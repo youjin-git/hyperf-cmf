@@ -12,16 +12,16 @@ const DEFAULT_CONFIG = {
 	CORE_VER: "1.0.0",
 
 	//接口地址
-	API_URL: "/api",
+	API_URL: process.env.VUE_APP_API_URL,
 
 	//请求超时
 	TIMEOUT: 10000,
 
 	//TokenName
-	TOKEN_NAME: "Authorization",
+	TOKEN_NAME: "X-token",
 
 	//Token前缀，注意最后有个空格，如不需要需设置空字符串
-	TOKEN_PREFIX: "Bearer ",
+	TOKEN_PREFIX: "",
 
 	//追加其他头
 	HEADERS: {},
@@ -58,10 +58,11 @@ const DEFAULT_CONFIG = {
 	}
 }
 
+console.log(DEFAULT_CONFIG)
 // 如果生产模式，就合并动态的APP_CONFIG
 // public/config.js
-if(process.env.NODE_ENV === 'production'){
-	Object.assign(DEFAULT_CONFIG, APP_CONFIG)
-}
+// if(process.env.NODE_ENV === 'production'){
+// 	Object.assign(DEFAULT_CONFIG, APP_CONFIG)
+// }
 
 module.exports = DEFAULT_CONFIG

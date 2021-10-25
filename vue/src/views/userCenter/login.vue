@@ -37,9 +37,9 @@
 					</div>
 					<h2>{{ $t('login.signInTitle') }}</h2>
 				</div>
-				<el-form ref="loginForm" :model="ruleForm" :rules="rules" label-width="0" size="large">
-					<el-form-item prop="user">
-						<el-input v-model="ruleForm.user" prefix-icon="el-icon-user" clearable :placeholder="$t('login.userPlaceholder')">
+				<el-form ref="loginForm" :model="FormParams" :rules="rules" label-width="0" size="large">
+					<el-form-item prop="username">
+						<el-input v-model="FormParams.username" prefix-icon="el-icon-user" clearable :placeholder="$t('login.userPlaceholder')">
 							<template #append>
 								<el-select v-model="userType" style="width: 130px;">
 									<el-option :label="$t('login.admin')" value="admin"></el-option>
@@ -48,13 +48,27 @@
 							</template>
 						</el-input>
 					</el-form-item>
+
 					<el-form-item prop="password">
-						<el-input v-model="ruleForm.password" prefix-icon="el-icon-lock" clearable show-password :placeholder="$t('login.PWPlaceholder')"></el-input>
+						<el-input v-model="FormParams.password" prefix-icon="el-icon-lock" clearable show-password :placeholder="$t('login.PWPlaceholder')"></el-input>
+					</el-form-item>
+					<el-form-item prop="code" class="captcha">
+						<div class="captcha">
+							<el-input
+								v-model="FormParams.code"
+								prefix-icon="el-icon-message"
+								placeholder="验证码"
+							>
+								<template #suffix>
+									<el-image style="width: 150px;margin-right: -5px" :src="captchatImg" @click="getCaptcha()"></el-image>
+								</template>
+							</el-input>
+						</div>
 					</el-form-item>
 					<el-form-item style="margin-bottom: 10px;">
 						<el-row>
 							<el-col :span="12">
-								<el-checkbox :label="$t('login.rememberMe')" v-model="ruleForm.autologin"></el-checkbox>
+								<el-checkbox :label="$t('login.rememberMe')" v-model="FormParams.autologin"></el-checkbox>
 							</el-col>
 							<el-col :span="12" style="text-align: right;">
 								<el-button type="text">{{ $t('login.forgetPassword') }}？</el-button>
@@ -85,20 +99,13 @@
 		data() {
 			return {
 				userType: 'admin',
-				ruleForm: {
+				FormParams: {
 					user: "admin",
 					password: "admin",
 					autologin: false
 				},
-				rules: {
-					user: [
-						{required: true, message: this.$t('login.userError'), trigger: 'blur'}
-					],
-					password: [
-						{required: true, message: this.$t('login.PWError'), trigger: 'blur'}
-					]
-				},
-				islogin: false,
+
+
 				config: {
 					lang: this.$TOOL.data.get('APP_LANG') || this.$CONFIG.LANG,
 					theme: this.$TOOL.data.get('APP_THEME') || 'default'
@@ -122,11 +129,11 @@
 		watch:{
 			userType(val){
 				if(val == 'admin'){
-					this.ruleForm.user = 'admin'
-					this.ruleForm.password = 'admin'
+					this.FormParams.user = 'admin'
+					this.FormParams.password = 'admin'
 				}else if(val == 'user'){
-					this.ruleForm.user = 'user'
-					this.ruleForm.password = 'user'
+					this.FormParams.user = 'user'
+					this.FormParams.password = 'user'
 				}
 			},
 			'config.theme'(val){
@@ -139,6 +146,7 @@
 			}
 		},
 		created: function() {
+			console.log(this);
 			this.$TOOL.data.remove("TOKEN")
 			this.$TOOL.data.remove("USER_INFO")
 			this.$TOOL.data.remove("MENU")
@@ -150,15 +158,14 @@
 			console.log('%c SCUI %c Gitee: https://gitee.com/lolicode/scui', 'background:#666;color:#fff;border-radius:3px;', '')
 		},
 		methods: {
-			async login(){
-
+			async login1(){
 				var validate = await this.$refs.loginForm.validate().catch(()=>{})
 				if(!validate){ return false }
 
 				this.islogin = true
 				var data = {
-					username: this.ruleForm.user,
-					password: this.$TOOL.crypto.MD5(this.ruleForm.password)
+					username: this.FormParams.user,
+					password: this.$TOOL.crypto.MD5(this.FormParams.password)
 				}
 				//获取token
 				var user = await this.$API.auth.token.post(data)
@@ -172,7 +179,7 @@
 				}
 				//获取菜单
 				var menu = null
-				if(this.ruleForm.user == 'admin'){
+				if(this.FormParams.user == 'admin'){
 					menu = await this.$API.system.menu.myMenus.get()
 				}else{
 					menu = await this.$API.demo.menu.get()
@@ -209,6 +216,55 @@
 		}
 	}
 </script>
+<script setup>
+	import { ref,getCurrentInstance,onMounted,reactive } from 'vue'
+	import { useRouter } from 'vue-router'
+	const router = useRouter();
+	import {captchatImg,getCaptcha} from './loginCaptcha';
+	const { proxy ,ctx } = getCurrentInstance();
+	const FormParams = reactive({
+		username: "admin",
+		password: "123456",
+		key:"",
+		code:"",
+	})
+	const rules = reactive({
+		username:[{
+			required: true,message:'请输入用户名',trigger: 'blur',
+		}],
+		password:[{
+			required: true,message:'请输入密码',trigger: 'blur',
+		}],
+	})
+
+	const islogin = ref(false);
+
+	const login = async () => {
+		islogin.value = true;
+		var validate = await proxy.$refs.loginForm.validate().catch(()=>{})
+		if(!validate){ return false }
+		//获取token
+		var user = await proxy.$API.auth.token.post(FormParams).then(loginSuccess).finally(()=>{
+			islogin.value = false;
+		})
+	}
+	const loginSuccess = (data)=>{
+		proxy.$TOOL.data.set("TOKEN", data.token)
+		router.replace({
+			path: '/'
+		})
+	}
+
+	onMounted(() => {
+		getCaptcha().then((data)=>{
+			FormParams.key = data.key;
+			FormParams.code = data.code;
+		});
+	})
+</script>
+
+
+
 
 <style scoped>
 	.login_bg {width: 100%;height: 100%;background: #fff;display: flex;}

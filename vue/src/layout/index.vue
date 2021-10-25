@@ -219,6 +219,7 @@
 			this.onLayoutResize();
 			window.addEventListener('resize', this.onLayoutResize);
 			var menu = this.$TOOL.data.get("MENU");
+
 			this.menu = this.filterUrl(menu);
 			this.showThis()
 		},

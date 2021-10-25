@@ -6,6 +6,7 @@ import 'nprogress/nprogress.css'
 import tool from '@/utils/tool';
 import systemRouter from './systemRouter';
 import {beforeEach, afterEach} from './scrollBehavior';
+import Store from '@/store'
 
 //系统路由
 const routes = systemRouter
@@ -53,14 +54,17 @@ router.beforeEach(async (to, from, next) => {
 		});
 		return false;
 	}
-	
+
 	//整页路由处理
 	if(to.meta.fullpage){
 		to.matched = [to.matched[to.matched.length-1]]
 	}
+
+
 	//加载API路由
 	if(!isGetApiRouter){
-		let menu = tool.data.get("MENU");
+		let menu = await Store.dispatch('getMenus')
+
 		var apiRouter = filterAsyncRouter(menu);
 		apiRouter = flatAsyncRoutes(apiRouter)
 		apiRouter.forEach(item => {
@@ -83,6 +87,7 @@ router.afterEach((to, from) => {
 
 router.onError((error) => {
 	NProgress.done();
+	console.log(error);
 	ElNotification.error({
 		title: '路由错误',
 		message: error.message
@@ -92,8 +97,14 @@ router.onError((error) => {
 //转换
 function filterAsyncRouter(routerMap) {
 	const accessedRouters = []
+	console.log(routerMap);
 	routerMap.forEach(item => {
 		item.meta = item.meta?item.meta:{};
+		item.meta = {
+			icon:'el-icon-platform-eleme',
+			title:'首页',
+			type:'menu',
+		}
 		//处理外部链接特殊路由
 		if(item.meta.type=='iframe'){
 			item.meta.url = item.path;
@@ -108,6 +119,8 @@ function filterAsyncRouter(routerMap) {
 			children: item.children ? filterAsyncRouter(item.children) : null,
 			component: loadComponent(item.component)
 		}
+		console.log(route);
+
 		accessedRouters.push(route)
 	})
 	return accessedRouters
@@ -115,6 +128,7 @@ function filterAsyncRouter(routerMap) {
 function loadComponent(component){
 	if(component){
 		return () => import(/* webpackChunkName: "[request]" */ `@/views/${component}`)
+		// return (resolve) => require([`@/views/${component}`], resolve)
 	}else{
 		return () => import(`@/layout/other/empty`)
 	}
