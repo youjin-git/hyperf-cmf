@@ -120,8 +120,17 @@ class MenuController extends AbstractController
                     $query->whereIn('menu_id', $rules);
                 }
             })
-            ->where('status', 1)->get()->toArray();
-        $lists = list_to_tree($lists, 0);
+            ->where('status', 1)->get();
+        $lists->transform(function ($item) {
+            $item->meta = [
+                'icon' => $item->icon,
+                'title' => $item->title,
+                'type' => $item->type,
+                'affix' => $item->affix ? true : false,
+            ];
+            return $item;
+        });
+        $lists = list_to_tree($lists->toArray(), 0);
         succ($lists);
     }
 

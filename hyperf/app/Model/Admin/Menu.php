@@ -51,6 +51,7 @@ class Menu extends Model
         return $value;
     }
 
+    
     public function getQueryAttribute($value)
     {
         $value && parse_str($value, $value);

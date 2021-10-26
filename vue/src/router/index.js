@@ -101,8 +101,8 @@ function filterAsyncRouter(routerMap) {
 	routerMap.forEach(item => {
 		item.meta = item.meta?item.meta:{};
 		item.meta = {
-			icon:'el-icon-platform-eleme',
-			title:'首页',
+			icon:item.icon,
+			title:item.title,
 			type:'menu',
 		}
 		//处理外部链接特殊路由
@@ -119,7 +119,7 @@ function filterAsyncRouter(routerMap) {
 			children: item.children ? filterAsyncRouter(item.children) : null,
 			component: loadComponent(item.component)
 		}
-		console.log(route);
+
 
 		accessedRouters.push(route)
 	})
@@ -128,7 +128,6 @@ function filterAsyncRouter(routerMap) {
 function loadComponent(component){
 	if(component){
 		return () => import(/* webpackChunkName: "[request]" */ `@/views/${component}`)
-		// return (resolve) => require([`@/views/${component}`], resolve)
 	}else{
 		return () => import(`@/layout/other/empty`)
 	}

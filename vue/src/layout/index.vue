@@ -129,7 +129,7 @@
 							<li v-for="item in menu" :key="item" :class="pmenu.path==item.path?'active':''"
 								@click="showMenu(item)">
 								<i :class="item.meta.icon || 'el-icon-menu'"></i>
-								<p>{{ item.meta.title }}</p>
+								<p>{{ item.meta.title }}1</p>
 							</li>
 						</ul>
 					</el-scrollbar>
@@ -180,7 +180,7 @@
 	import userbar from './components/userbar.vue';
 	import setting from './components/setting.vue';
 	import iframeView from './components/iframeView.vue';
-
+	import Store from '@/store';
 	export default {
 		name: 'index',
 		components: {
@@ -215,11 +215,11 @@
 				return this.$store.state.global.menuIsCollapse
 			}
 		},
-		created() {
+		async created() {
 			this.onLayoutResize();
 			window.addEventListener('resize', this.onLayoutResize);
-			var menu = this.$TOOL.data.get("MENU");
-
+			// var menu = this.$TOOL.data.get("MENU");
+			let menu = await Store.dispatch('getMenus')
 			this.menu = this.filterUrl(menu);
 			this.showThis()
 		},
