@@ -1,0 +1,2950 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "hyperf swagger api desc",
+        "version": "1.0.0",
+        "title": "HYPERF API DOC"
+    },
+    "host": "39.105.46.139:9503",
+    "schemes": [
+        "http"
+    ],
+    "tags": [
+        {
+            "name": "授权",
+            "description": ""
+        },
+        {
+            "name": "首页",
+            "description": ""
+        },
+        {
+            "name": "商家",
+            "description": ""
+        },
+        {
+            "name": "spu",
+            "description": ""
+        },
+        {
+            "name": "认证管理",
+            "description": ""
+        },
+        {
+            "name": "余额管理",
+            "description": ""
+        },
+        {
+            "name": "配置获取",
+            "description": ""
+        },
+        {
+            "name": "定时脚本",
+            "description": ""
+        },
+        {
+            "name": "客服管理",
+            "description": ""
+        },
+        {
+            "name": "提现管理",
+            "description": ""
+        },
+        {
+            "name": "参保人管理",
+            "description": ""
+        },
+        {
+            "name": "登录",
+            "description": ""
+        },
+        {
+            "name": "支付管理",
+            "description": ""
+        },
+        {
+            "name": "支付回调",
+            "description": ""
+        },
+        {
+            "name": "订单管理",
+            "description": ""
+        },
+        {
+            "name": "项目管理",
+            "description": ""
+        },
+        {
+            "name": "用户管理",
+            "description": ""
+        },
+        {
+            "name": "验证码",
+            "description": ""
+        },
+        {
+            "name": "文件管理",
+            "description": ""
+        },
+        {
+            "name": "采集",
+            "description": ""
+        },
+        {
+            "name": "小红书笔记",
+            "description": ""
+        },
+        {
+            "name": "提报",
+            "description": ""
+        },
+        {
+            "name": "小红书",
+            "description": ""
+        },
+        {
+            "name": "账单管理",
+            "description": ""
+        },
+        {
+            "name": "产品",
+            "description": ""
+        },
+        {
+            "name": "访问路径",
+            "description": ""
+        }
+    ],
+    "definitions": {
+        "ModelArray": {
+            "type": "array",
+            "required": [],
+            "items": {
+                "type": "string"
+            }
+        },
+        "ModelObject": {
+            "type": "object",
+            "required": [],
+            "items": {
+                "type": "string"
+            }
+        }
+    },
+    "paths": {
+        "/api/auth/mp": {
+            "post": {
+                "tags": [
+                    "授权"
+                ],
+                "summary": "",
+                "description": "微信小程序授权",
+                "operationId": "ApiAuthMpPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "code",
+                        "description": "code",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/api/home": {
+            "post": {
+                "tags": [
+                    "首页"
+                ],
+                "summary": "",
+                "description": "微信小程序授权",
+                "operationId": "ApiHomePOST",
+                "parameters": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": []
+            }
+        },
+        "/merchant/detail": {
+            "post": {
+                "tags": [
+                    "商家"
+                ],
+                "summary": "",
+                "description": "获取用户信息",
+                "operationId": "MerchantDetailPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "id",
+                        "description": "id",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/api/store/product/category/lst": {
+            "post": {
+                "tags": [
+                    "授权"
+                ],
+                "summary": "",
+                "description": "获取用户信息",
+                "operationId": "ApiStoreProductCategoryLstPOST",
+                "parameters": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": []
+            }
+        },
+        "/api/Product/spu/recommend": {
+            "post": {
+                "tags": [
+                    "spu"
+                ],
+                "summary": "",
+                "description": "推荐",
+                "operationId": "ApiProductSpuRecommendPOST",
+                "parameters": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": []
+            }
+        },
+        "/api/user": {
+            "post": {
+                "tags": [
+                    "授权"
+                ],
+                "summary": "",
+                "description": "获取用户信息",
+                "operationId": "ApiUserPOST",
+                "parameters": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": []
+            }
+        },
+        "/authentication/info": {
+            "post": {
+                "tags": [
+                    "认证管理"
+                ],
+                "summary": "",
+                "description": "认证详情",
+                "operationId": "AuthenticationInfoPOST",
+                "parameters": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": []
+            }
+        },
+        "/authentication/add": {
+            "post": {
+                "tags": [
+                    "认证管理"
+                ],
+                "summary": "",
+                "description": "添加认证",
+                "operationId": "AuthenticationAddPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "real_name",
+                        "description": "真实姓名",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "id_card",
+                        "description": "身份证",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "wx_picture_id",
+                        "description": "微信收款码图片id",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "zfb_picture_id",
+                        "description": "支付宝收款码图片id",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/balance/add": {
+            "post": {
+                "tags": [
+                    "余额管理"
+                ],
+                "summary": "",
+                "description": "添加提现记录",
+                "operationId": "BalanceAddPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "price",
+                        "description": "提现余额",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "type",
+                        "description": "提现方式",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "openid",
+                        "description": "openid",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/balance/lists": {
+            "post": {
+                "tags": [
+                    "余额管理"
+                ],
+                "summary": "",
+                "description": "账单列表",
+                "operationId": "BalanceListsPOST",
+                "parameters": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": []
+            }
+        },
+        "/config/init": {
+            "post": {
+                "tags": [
+                    "配置获取"
+                ],
+                "summary": "",
+                "description": "配置获取",
+                "operationId": "ConfigInitPOST",
+                "parameters": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": []
+            }
+        },
+        "/crontab/send_price": {
+            "get": {
+                "tags": [
+                    "定时脚本"
+                ],
+                "summary": "",
+                "description": "发放余额",
+                "operationId": "CrontabSend_priceGET",
+                "parameters": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": []
+            }
+        },
+        "/crontab/send_price_bak": {
+            "get": {
+                "tags": [
+                    "定时脚本"
+                ],
+                "summary": "",
+                "description": "发放余额",
+                "operationId": "CrontabSend_price_bakGET",
+                "parameters": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": []
+            }
+        },
+        "/customer/": {
+            "post": {
+                "tags": [
+                    "客服管理"
+                ],
+                "summary": "",
+                "description": "客服",
+                "operationId": "CustomerPOST",
+                "parameters": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": []
+            }
+        },
+        "/extract/lists": {
+            "post": {
+                "tags": [
+                    "提现管理"
+                ],
+                "summary": "",
+                "description": "提现列表",
+                "operationId": "ExtractListsPOST",
+                "parameters": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": []
+            }
+        },
+        "/extract/add": {
+            "post": {
+                "tags": [
+                    "提现管理"
+                ],
+                "summary": "",
+                "description": "添加提现记录",
+                "operationId": "ExtractAddPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "extract_price",
+                        "description": "提现余额",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/insured/init": {
+            "post": {
+                "tags": [
+                    "参保人管理"
+                ],
+                "summary": "",
+                "description": "参保人添加初始化",
+                "operationId": "InsuredInitPOST",
+                "parameters": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": []
+            }
+        },
+        "/insured/add": {
+            "post": {
+                "tags": [
+                    "参保人管理"
+                ],
+                "summary": "",
+                "description": "参保人添加",
+                "operationId": "InsuredAddPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "name",
+                        "description": "姓名",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "id_card",
+                        "description": "身份证号码",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "household",
+                        "description": "户籍性质",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "nation",
+                        "description": "民族",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "provice",
+                        "description": "户籍所在省市",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "is_tax",
+                        "description": "1代表有,0代表无",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "is_first_insured",
+                        "description": "1代表有,0代表无",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "education",
+                        "description": "学历",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "id_card_positive_picture_id",
+                        "description": "身份证正面",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "id_card_back_picture_id",
+                        "description": "身份证反面",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/insured/edit": {
+            "post": {
+                "tags": [
+                    "参保人管理"
+                ],
+                "summary": "",
+                "description": "参保人编辑",
+                "operationId": "InsuredEditPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "id",
+                        "description": "id",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "name",
+                        "description": "姓名",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "id_card",
+                        "description": "身份证号码",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "household",
+                        "description": "户籍性质",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "nation",
+                        "description": "民族",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "provice",
+                        "description": "户籍所在省市",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "is_tax",
+                        "description": "1代表有,0代表无",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "is_first_insured",
+                        "description": "1代表有,0代表无",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "education",
+                        "description": "学历",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "id_card_positive_picture_id",
+                        "description": "身份证正面",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "id_card_back_picture_id",
+                        "description": "身份证反面",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/insured/lists": {
+            "post": {
+                "tags": [
+                    "参保人管理"
+                ],
+                "summary": "",
+                "description": "参保人列表",
+                "operationId": "InsuredListsPOST",
+                "parameters": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": []
+            }
+        },
+        "/insured/detail": {
+            "post": {
+                "tags": [
+                    "参保人管理"
+                ],
+                "summary": "",
+                "description": "参保人详情",
+                "operationId": "InsuredDetailPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "id",
+                        "description": "id",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/insured/delete": {
+            "post": {
+                "tags": [
+                    "参保人管理"
+                ],
+                "summary": "",
+                "description": "参保人删除",
+                "operationId": "InsuredDeletePOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "id",
+                        "description": "id",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/login/sms": {
+            "post": {
+                "tags": [
+                    "登录"
+                ],
+                "summary": "",
+                "description": "注册",
+                "operationId": "LoginSmsPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "phone",
+                        "description": "手机号码",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "code",
+                        "description": "短信验证码",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "password",
+                        "description": "密码",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/login/login": {
+            "post": {
+                "tags": [
+                    "登录"
+                ],
+                "summary": "",
+                "description": "密码登录",
+                "operationId": "LoginLoginPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "phone",
+                        "description": "手机号码",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "password",
+                        "description": "密码",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/login/forget": {
+            "post": {
+                "tags": [
+                    "登录"
+                ],
+                "summary": "",
+                "description": "忘记密码",
+                "operationId": "LoginForgetPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "phone",
+                        "description": "手机号码",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "code",
+                        "description": "验证码",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "password",
+                        "description": "密码",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/notify/wx/balance": {
+            "post": {
+                "tags": [
+                    "支付管理"
+                ],
+                "summary": "",
+                "description": "客服",
+                "operationId": "NotifyWxBalancePOST",
+                "parameters": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": []
+            }
+        },
+        "/notify/wx": {
+            "post": {
+                "tags": [
+                    "支付管理"
+                ],
+                "summary": "",
+                "description": "客服",
+                "operationId": "NotifyWxPOST",
+                "parameters": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": []
+            }
+        },
+        "/notify/zfb": {
+            "post": {
+                "tags": [
+                    "支付回调"
+                ],
+                "summary": "",
+                "description": "客服",
+                "operationId": "NotifyZfbPOST",
+                "parameters": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": []
+            }
+        },
+        "/notify/zfb/balance": {
+            "post": {
+                "tags": [
+                    "支付回调"
+                ],
+                "summary": "",
+                "description": "balance",
+                "operationId": "NotifyZfbBalancePOST",
+                "parameters": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": []
+            }
+        },
+        "/order/init": {
+            "post": {
+                "tags": [
+                    "订单管理"
+                ],
+                "summary": "",
+                "description": "订单初始化",
+                "operationId": "OrderInitPOST",
+                "parameters": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": []
+            }
+        },
+        "/order/get_insured_config": {
+            "post": {
+                "tags": [
+                    "订单管理"
+                ],
+                "summary": "",
+                "description": "获取配置",
+                "operationId": "OrderGet_insured_configPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "start_month",
+                        "description": "开始月份",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/order/add": {
+            "post": {
+                "tags": [
+                    "订单管理"
+                ],
+                "summary": "",
+                "description": "订单添加",
+                "operationId": "OrderAddPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "social_security_base_price",
+                        "description": "社保基础价格",
+                        "required": true,
+                        "type": "integer",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "is_repair",
+                        "description": "是否补缴",
+                        "required": true,
+                        "type": "integer",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "insured_id",
+                        "description": "代缴人",
+                        "required": true,
+                        "type": "integer",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "start_month",
+                        "description": "开始月份",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "months",
+                        "description": "总共月份",
+                        "required": true,
+                        "type": "integer",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "is_fund",
+                        "description": "是否缴纳公积金",
+                        "required": true,
+                        "type": "integer",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "fund_base_price",
+                        "description": "公积金基础价格",
+                        "required": true,
+                        "type": "integer",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "is_create",
+                        "description": "是否生成订单",
+                        "required": true,
+                        "type": "integer",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "insured_area_id",
+                        "description": "310000:主城区,311100:杭州余杭区",
+                        "required": true,
+                        "type": "integer",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/order/lists": {
+            "post": {
+                "tags": [
+                    "订单管理"
+                ],
+                "summary": "",
+                "description": "订单列表",
+                "operationId": "OrderListsPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "status",
+                        "description": "订单状态",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/order/detail": {
+            "post": {
+                "tags": [
+                    "订单管理"
+                ],
+                "summary": "",
+                "description": "订单详情",
+                "operationId": "OrderDetailPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "id",
+                        "description": "订单id",
+                        "required": true,
+                        "type": "integer",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/pay/order": {
+            "get": {
+                "tags": [
+                    "支付管理"
+                ],
+                "summary": "",
+                "description": "支付宝",
+                "operationId": "PayOrderGET",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "id",
+                        "description": "订单id",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "openid",
+                        "description": "openid",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "pay_type",
+                        "description": "支付方式",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/pay/h5": {
+            "post": {
+                "tags": [
+                    "支付管理"
+                ],
+                "summary": "",
+                "description": "微信二维码支付",
+                "operationId": "PayH5POST",
+                "parameters": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": []
+            }
+        },
+        "/pay/qr_code": {
+            "post": {
+                "tags": [
+                    "支付管理"
+                ],
+                "summary": "",
+                "description": "微信二维码支付",
+                "operationId": "PayQr_codePOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "id",
+                        "description": "id",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "price",
+                        "description": "价格",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/pay/jsapi": {
+            "post": {
+                "tags": [
+                    "支付管理"
+                ],
+                "summary": "",
+                "description": "微信jsapi支付",
+                "operationId": "PayJsapiPOST",
+                "parameters": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": []
+            }
+        },
+        "/pay/zfb_h5": {
+            "get": {
+                "tags": [
+                    "支付管理"
+                ],
+                "summary": "",
+                "description": "支付宝h5支付",
+                "operationId": "PayZfb_h5GET",
+                "parameters": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": []
+            }
+        },
+        "/project/lists": {
+            "post": {
+                "tags": [
+                    "项目管理"
+                ],
+                "summary": "",
+                "description": "项目列表",
+                "operationId": "ProjectListsPOST",
+                "parameters": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": []
+            }
+        },
+        "/project/info": {
+            "post": {
+                "tags": [
+                    "项目管理"
+                ],
+                "summary": "",
+                "description": "项目详情",
+                "operationId": "ProjectInfoPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "project_id",
+                        "description": "项目id",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/project/add": {
+            "post": {
+                "tags": [
+                    "项目管理"
+                ],
+                "summary": "",
+                "description": "项目申领",
+                "operationId": "ProjectAddPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "project_id",
+                        "description": "项目id",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/swagger": {
+            "get": {
+                "tags": [
+                    "余额管理"
+                ],
+                "summary": "",
+                "description": "认证详情",
+                "operationId": "SwaggerGET",
+                "parameters": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": []
+            }
+        },
+        "/user/info": {
+            "post": {
+                "tags": [
+                    "用户管理"
+                ],
+                "summary": "",
+                "description": "用户详情",
+                "operationId": "UserInfoPOST",
+                "parameters": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": []
+            }
+        },
+        "/user/project": {
+            "post": {
+                "tags": [
+                    "用户管理"
+                ],
+                "summary": "",
+                "description": "我的项目列表",
+                "operationId": "UserProjectPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "status",
+                        "description": "状态",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/user/update": {
+            "post": {
+                "tags": [
+                    "用户管理"
+                ],
+                "summary": "",
+                "description": "我的项目列表",
+                "operationId": "UserUpdatePOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "password",
+                        "description": "密码",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "address",
+                        "description": "常驻地址",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "real_name",
+                        "description": "真实姓名",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/user/change_new_phone": {
+            "post": {
+                "tags": [
+                    "用户管理"
+                ],
+                "summary": "",
+                "description": "修改手机号码",
+                "operationId": "UserChange_new_phonePOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "new_phone",
+                        "description": "新手机号码",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "new_phone_code",
+                        "description": "新手机验证码",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/user/check_old_phone": {
+            "post": {
+                "tags": [
+                    "用户管理"
+                ],
+                "summary": "",
+                "description": "检测老手机号码",
+                "operationId": "UserCheck_old_phonePOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "old_phone",
+                        "description": "原手机号码",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "old_phone_code",
+                        "description": "原手机验证码",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/util/captcha/get": {
+            "post": {
+                "tags": [
+                    "验证码"
+                ],
+                "summary": "",
+                "description": "图片验证码",
+                "operationId": "UtilCaptchaGetPOST",
+                "parameters": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": []
+            }
+        },
+        "/util/file/upload": {
+            "post": {
+                "tags": [
+                    "文件管理"
+                ],
+                "summary": "",
+                "description": "上传文件",
+                "operationId": "UtilFileUploadPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "file",
+                        "description": "文件",
+                        "required": false,
+                        "type": "file",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/util/file/get_path": {
+            "post": {
+                "tags": [
+                    "文件管理"
+                ],
+                "summary": "",
+                "description": "",
+                "operationId": "UtilFileGet_pathPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "id",
+                        "description": "文件id",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/util/sms/send": {
+            "post": {
+                "tags": [
+                    "验证码"
+                ],
+                "summary": "",
+                "description": "发送短信验证码",
+                "operationId": "UtilSmsSendPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "phone",
+                        "description": "手机号码",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "key",
+                        "description": "key",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "code",
+                        "description": "图片验证码",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "type",
+                        "description": "register,forgetPassword,checkOldPhone,checkNewPhone",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/xhs/collection/start": {
+            "post": {
+                "tags": [
+                    "采集"
+                ],
+                "summary": "",
+                "description": "获取用户信息",
+                "operationId": "XhsCollectionStartPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "id",
+                        "description": "Id",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/xhs/notes/import_notes": {
+            "post": {
+                "tags": [
+                    "小红书笔记"
+                ],
+                "summary": "",
+                "description": "导入笔记",
+                "operationId": "XhsNotesImport_notesPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "id",
+                        "description": "关键词",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/xhs/notes/delete": {
+            "post": {
+                "tags": [
+                    "小红书笔记"
+                ],
+                "summary": "",
+                "description": "删除",
+                "operationId": "XhsNotesDeletePOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "ids",
+                        "description": "ID",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/xhs/notes/export": {
+            "post": {
+                "tags": [
+                    "小红书笔记"
+                ],
+                "summary": "",
+                "description": "获取用户信息",
+                "operationId": "XhsNotesExportPOST",
+                "parameters": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": []
+            }
+        },
+        "/xhs/notes/create": {
+            "post": {
+                "tags": [
+                    "小红书笔记"
+                ],
+                "summary": "",
+                "description": "获取用户信息",
+                "operationId": "XhsNotesCreatePOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "id",
+                        "description": "关键词",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/xhs/notes/edit": {
+            "post": {
+                "tags": [
+                    "小红书笔记"
+                ],
+                "summary": "",
+                "description": "编辑",
+                "operationId": "XhsNotesEditPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "wechat",
+                        "description": "关键词",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "url",
+                        "description": "url",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "name",
+                        "description": "name",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "email",
+                        "description": "关键词",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "mechanism",
+                        "description": "关键词",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "remark",
+                        "description": "关键词",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/xhs/notes/add": {
+            "post": {
+                "tags": [
+                    "小红书笔记"
+                ],
+                "summary": "",
+                "description": "添加",
+                "operationId": "XhsNotesAddPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "wechat",
+                        "description": "关键词",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "url",
+                        "description": "url",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "name",
+                        "description": "name",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "email",
+                        "description": "关键词",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "mechanism",
+                        "description": "关键词",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "remark",
+                        "description": "关键词",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/xhs/notes/lists": {
+            "post": {
+                "tags": [
+                    "小红书笔记"
+                ],
+                "summary": "",
+                "description": "获取用户信息",
+                "operationId": "XhsNotesListsPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "keywords",
+                        "description": "关键词",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "is_del",
+                        "description": "is_del",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "title",
+                        "description": "title",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "sort",
+                        "description": "sort",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/xhs/notes/waitCollentNum": {
+            "post": {
+                "tags": [
+                    "小红书笔记"
+                ],
+                "summary": "",
+                "description": "获取用户信息",
+                "operationId": "XhsNotesWaitCollentNumPOST",
+                "parameters": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": []
+            }
+        },
+        "/xhs/notes/add_friend": {
+            "post": {
+                "tags": [
+                    "小红书笔记"
+                ],
+                "summary": "",
+                "description": "获取用户信息",
+                "operationId": "XhsNotesAdd_friendPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "id",
+                        "description": "id",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/xhs/notes/notes": {
+            "post": {
+                "tags": [
+                    "小红书笔记"
+                ],
+                "summary": "",
+                "description": "notes",
+                "operationId": "XhsNotesNotesPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "id",
+                        "description": "Id",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/xhs/report/create": {
+            "post": {
+                "tags": [
+                    "提报"
+                ],
+                "summary": "",
+                "description": "create",
+                "operationId": "XhsReportCreatePOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "id",
+                        "description": "id",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/xhs/report/lists": {
+            "post": {
+                "tags": [
+                    "提报"
+                ],
+                "summary": "",
+                "description": "获取用户信息",
+                "operationId": "XhsReportListsPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "keywords",
+                        "description": "关键词",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "order",
+                        "description": "order",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "sort",
+                        "description": "sort",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/xhs/report/add": {
+            "post": {
+                "tags": [
+                    "提报"
+                ],
+                "summary": "",
+                "description": "添加提报",
+                "operationId": "XhsReportAddPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "id",
+                        "description": "关键词",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "types",
+                        "description": "关键词",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "report_price",
+                        "description": "提报价格",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/xhs/report/record": {
+            "post": {
+                "tags": [
+                    "提报"
+                ],
+                "summary": "",
+                "description": "叮当",
+                "operationId": "XhsReportRecordPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "ids",
+                        "description": "IDS",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/xhs/report/edit": {
+            "post": {
+                "tags": [
+                    "提报"
+                ],
+                "summary": "",
+                "description": "编辑",
+                "operationId": "XhsReportEditPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "num",
+                        "description": "关键词",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "rate",
+                        "description": "url",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "remark",
+                        "description": "关键词",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/xhs/report/record_lists": {
+            "post": {
+                "tags": [
+                    "提报"
+                ],
+                "summary": "",
+                "description": "叮当",
+                "operationId": "XhsReportRecord_listsPOST",
+                "parameters": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": []
+            }
+        },
+        "/xhs/talent/import_notes": {
+            "post": {
+                "tags": [
+                    "小红书"
+                ],
+                "summary": "",
+                "description": "导入笔记",
+                "operationId": "XhsTalentImport_notesPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "id",
+                        "description": "关键词",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/xhs/talent/top": {
+            "post": {
+                "tags": [
+                    "小红书"
+                ],
+                "summary": "",
+                "description": "获取用户信息",
+                "operationId": "XhsTalentTopPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "id",
+                        "description": "置顶",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "top",
+                        "description": "是否置顶",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/xhs/talent/parsing": {
+            "post": {
+                "tags": [
+                    "小红书"
+                ],
+                "summary": "",
+                "description": "获取用户信息",
+                "operationId": "XhsTalentParsingPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "id",
+                        "description": "关键词",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/xhs/talent/create": {
+            "post": {
+                "tags": [
+                    "小红书"
+                ],
+                "summary": "",
+                "description": "获取用户信息",
+                "operationId": "XhsTalentCreatePOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "id",
+                        "description": "关键词",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/xhs/talent/edit": {
+            "post": {
+                "tags": [
+                    "小红书"
+                ],
+                "summary": "",
+                "description": "编辑",
+                "operationId": "XhsTalentEditPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "wechat",
+                        "description": "关键词",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "url",
+                        "description": "url",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "name",
+                        "description": "name",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "email",
+                        "description": "关键词",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "mechanism",
+                        "description": "关键词",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "remark",
+                        "description": "关键词",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/xhs/talent/delete": {
+            "post": {
+                "tags": [
+                    "小红书"
+                ],
+                "summary": "",
+                "description": "删除",
+                "operationId": "XhsTalentDeletePOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "id",
+                        "description": "ID",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/xhs/talent/add": {
+            "post": {
+                "tags": [
+                    "小红书"
+                ],
+                "summary": "",
+                "description": "添加",
+                "operationId": "XhsTalentAddPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "wechat",
+                        "description": "关键词",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "url",
+                        "description": "url",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "email",
+                        "description": "关键词",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "mechanism",
+                        "description": "关键词",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "remark",
+                        "description": "关键词",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/xhs/talent/lists": {
+            "post": {
+                "tags": [
+                    "小红书"
+                ],
+                "summary": "",
+                "description": "获取用户信息",
+                "operationId": "XhsTalentListsPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "keywords",
+                        "description": "keywords",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "order",
+                        "description": "order",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "sort",
+                        "description": "sort",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "fans",
+                        "description": "fans",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "notes",
+                        "description": "notes",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/xhs/talent/waitCollentNum": {
+            "post": {
+                "tags": [
+                    "小红书"
+                ],
+                "summary": "",
+                "description": "获取用户信息",
+                "operationId": "XhsTalentWaitCollentNumPOST",
+                "parameters": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": []
+            }
+        },
+        "/xhs/talent/add_friend": {
+            "post": {
+                "tags": [
+                    "小红书"
+                ],
+                "summary": "",
+                "description": "获取用户信息",
+                "operationId": "XhsTalentAdd_friendPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "id",
+                        "description": "id",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/xhs/talent/notes": {
+            "post": {
+                "tags": [
+                    "小红书"
+                ],
+                "summary": "",
+                "description": "notes",
+                "operationId": "XhsTalentNotesPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "id",
+                        "description": "Id",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/xhs/talent_friend/lists": {
+            "post": {
+                "tags": [
+                    "小红书"
+                ],
+                "summary": "",
+                "description": "获取用户信息",
+                "operationId": "XhsTalent_friendListsPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "keywords",
+                        "description": "keywords",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "order",
+                        "description": "order",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "sort",
+                        "description": "sort",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "fans",
+                        "description": "fans",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "notes",
+                        "description": "notes",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/xhs/talent_friend/add_friend": {
+            "post": {
+                "tags": [
+                    "小红书"
+                ],
+                "summary": "",
+                "description": "获取用户信息",
+                "operationId": "XhsTalent_friendAdd_friendPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "id",
+                        "description": "id",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/xhs/talent_friend/create": {
+            "post": {
+                "tags": [
+                    "小红书"
+                ],
+                "summary": "",
+                "description": "create",
+                "operationId": "XhsTalent_friendCreatePOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "id",
+                        "description": "id",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/xhs/talent_friend/update": {
+            "post": {
+                "tags": [
+                    "小红书"
+                ],
+                "summary": "",
+                "description": "获取用户信息",
+                "operationId": "XhsTalent_friendUpdatePOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "price1",
+                        "description": "价格",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "price2",
+                        "description": "价格",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "price3",
+                        "description": "价格",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "price4",
+                        "description": "价格",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "id",
+                        "description": "Id",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "remark",
+                        "description": "remark",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    },
+                    {
+                        "in": "formData",
+                        "name": "views",
+                        "description": "views",
+                        "required": false,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/bill/lists": {
+            "post": {
+                "tags": [
+                    "账单管理"
+                ],
+                "summary": "",
+                "description": "账单列表",
+                "operationId": "BillListsPOST",
+                "parameters": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": []
+            }
+        },
+        "/api/product/detail": {
+            "post": {
+                "tags": [
+                    "产品"
+                ],
+                "summary": "",
+                "description": "获取用户信息",
+                "operationId": "ApiProductDetailPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "id",
+                        "description": "id",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/api/product/new": {
+            "post": {
+                "tags": [
+                    "产品"
+                ],
+                "summary": "",
+                "description": "获取用户信息",
+                "operationId": "ApiProductNewPOST",
+                "parameters": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": []
+            }
+        },
+        "/api/product/list": {
+            "post": {
+                "tags": [
+                    "产品"
+                ],
+                "summary": "",
+                "description": "获取用户信息",
+                "operationId": "ApiProductListPOST",
+                "parameters": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": []
+            }
+        },
+        "/api/login/openid": {
+            "post": {
+                "tags": [
+                    "授权"
+                ],
+                "summary": "",
+                "description": "微信小程序授权",
+                "operationId": "ApiLoginOpenidPOST",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "code",
+                        "description": "code",
+                        "required": true,
+                        "type": "string",
+                        "default": null
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": [],
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ]
+            }
+        },
+        "/": {
+            "get": {
+                "tags": [
+                    "访问路径"
+                ],
+                "summary": "",
+                "description": "后台访问路径",
+                "operationId": "GET",
+                "parameters": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": []
+            }
+        },
+        "/admin": {
+            "get": {
+                "tags": [
+                    "访问路径"
+                ],
+                "summary": "",
+                "description": "后台访问路径",
+                "operationId": "AdminGET",
+                "parameters": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": []
+            }
+        },
+        "/notify/wx/balance/zfb_balance_test": {
+            "get": {
+                "tags": [
+                    "支付管理"
+                ],
+                "summary": "",
+                "description": "balance",
+                "operationId": "NotifyWxBalanceZfb_balance_testGET",
+                "parameters": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": []
+            }
+        },
+        "/notify/wx/zfb_balance_test": {
+            "get": {
+                "tags": [
+                    "支付管理"
+                ],
+                "summary": "",
+                "description": "balance",
+                "operationId": "NotifyWxZfb_balance_testGET",
+                "parameters": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": []
+            }
+        },
+        "/notify/zfb/zfb_balance_test": {
+            "get": {
+                "tags": [
+                    "支付回调"
+                ],
+                "summary": "",
+                "description": "balance",
+                "operationId": "NotifyZfbZfb_balance_testGET",
+                "parameters": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": []
+            }
+        }
+    }
+}

@@ -2,6 +2,7 @@ import config from "@/config";
 
 export default {
 	state: {
+		meuns:[],
 		//移动端布局
 		ismobile: false,
 		//布局

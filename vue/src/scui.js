@@ -1,7 +1,7 @@
 import config from "./config"
 import api from './api'
 import tool from './utils/tool'
-import http from "./utils/request"
+import http from "@/utils/request"
 import { permission, rolePermission } from './utils/permission'
 import scTable from './components/scTable'
 import scFilterBar from './components/scFilterBar'

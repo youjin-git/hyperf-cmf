@@ -6,6 +6,7 @@ import 'nprogress/nprogress.css'
 import tool from '@/utils/tool';
 import systemRouter from './systemRouter';
 import {beforeEach, afterEach} from './scrollBehavior';
+import Store from '@/store'
 
 //系统路由
 const routes = systemRouter
@@ -16,6 +17,7 @@ const routes_404 = {
 	hidden: true,
 	component: () => import(/* webpackChunkName: "404" */ '@/layout/other/404'),
 }
+
 let routes_404_r = ()=>{}
 
 const router = createRouter({
@@ -53,16 +55,19 @@ router.beforeEach(async (to, from, next) => {
 		});
 		return false;
 	}
-	
+
 	//整页路由处理
 	if(to.meta.fullpage){
 		to.matched = [to.matched[to.matched.length-1]]
 	}
+
+
 	//加载API路由
 	if(!isGetApiRouter){
-		let menu = tool.data.get("MENU");
+		let menu = await Store.dispatch('getMenus')
 		var apiRouter = filterAsyncRouter(menu);
 		apiRouter = flatAsyncRoutes(apiRouter)
+		console.log(apiRouter);
 		apiRouter.forEach(item => {
 			router.addRoute("layout", item)
 		})
@@ -83,6 +88,7 @@ router.afterEach((to, from) => {
 
 router.onError((error) => {
 	NProgress.done();
+	console.log(error);
 	ElNotification.error({
 		title: '路由错误',
 		message: error.message
@@ -92,8 +98,14 @@ router.onError((error) => {
 //转换
 function filterAsyncRouter(routerMap) {
 	const accessedRouters = []
+
 	routerMap.forEach(item => {
 		item.meta = item.meta?item.meta:{};
+		item.meta = {
+			icon:item.icon,
+			title:item.title,
+			type:'menu',
+		}
 		//处理外部链接特殊路由
 		if(item.meta.type=='iframe'){
 			item.meta.url = item.path;
@@ -108,6 +120,8 @@ function filterAsyncRouter(routerMap) {
 			children: item.children ? filterAsyncRouter(item.children) : null,
 			component: loadComponent(item.component)
 		}
+
+
 		accessedRouters.push(route)
 	})
 	return accessedRouters
