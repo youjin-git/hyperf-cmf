@@ -3,15 +3,18 @@
 
 namespace App\Dao;
 
+use App\Model\Model;
 use Hyperf\Database\Model\Builder;
 use Hyperf\Utils\Context;
 
 /**
  * @author: zwc
- * @mixin static|Builder
+ * @mixin static|Builder|Model
  */
 abstract class BaseDao
 {
+
+    protected $params = [];
 
     /**
      * @var Builder
@@ -20,21 +23,25 @@ abstract class BaseDao
 
     protected $baseMethods = [];
 
-    protected $OrderColumn = 'create_time';
-
-    protected $params = [];
-
-    protected $OrderDirection = 'desc';
-
-    public function verify($field, $value = '')
+    public function verify($field, $value = null, $callback = true)
     {
-        if (isset($this->params[$field])) {
-            if ($this->params[$field] !== $value) {
-                return true;
-            }
+        if (is_callable($value)) {
+            $callback = $value;
+            $value = null;
+        }
+        if (!is_array($value)) {
+            $value = [$value];
+        }
+        if (array_key_exists($field, $this->params) && !is_null($this->params[$field])) {
+            $val = $this->params[$field];
+            $count = count(array_filter($value, function ($item) use ($val, $field) {
+                return $item === $val;
+            }));
+            return $count > 0 ? false : (is_callable($callback) ? $callback($this->params[$field]) : $callback);
         }
         return false;
     }
+
 
     public function setBaseMethods($method, $params)
     {
@@ -44,15 +51,13 @@ abstract class BaseDao
     public function __construct()
     {
         $modelClass = str_replace(['\Dao', 'Dao'], ['\Model', ''], get_class($this));
-
         $this->baseDao = App($modelClass);;
     }
 
-    public function getModel($whereParams = [], $withParams = [])
+    abstract public function MakeWhere(Builder $query, $params);
+
+    public function getModel()
     {
-//        $whereParams && $this->DaoWhere($whereParams);
-//        $this->DaoWith($withParams);
-//        $baseDao = $this->baseDao;
         return $this->baseDao;
     }
 
@@ -61,106 +66,23 @@ abstract class BaseDao
         return $this->baseDao = $this->baseDao->newQuery();
     }
 
-    public function error($message = '')
-    {
-        Context::set('error_msg', $message);
-        $this->message = $message;
-        return false;
-    }
-
-    public function getError()
-    {
-        return $this->message;
-    }
-
-
-    public function CallWhere($params)
-    {
-        return function ($query) use ($params) {
-            $this->MakeWhere($query, $params);
-        };
-    }
-
-
-    abstract public function MakeWhere(Builder $query, $params);
-
-    abstract public function MakeWith(): array;
-
-
-//    /**
-//     * @author: zwc
-//     * @time: 2021/6/9 16:18
-//     */
-//    protected function DaoWhere($params)
-//    {
-//        $this->baseDao = $this->baseDao->where($this->CallWhere($params));
-//        return $this;
-//    }
-
-//    /**
-//     * @author: zwc
-//     * @time: 2021/7/3 13:51
-//     */
-//    protected function DaoWith(array $withParams = [])
-//    {
-//        $this->baseDao = $this->baseDao->with($withParams ?: $this->MakeWith());
-//        return $this;
-//    }
-
-    public function DaoWhere($params = [])
-    {
-        $this->params = $params;
-        $this->setBaseMethods('DaoWhere', $params);
-        return $this;
-    }
-
-    public function DaoWith($params = [])
-    {
-        $this->setBaseMethods('DaoWith', $params);
-        return $this;
-    }
-
-    public function DaoOrder($params = [])
-    {
-        $this->setBaseMethods('DaoOrder', $params);
-        return $this;
-    }
-
-    protected function DaoOrderScope(Builder $query, $params)
-    {
-
-        if (method_exists($this, 'MakeOrder') && $this->MakeOrder()) {
-            $params = $this->MakeOrder();
-            $query->orderBy($params[0] ?? $this->OrderColumn, $params[1] ?? $this->OrderDirection);
-        } else {
-            $query->orderBy($this->OrderColumn, $this->OrderDirection);
-        }
-        return $this;
-    }
-
-    protected function DaoWhereScope($query, $params)
-    {
-        $query->where($this->CallWhere($params));
-        return $this;
-    }
-
-    protected function DaoWithScope($query, array $withParams = [])
-    {
-        $query->with($withParams ?: $this->MakeWith());
-        return $this;
-    }
 
     public function __call($method, $parameters)
     {
-        if (strpos($method, 'Dao') !== false) {
-            $this->setBaseMethods($method, $parameters);
-            return $this;
-        }
+        dump($method);
+
         return tap($this->getModel()->newQuery(), function ($query) {
-            foreach ($this->baseMethods as [$method, $params]) {
-                $this->{$method . 'Scope'}($query, $params);
-            }
-            $this->baseMethods = [];
+
         })->{$method}(...$parameters);
+//        if (strpos($method, 'Dao') !== false) {
+//            $this->setBaseMethods($method, $parameters);
+//            return $this;
+//        }
+//        return tap($this->getModel()->newQuery(), function ($query) {
+//            foreach ($this->baseMethods as [$method, $params]) {
+//                $this->{$method . 'Scope'}($query, $params);
+//            }
+//            $this->baseMethods = [];
+//        })->{$method}(...$parameters);
     }
 }

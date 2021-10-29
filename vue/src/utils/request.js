@@ -111,9 +111,6 @@ var http = {};
 })
 
 
-
-console.log(http);
-
 // var http = {
 //
 // 	/** get 请求

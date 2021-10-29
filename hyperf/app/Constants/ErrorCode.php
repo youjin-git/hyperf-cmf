@@ -16,7 +16,6 @@ class ErrorCode extends AbstractConstants
      */
     const FAIL = 1000;
 
-
     /**
      * @Message("ok")
      */

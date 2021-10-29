@@ -1,15 +1,21 @@
 <?php
 declare (strict_types=1);
 
-namespace App\Model\Admin;
+namespace App\Model\System;
 
 use App\Model\Model;
+use Hyperf\Database\Model\Builder;
 use Hyperf\Database\Model\SoftDeletes;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\Redis\Redis;
 
-
-class Menu extends Model
+/**
+ * @Notes：
+ * @author: zwc
+ * @time: 2021/10/13 13:18
+ * @method self DaoWhere(array $params)
+ */
+class SystemMenu extends Model
 {
     use SoftDeletes;
 
@@ -41,13 +47,17 @@ class Menu extends Model
     ];
 
     const USER_ENABLE = 1;
-
     const USER_DISABLE = 0;
 
     public static $status = [
         self::USER_DISABLE => '禁用',
         self::USER_ENABLE => '启用',
     ];
+
+    public function MakeWhere(Builder $query, $params)
+    {
+
+    }
 
     public function getPathAttribute($value)
     {
@@ -59,14 +69,6 @@ class Menu extends Model
     {
         $value && parse_str($value, $value);
         return $value;
-    }
-
-    public function get_token($uid)
-    {
-        //生成随机树
-        $token = time() . rand(10000, 9999999) . $uid;
-        $this->redis->set($this->token_pre . $token, $uid);
-        return $token;
     }
 
 

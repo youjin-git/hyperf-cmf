@@ -19,6 +19,11 @@ abstract class BaseService
         return $this->baseModel;
     }
 
+    public function page($isPage = true)
+    {
+        _SetNotPage($isPage);
+        return $this;
+    }
 
     public function query()
     {

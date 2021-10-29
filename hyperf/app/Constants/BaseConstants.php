@@ -28,6 +28,7 @@ class BaseConstants extends AbstractConstants
         return static::$constCacheArray[$calledClass];
     }
 
+
     /**
      * Get all of the enum keys.
      *
@@ -38,7 +39,6 @@ class BaseConstants extends AbstractConstants
         return array_keys(static::getConstants());
     }
 
-
     /**
      * Get all of the enum values.
      *
@@ -48,6 +48,7 @@ class BaseConstants extends AbstractConstants
     {
         return array_values(static::getConstants());
     }
+
 
     public static function getKey($value): string
     {

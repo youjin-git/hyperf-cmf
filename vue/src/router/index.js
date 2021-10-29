@@ -17,6 +17,7 @@ const routes_404 = {
 	hidden: true,
 	component: () => import(/* webpackChunkName: "404" */ '@/layout/other/404'),
 }
+
 let routes_404_r = ()=>{}
 
 const router = createRouter({
@@ -64,9 +65,9 @@ router.beforeEach(async (to, from, next) => {
 	//加载API路由
 	if(!isGetApiRouter){
 		let menu = await Store.dispatch('getMenus')
-
 		var apiRouter = filterAsyncRouter(menu);
 		apiRouter = flatAsyncRoutes(apiRouter)
+		console.log(apiRouter);
 		apiRouter.forEach(item => {
 			router.addRoute("layout", item)
 		})
@@ -97,7 +98,7 @@ router.onError((error) => {
 //转换
 function filterAsyncRouter(routerMap) {
 	const accessedRouters = []
-	console.log(routerMap);
+
 	routerMap.forEach(item => {
 		item.meta = item.meta?item.meta:{};
 		item.meta = {

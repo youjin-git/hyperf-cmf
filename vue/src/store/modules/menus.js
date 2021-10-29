@@ -3,7 +3,7 @@ import http from "@/utils/request"
 import tool from '@/utils/tool'
 export default {
 	state: {
-		list:[],
+		list:tool.data.get("MENU"),
 	},
 	mutations: {
 		SET_MENU_LIST(state, value){

@@ -31,6 +31,11 @@ function isJson($msg)
     return is_array(json_decode($msg, true));
 }
 
+function _SetNotPage($isPage = false)
+{
+    return \Hyperf\Utils\Context::set(\App\Constants\Context::ISPAGE, $isPage);
+}
+
 function err(string $msg = '未知错误', int $code = ErrorCode::FAIL, $data = [])
 {
     $msg = getErrorMsg($msg);
@@ -42,6 +47,11 @@ function err(string $msg = '未知错误', int $code = ErrorCode::FAIL, $data = 
 }
 
 function succ($data = [])
+{
+    throw new YjException($data, ErrorCode::CODE_SUCC, 'success');
+}
+
+function _SUCCESS($data = [])
 {
     throw new YjException($data, ErrorCode::CODE_SUCC, 'success');
 }

@@ -25,10 +25,16 @@ use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\ModelCache\Cacheable;
 use Hyperf\ModelCache\CacheableInterface;
 use Hyperf\Redis\Redis;
+use Hyperf\Utils\Collection;
 use Hyperf\Utils\Context;
 use function Swoole\Coroutine\Http\request;
 
 
+/**
+ * @mixin Builder
+ * @property int getList
+ * @method static BaseModel | Collection getList($columns = [], $pageName = 'page', $page = null)
+ */
 class Model extends BaseModel implements CacheableInterface
 {
 
@@ -40,11 +46,6 @@ class Model extends BaseModel implements CacheableInterface
 
 //    protected $dateFormat = 'U';
 
-    public function booted()
-    {
-        //重写更新
-//        ($limit = di()->get(RequestInterface::class)->input('limit')) && $this->setPerPage($limit);
-    }
 
     public function fillableData($data)
     {
@@ -66,6 +67,38 @@ class Model extends BaseModel implements CacheableInterface
         return Context::get('error_msg');
     }
 
+    protected $params = [];
+
+
+    public function scopeDaoWhere($query, array $params)
+    {
+        $this->params = $params;
+        $query->where(function ($query) use ($params) {
+            $this->MakeWhere($query, $params);
+        });
+    }
+
+    public function scopeGetList(Builder $query, $columns = ['*'], $pageName = 'page', $page = null)
+    {
+
+        if (Context::get(\App\Constants\Context::ISPAGE, true)) {
+            $limit = di()->get(RequestInterface::class)->input('limit', config('page.defaultLimit'));
+            return $query->paginate($limit, $columns, $pageName, $page);
+        } else {
+            Context::set(\App\Constants\Context::ISPAGE, false);
+            return $query->get($columns);
+        }
+    }
+
+
+    public function MakeWhere(Builder $query, $params)
+    {
+//        $this->verify('nurseid', function ($nurseid) use ($query) {
+//            $query->where('nurseid', $nurseid);
+//        });
+    }
+
+
     /**
      * @Inject()
      * @var Redis
@@ -77,48 +110,28 @@ class Model extends BaseModel implements CacheableInterface
         return $this->paginate($limit);
     }
 
+
     public function checkAttributes($attribute, $callback, $empty = '')
     {
-        if (array_key_exists($attribute, $this->attributes)) {
-            return $callback($this->attributes[$attribute]);
+        if (!is_array($attribute)) {
+            $attribute = [$attribute];
+        }
+//        _Collect($attribute)->isSuccess(function ($item, $key) {
+//            return array_key_exists($key, $this->attributes);
+//        }, function ($query) {
+//            return $query;
+//        })
+        $newAttribute = collect($attribute)->filter(function ($value) {
+            return array_key_exists($value, $this->attributes);
+        })->map(function ($key) {
+            return $this->attributes[$key];
+        });
+        if ($newAttribute->count() == count($attribute)) {
+            return $callback(...$newAttribute->toArray());
         } else {
             return $empty;
         }
     }
-
-//
-//    public function scopeWhere2query($query = null, $where=[]){
-//
-//
-//        $query = $query ?? $this->newQuery();
-//        if (!$where) {
-//            return $query;
-//        }
-//        if(is_callable($where)){
-//            return $query->where($where);
-//        }
-//        $boolean = 'and';
-//
-//
-//        foreach($where as $key => $item){
-//            foreach ($item as $op => $val) {
-//
-//                if ($op == 'between') {
-//                    $query->whereBetween($key, $val, $boolean);
-//                    continue;
-//                }
-//
-//                if ($op == 'like') {
-//                    $query->where($key, 'like', $val, $boolean);
-//                    continue;
-//                }
-//
-//                $query->where($key, $op, $val, $boolean);
-//            }
-//        }
-//
-//        return $query;
-//    }
 
 
 }

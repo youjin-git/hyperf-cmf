@@ -21,7 +21,7 @@ if (!function_exists('app')) {
         if (is_null($abstract)) {
             return ApplicationContext::getContainer();
         }
-        return ApplicationContext::getContainer()->make($abstract, $parameters);
+        return ApplicationContext::getContainer()->get($abstract, $parameters);
     }
 }
 
