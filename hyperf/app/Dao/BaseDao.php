@@ -51,14 +51,20 @@ abstract class BaseDao
     public function __construct()
     {
         $modelClass = str_replace(['\Dao', 'Dao'], ['\Model', ''], get_class($this));
-        $this->baseDao = App($modelClass);;
+        $this->baseDao = App($modelClass);
     }
 
-    abstract public function MakeWhere(Builder $query, $params);
+//    abstract public function MakeWhere(Builder $query, $params);
 
     public function getModel()
     {
         return $this->baseDao;
+    }
+
+    protected function error($msg)
+    {
+        Context::set('error_msg', $msg);
+        return false;
     }
 
     protected function getNewModel()

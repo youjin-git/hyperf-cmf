@@ -10,12 +10,9 @@ use Hyperf\Database\Model\Builder;
 
 /**
  * @var SystemMenu
- * @method self DaoWhere(array $params)
  */
 class SystemMenuDao extends BaseDao
 {
-    public function MakeWhere(Builder $query, $params)
-    {
 
-    }
+
 }

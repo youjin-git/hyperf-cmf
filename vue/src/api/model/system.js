@@ -10,6 +10,9 @@ export default {
 				return await http.get(this.url);
 			}
 		},
+		save:{
+			url:""
+		},
 		list: {
 			url: `admin/system/system_menu/list`,
 			name: "获取菜单",

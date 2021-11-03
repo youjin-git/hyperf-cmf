@@ -7,7 +7,7 @@
 			<a v-if="navMenu.meta&&navMenu.meta.type=='link'" :href="navMenu.path" target="_blank" @click.stop='()=>{}'></a>
 			<i v-if="navMenu.meta&&navMenu.meta.icon" :class="navMenu.meta.icon || 'el-icon-menu'"></i>
 			<template #title>
-				<span>{{navMenu.meta.title}}{{navMenu.path}}</span>
+				<span>{{navMenu.meta.title}}</span>
 			</template>
 		</el-menu-item>
 		<el-sub-menu v-else :index="navMenu.path">

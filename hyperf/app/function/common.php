@@ -46,6 +46,17 @@ function err(string $msg = '未知错误', int $code = ErrorCode::FAIL, $data = 
     throw  new YjException($data, $code, $msg);
 }
 
+function _Error(string $msg = '未知错误', int $code = ErrorCode::FAIL, $data = [])
+{
+    $msg = getErrorMsg($msg);
+    if (isJson($msg)) {
+        $msg = json_decode($msg, true)['message'] ?? $msg;
+    }
+
+    throw  new YjException($data, $code, $msg);
+}
+
+
 function succ($data = [])
 {
     throw new YjException($data, ErrorCode::CODE_SUCC, 'success');
@@ -335,6 +346,13 @@ function list_to_tree($array, $val = 0, $id = 'id', $pid = 'pid', $child = 'chil
         }
     }
     return $tree1;
+}
+
+if (!function_exists("_Collect")) {
+    function _Collect($value)
+    {
+        return new \App\Tool\Collect($value);
+    }
 }
 
 

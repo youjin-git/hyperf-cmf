@@ -22,7 +22,12 @@ class SystemMenuService extends BaseService
     {
         $data = $this->systemMenuDao->DaoWhere($params)->getList();
         $except = [
-            'title'
+//            'title',
+//            'type',
+//            'icon',
+//            'active',
+//            'hidden',
+//            'hiddenBreadcrumb'
         ];
         $data->transform(function ($item) use ($except) {
             $item = collect($item);
@@ -30,6 +35,21 @@ class SystemMenuService extends BaseService
             return $item->except($except);
         });
         return $data;
+    }
+
+    public function edit($id, Collection $params)
+    {
+        $systemMenuData = $this->systemMenuDao->DaoWhere([
+            'id' => $id
+        ])->firstOr(fn() => _Error('不存在数据'));
+        $systemMenuData->fill($params->toArray());
+        return $systemMenuData->save();
+    }
+
+    public function add(Collection $params)
+    {
+
+        return $this->systemMenuDao->create($params->toArray());
     }
 
 }

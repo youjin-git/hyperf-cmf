@@ -35,7 +35,7 @@ use function Swoole\Coroutine\Http\request;
  * @property int getList
  * @method static BaseModel | Collection getList($columns = [], $pageName = 'page', $page = null)
  */
-class Model extends BaseModel implements CacheableInterface
+abstract class Model extends BaseModel implements CacheableInterface
 {
 
     use Cacheable;
@@ -44,8 +44,11 @@ class Model extends BaseModel implements CacheableInterface
     const UPDATED_AT = 'update_time';
     const DELETED_AT = 'delete_time';
 
-//    protected $dateFormat = 'U';
-
+    /**
+     * @Inject()
+     * @var Redis
+     */
+    protected $redis;
 
     public function fillableData($data)
     {
@@ -69,7 +72,6 @@ class Model extends BaseModel implements CacheableInterface
 
     protected $params = [];
 
-
     public function scopeDaoWhere($query, array $params)
     {
         $this->params = $params;
@@ -90,20 +92,27 @@ class Model extends BaseModel implements CacheableInterface
         }
     }
 
+//    abstract public function MakeWhere(Builder $query, $params);
 
-    public function MakeWhere(Builder $query, $params)
+    public function verify($field, $value = null, $callback = true)
     {
-//        $this->verify('nurseid', function ($nurseid) use ($query) {
-//            $query->where('nurseid', $nurseid);
-//        });
+        if (is_callable($value)) {
+            $callback = $value;
+            $value = null;
+        }
+        if (!is_array($value)) {
+            $value = [$value];
+        }
+        if (array_key_exists($field, $this->params) && !is_null($this->params[$field])) {
+            $val = $this->params[$field];
+            $count = count(array_filter($value, function ($item) use ($val, $field) {
+                return $item === $val;
+            }));
+            return $count > 0 ? false : (is_callable($callback) ? $callback($this->params[$field]) : $callback);
+        }
+        return false;
     }
 
-
-    /**
-     * @Inject()
-     * @var Redis
-     */
-    protected $redis;
 
     public function lists($limit = 15)
     {

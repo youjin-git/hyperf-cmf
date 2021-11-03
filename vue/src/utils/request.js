@@ -70,172 +70,77 @@ axios.interceptors.response.use(
 	}
 );
 
-const handelData = function ({code,}) {
-
+class http{
+	config = {
+		url:'',
+		method:'post',
+	}
+	params = {
+	}
+	beforeSuccessCallback = []
+	axiosConfig = {
+	}
+	url(url){
+		this.config.url = url;
+	}
+	axiosRequest() {
+		return axios({
+			method:this.config.method,
+			url: this.config.url,
+			data: this.params,
+			...this.axiosConfig
+		}).then(({data}) => {
+			return Promise.resolve(data);
+		}).catch((error) => {
+			return Promise.reject(error);
+		})
+	}
+	request(){
+		return this.axiosRequest().then(({status,data,message,code})=>{
+			switch (status) {
+				case 0:
+				case 200:
+					return this.beforeSuccess().success(data);
+				case 1000:
+					ElMessage.error({
+						message:message,
+						type:'error'
+					});
+					break;
+			}
+			return Promise.reject({message,data,status})
+		})
+	}
+	post(url,params){
+		this.config.method = 'post'
+		this.config.url = url
+		this.params = params;
+		return this.request();
+	}
+	get(url,params){
+		this.config.method = 'get'
+		this.config.url = url
+		this.params = params;
+		return this.request();
+	}
+	beforeSuccess(){
+		this.beforeSuccessCallback.forEach((fun)=>{
+			fun();
+		})
+		return this;
+	}
+	success(data){
+		return Promise.resolve(data);
+	}
+	showSuccessInfo(message){
+		this.beforeSuccessCallback.push(function () {
+			ElMessage.success({
+				message:message,
+				type:'error'
+			})
+		});
+		return this;
+	}
 }
 
-const baseRequest = function ({url,method,params,config}) {
-			return axios({
-				method:method,
-				url: url,
-				data: params,
-				...config
-			}).then(({data}) => {
-				return Promise.resolve(data);
-			}).catch((error) => {
-				return Promise.reject(error);
-			})
-}
-
-
-var http = {};
-['get','post', 'put', 'patch', 'delete'].forEach((method) => {
-		return http[method] = (url, params = {}, options = {}) => {
-			return baseRequest(
-				Object.assign({ url, params, method }, options)
-			).then(({status,data,message,code})=>{
-					switch (status) {
-						case 0:
-						case 200:
-							return Promise.resolve(data);
-						case 1000:
-							ElMessage.error({
-								message:message,
-								type:'error'
-							});
-							break;
-					}
-					return Promise.reject({message,data,status})
-			})
-		};
-})
-
-
-// var http = {
-//
-// 	/** get 请求
-// 	 * @param  {接口地址} url
-// 	 * @param  {请求参数} params
-// 	 * @param  {参数} config
-// 	 */
-// 	get: function(url, params={}, config={}) {
-// 		return new Promise((resolve, reject) => {
-// 			axios({
-// 				method: 'get',
-// 				url: url,
-// 				params: params,
-// 				...config
-// 			}).then((response) => {
-// 				resolve(response.data);
-// 			}).catch((error) => {
-// 				reject(error);
-// 			})
-// 		})
-// 	},
-//
-// 	/** post 请求
-// 	 * @param  {接口地址} url
-// 	 * @param  {请求参数} data
-// 	 * @param  {参数} config
-// 	 */
-// 	post: function(url, data={}, config={}) {
-// 		return new Promise((resolve, reject) => {
-// 			axios({
-// 				method: 'post',
-// 				url: url,
-// 				data: data,
-// 				...config
-// 			}).then((response) => {
-// 				resolve(response.data);
-// 			}).catch((error) => {
-// 				reject(error);
-// 			})
-// 		})
-// 	},
-//
-// 	/** put 请求
-// 	 * @param  {接口地址} url
-// 	 * @param  {请求参数} data
-// 	 * @param  {参数} config
-// 	 */
-// 	put: function(url, data={}, config={}) {
-// 		return new Promise((resolve, reject) => {
-// 			axios({
-// 				method: 'put',
-// 				url: url,
-// 				data: data,
-// 				...config
-// 			}).then((response) => {
-// 				resolve(response.data);
-// 			}).catch((error) => {
-// 				reject(error);
-// 			})
-// 		})
-// 	},
-//
-// 	/** patch 请求
-// 	 * @param  {接口地址} url
-// 	 * @param  {请求参数} data
-// 	 * @param  {参数} config
-// 	 */
-// 	patch: function(url, data={}, config={}) {
-// 		return new Promise((resolve, reject) => {
-// 			axios({
-// 				method: 'patch',
-// 				url: url,
-// 				data: data,
-// 				...config
-// 			}).then((response) => {
-// 				resolve(response.data);
-// 			}).catch((error) => {
-// 				reject(error);
-// 			})
-// 		})
-// 	},
-//
-// 	/** delete 请求
-// 	 * @param  {接口地址} url
-// 	 * @param  {请求参数} data
-// 	 * @param  {参数} config
-// 	 */
-// 	delete: function(url, data={}, config={}) {
-// 		return new Promise((resolve, reject) => {
-// 			axios({
-// 				method: 'delete',
-// 				url: url,
-// 				data: data,
-// 				...config
-// 			}).then((response) => {
-// 				resolve(response.data);
-// 			}).catch((error) => {
-// 				reject(error);
-// 			})
-// 		})
-// 	},
-//
-// 	/** jsonp 请求
-// 	 * @param  {接口地址} url
-// 	 * @param  {JSONP回调函数名称} name
-// 	 */
-// 	jsonp: function(url, name='jsonp'){
-// 		return new Promise((resolve) => {
-// 			var script = document.createElement('script')
-// 			var _id = `jsonp${Math.ceil(Math.random() * 1000000)}`
-// 			script.id = _id
-// 			script.type = 'text/javascript'
-// 			script.src = url
-// 			window[name] =(response) => {
-// 				resolve(response)
-// 				document.getElementsByTagName('head')[0].removeChild(script)
-// 				try {
-// 					delete window[name];
-// 				}catch(e){
-// 					window[name] = undefined;
-// 				}
-// 			}
-// 			document.getElementsByTagName('head')[0].appendChild(script)
-// 		})
-// 	}
-// }
-
-export default http;
+export default new http();

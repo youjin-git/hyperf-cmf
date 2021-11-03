@@ -22,10 +22,12 @@ import errorHandler from './utils/errorHandler'
 
 export default {
 	install(app) {
+
 		//挂载全局对象
 		app.config.globalProperties.$CONFIG = config;
 		app.config.globalProperties.$TOOL = tool;
 		app.config.globalProperties.$HTTP = http;
+
 		app.config.globalProperties.$API = api;
 		app.config.globalProperties.$AUTH = permission;
 		app.config.globalProperties.$ROLE = rolePermission;

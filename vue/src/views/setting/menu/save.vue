@@ -7,14 +7,14 @@
 			<el-col :lg="12">
 				<h2>{{form.meta.title || "新增菜单"}}</h2>
 				<el-form :model="form" :rules="rules" ref="dialogForm" label-width="80px" label-position="left">
-					<el-form-item label="显示名称" prop="meta.title">
-						<el-input v-model="form.meta.title" clearable placeholder="菜单显示名字"></el-input>
+					<el-form-item label="显示名称" prop="title">
+						<el-input v-model="form.title" clearable placeholder="菜单显示名字"></el-input>
 					</el-form-item>
 					<el-form-item label="上级菜单" prop="parentId">
-						<el-cascader v-model="form.parentId" :options="menuOptions" :props="menuProps" :show-all-levels="false" placeholder="顶级菜单" clearable disabled></el-cascader>
+						<el-cascader v-model="form.pid" :options="menuOptions" :props="menuProps" :show-all-levels="false" placeholder="顶级菜单" clearable disabled></el-cascader>
 					</el-form-item>
-					<el-form-item label="类型" prop="meta.type">
-						<el-radio-group v-model="form.meta.type">
+					<el-form-item label="类型" prop="type">
+						<el-radio-group v-model="form.type">
 							<el-radio-button label="menu">菜单</el-radio-button>
 							<el-radio-button label="iframe">Iframe</el-radio-button>
 							<el-radio-button label="link">外链</el-radio-button>
@@ -26,7 +26,7 @@
 						<div class="el-form-item-msg">系统唯一且与内置组件名一致，否则导致缓存失效。如类型为Iframe的菜单，别名将代替源地址显示在地址栏</div>
 					</el-form-item>
 					<el-form-item label="菜单图标" prop="meta.icon">
-						<sc-icon-select v-model="form.meta.icon" clearable></sc-icon-select>
+						<sc-icon-select v-model="form.icon" clearable></sc-icon-select>
 					</el-form-item>
 					<el-form-item label="路由地址" prop="path">
 						<el-input v-model="form.path" clearable placeholder=""></el-input>
@@ -44,13 +44,9 @@
 						</el-input>
 						<div class="el-form-item-msg">如父节点、链接或Iframe等没有视图的菜单不需要填写</div>
 					</el-form-item>
-					<el-form-item label="颜色" prop="color">
-						<el-color-picker v-model="form.meta.color" :predefine="predefineColors"></el-color-picker>
-
-					</el-form-item>
 					<el-form-item label="是否隐藏" prop="meta.hidden">
-						<el-checkbox v-model="form.meta.hidden">隐藏菜单</el-checkbox>
-						<el-checkbox v-model="form.meta.hiddenBreadcrumb">隐藏面包屑</el-checkbox>
+						<el-checkbox v-model="form.hidden">隐藏菜单</el-checkbox>
+						<el-checkbox v-model="form.hiddenBreadcrumb">隐藏面包屑</el-checkbox>
 						<div class="el-form-item-msg">菜单不显示在导航中，但用户依然可以访问，例如详情页</div>
 					</el-form-item>
 					<el-form-item>
@@ -98,13 +94,11 @@
 					path: "",
 					component: "",
 					redirect: "",
-					meta:{
-						title: "",
-						icon: "",
-						active: "",
-						color: "",
-						type: "menu"
-					},
+					title: "",
+					icon: "",
+					active: "",
+					color: "",
+					type: "menu",
 					apiList: []
 				},
 				menuOptions: [],
@@ -148,8 +142,8 @@
 				tree.forEach(item => {
 					var obj = {
 						id: item.id,
-						parentId: item.parentId,
-						title: item.meta.title,
+						parentId: item.pid,
+						title: item.title,
 						children: item.children&&item.children.length>0 ? this.treeToMap(item.children) : null
 					}
 					map.push(obj)
@@ -159,13 +153,12 @@
 			//保存
 			async save(){
 				this.loading = true
-				var res = await this.$API.demo.post.post(this.form)
-				this.loading = false
-				if(res.code == 200){
+				var res = await this.$HTTP.post('/admin/system/system_menu/edit',this.form).then(res=>{
 					this.$message.success("保存成功")
-				}else{
-					this.$message.warning(res.message)
-				}
+				}).catch(()=>{
+
+				})
+				this.loading = false
 			},
 			//表单注入数据
 			setData(data, pid){

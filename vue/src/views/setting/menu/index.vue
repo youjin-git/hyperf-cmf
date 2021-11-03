@@ -100,24 +100,25 @@
 			async add(node, data){
 				var newMenuName = "未命名" + newMenuIndex++;
 				var newMenuData = {
-					parentId: data ? data.id : "",
+					pid: data ? data.id : 0,
 					name: newMenuName,
 					path: "",
 					component: "",
-					meta:{
-						title: newMenuName,
-						type: "menu"
-					}
+					title: newMenuName,
+					type: "menu"
 				}
 				this.menuloading = true
-				var res = await this.$API.demo.post.post(newMenuData)
-				this.menuloading = false
-				newMenuData.id = res.data
+				var res = await this.$HTTP.showSuccessInfo('添加成功').post('/admin/system/system_menu/add',newMenuData).catch((res)=>{
+					this.getMenu();
+				});
 
-				this.$refs.menu.append(newMenuData, node)
-				this.$refs.menu.setCurrentKey(newMenuData.id)
-				var pid = node ? node.data.id : ""
-				this.$refs.save.setData(newMenuData, pid)
+				this.menuloading = false
+				this.getMenu();
+				// newMenuData.id = res.data
+				// this.$refs.menu.append(newMenuData, node)
+				// this.$refs.menu.setCurrentKey(newMenuData.id)
+				// var pid = node ? node.data.id : 0
+				// this.$refs.save.setData(newMenuData, pid)
 			},
 			//删除菜单
 			async delMenu(){
