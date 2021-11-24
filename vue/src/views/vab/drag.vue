@@ -27,6 +27,7 @@
 		},
 		data() {
 			return {
+
 				listA: [
 					{
 						id: 1,

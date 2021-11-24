@@ -19,6 +19,8 @@ import role from './directives/role'
 import time from './directives/time'
 import copy from './directives/copy'
 import errorHandler from './utils/errorHandler'
+import modalForm from '@/libs/modal-form'
+
 
 export default {
 	install(app) {
@@ -27,12 +29,14 @@ export default {
 		app.config.globalProperties.$CONFIG = config;
 		app.config.globalProperties.$TOOL = tool;
 		app.config.globalProperties.$HTTP = http;
+		app.config.globalProperties.$modalForm = modalForm(app);
 
 		app.config.globalProperties.$API = api;
 		app.config.globalProperties.$AUTH = permission;
 		app.config.globalProperties.$ROLE = rolePermission;
 
 		//注册全局组件
+
 		app.component('scTable', scTable);
 		app.component('scFilterBar', scFilterBar);
 		app.component('scUpload', scUpload);

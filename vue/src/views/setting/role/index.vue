@@ -3,8 +3,10 @@
 		<el-header>
 			<div class="left-panel">
 				<el-button type="primary" icon="el-icon-plus" @click="add"></el-button>
+				<el-button type="primary" icon="el-icon-plus" @click="add1"></el-button>
 				<el-button type="danger" plain icon="el-icon-delete" :disabled="selection.length==0" @click="batch_del"></el-button>
 				<el-button type="primary" plain :disabled="selection.length!=1" @click="permission">权限设置</el-button>
+
 			</div>
 			<div class="right-panel">
 				<div class="right-panel-search">
@@ -14,27 +16,7 @@
 			</div>
 		</el-header>
 		<el-main class="nopadding">
-			<scTable ref="table" :apiObj="apiObj" row-key="id" @selection-change="selectionChange" hidePagination>
-				<el-table-column type="selection" width="50"></el-table-column>
-				<el-table-column label="#" type="index" width="50"></el-table-column>
-				<el-table-column label="角色名称" prop="label" width="250"></el-table-column>
-				<el-table-column label="别名" prop="alias" width="150"></el-table-column>
-				<el-table-column label="排序" prop="sort" width="150"></el-table-column>
-				<el-table-column label="操作" fixed="right" align="right" width="140">
-					<template #default="scope">
-						<el-button type="text" size="small" @click="table_show(scope.row, scope.$index)">查看</el-button>
-						<el-divider direction="vertical"></el-divider>
-						<el-button type="text" size="small" @click="table_edit(scope.row, scope.$index)">编辑</el-button>
-						<el-divider direction="vertical"></el-divider>
-						<el-popconfirm title="确定删除吗？" @confirm="table_del(scope.row, scope.$index)">
-							<template #reference>
-								<el-button type="text" size="small">删除</el-button>
-							</template>
-						</el-popconfirm>
-					</template>
-				</el-table-column>
 
-			</scTable>
 		</el-main>
 	</el-container>
 
@@ -48,14 +30,32 @@
 	import saveDialog from './save'
 	import permissionDialog from './permission'
 
+
 	export default {
 		name: 'role',
 		components: {
 			saveDialog,
-			permissionDialog
+			permissionDialog,
 		},
 		data() {
 			return {
+				rule:[{
+					"type": "input",
+					"field": "4hs5sr",
+					"title": "输入框1",
+					"info": "",
+					"_fc_drag_tag": "input",
+					"hidden": false,
+					"display": true
+				},{
+					"type": "textarea",
+					"field": "4hs5",
+					"title": "输入框",
+					"info": "",
+					"_fc_drag_tag": "input",
+					"hidden": false,
+					"display": true
+				}],
 				dialog: {
 					save: false,
 					permission: false
@@ -68,12 +68,12 @@
 			}
 		},
 		methods: {
+			add1(){
+
+			},
 			//添加
 			add(){
-				this.dialog.save = true
-				this.$nextTick(() => {
-					this.$refs.saveDialog.open()
-				})
+				this.$modalForm(this.$HTTP.post('/admin/config/setting/create',{}));
 			},
 			//编辑
 			table_edit(row){
