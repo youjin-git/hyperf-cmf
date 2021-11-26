@@ -289,7 +289,28 @@ function deepCopy(value) {
         value: value
     }).value;
 }
+function toProps(rule) {
+	var prop = _objectSpread2({}, rule.props || {});
+	Object.keys(rule.on || {}).forEach(function (k) {
+		var name = "on".concat(upper(k));
+		if (Array.isArray(prop[name])) {
+			prop[name] = [].concat(_toConsumableArray(prop[name]), [rule.on[k]]);
+		} else if (prop[name]) {
+			prop[name] = [prop[name], rule.on[k]];
+		} else {
+			prop[name] = rule.on[k];
+		}
+	});
+
+	prop.key = rule.key;
+	prop.ref = rule.ref;
+	prop["class"] = rule["class"];
+	prop.style = rule.style;
+	if (prop.slot) delete prop.slot;
+	return prop;
+}
 export {
+	toProps,
 	$set,
     deepExtend,
 	getSlot,

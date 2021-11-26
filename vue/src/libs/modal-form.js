@@ -1,7 +1,7 @@
 import http from "@/utils/request"
 import {ref,reactive,h,render,createVNode,resolveComponent,defineComponent,extend,component} from 'vue'
 import formCreate from "@/components/formCreate";
-
+import {toProps} from "./common.js";
 
 let fApi
 let unique = 1
@@ -47,31 +47,41 @@ export default function modalForm(app) {
 		data.config.formData = {...data.config.formData, ...config.formData}
 		data.config.form.labelWidth = data.config.form.labelWidth || '120px'
 
+
+		var formCreate = h(app.component('formCreate'), toProps({props:{rule: data.rule}, on:{
+			getApi: (e) => {
+				fApi = e;
+			}
+		}}));
+
+		console.log(formCreate)
+
 		this.$msgbox({
 			dangerouslyUseHTMLString: true,
 			title: data.title,
 			customClass: config.class || 'modal-form',
-			// message:h(ElButton),
-			message: h(app.component('formCreate'), reactive({rule: data.rule})),
+			message: formCreate,
 			beforeClose: (action, instance, done) => {
-				if (action === 'confirm') {
-					instance.confirmButtonLoading = true
-					fApi.submit((formData) => {
-						http[data.method.toLowerCase()](data.action, formData).then((res) => {
-							done()
-							this.$message.success(res.message || '提交成功')
-							resolve(res)
-						}).catch(err => {
-							this.$message.error(err.message || '提交失败')
-							reject(err)
-						}).finally(() => {
-							instance.confirmButtonLoading = false
-						})
-					}, () => (instance.confirmButtonLoading = false))
-				} else {
-					instance.confirmButtonLoading = false
-					done()
-				}
+				console.log(fApi);
+				fApi.asubmit();
+				// if (action === 'confirm') {
+				// 	instance.confirmButtonLoading = true
+				// 	fApi.submit((formData) => {
+				// 		http[data.method.toLowerCase()](data.action, formData).then((res) => {
+				// 			done()
+				// 			this.$message.success(res.message || '提交成功')
+				// 			resolve(res)
+				// 		}).catch(err => {
+				// 			this.$message.error(err.message || '提交失败')
+				// 			reject(err)
+				// 		}).finally(() => {
+				// 			instance.confirmButtonLoading = false
+				// 		})
+				// 	}, () => (instance.confirmButtonLoading = false))
+				// } else {
+				// 	instance.confirmButtonLoading = false
+				// 	done()
+				// }
 			}
 		})
 	}).catch((e) => {

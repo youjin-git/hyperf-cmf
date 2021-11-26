@@ -4,12 +4,9 @@
 
 var vue = require('vue');
 var ElementPlus = require('element-plus');
-
 var {ElInput} = require('element-plus')
-
 import {FormCreate} from './formCreate';
 import {_objectSpread2} from './common';
-
 function $FormCreate(FormCreate) {
     var NAME$8 = 'FormCreate';
     return vue.defineComponent({
@@ -22,30 +19,56 @@ function $FormCreate(FormCreate) {
                 type: Array,
                 required: true
             },
-			modelValue: Object,
+            option: {
+                type: Object,
+                "default": function _default() {
+                    return {};
+                }
+            },
+			modelValue:  {
+				type: Object,
+				"default": function _default() {
+					return {};
+				}
+			},
+			getApi:{
+				type:Function
+			},
+            api: Object
         },
-        data() {
-            return {
-            }
-        },
+		emits: ['update:api', 'update:modelValue', 'mounted','getApi','submit'],
         render:function(){
             return this.fc.$handleRender();
         },
         setup:function setup(props) {
             var vm = vue.getCurrentInstance();
             let { rule,modelValue } = vue.toRefs(props);
-
             var fc = new FormCreate(vm)
+            var data = vue.reactive({
+                destroyed: false,
+                isShow: true,
+                unique: 1,
+                renderRule: (rule.value || []),
+                updateValue: JSON.stringify(modelValue)
+            });
             fc.install();
-			console.log('fc',fc);
+			var fapi = fc.api();
 
             return _objectSpread2({
-				fc:fc
+				fc:vue.markRaw(fc),
+				fapi: vue.markRaw(fapi)
+            },vue.toRefs(data),{},{
+                refresh: function refresh() {
+                    ++data.unique;
+                },
             })
         },
-        beforeCreate:function () {
-            this.fc.init();
-        }
+		created: function created() {
+			var vm = vue.getCurrentInstance();
+			vm.setupState.fc.init(); //4928
+			// _this.$emit('itemMounted', api);
+			vm.emit('getApi', vm.setupState.fapi);
+		}
     })
 }
 
