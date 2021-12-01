@@ -1,9 +1,10 @@
-import {is,deepExtend,getSlot,deepCopy,hasProperty,mergeProps,$set,extend,_defineProperty,_objectSpread2,upper,_toConsumableArray,toLine,uniqueId,toCase,lower} from "./common";
+import {is,copy,deepExtend,getSlot,deepCopy,hasProperty,mergeProps,$set,extend,_defineProperty,_objectSpread2,upper,_toConsumableArray,toLine,uniqueId,toCase,lower} from "./common";
 import {nameProp,BaseParser} from "./Prop";
-var {ElInput,ElSelect} = require('element-plus')
+var {ElInput,ElSelect,ElOption} = require('element-plus')
 
 var vue = require('vue');
 import {makeSlotBag} from "./makeSlotBag";
+// import {mergeGlobal} from "@/form-create-next/packages/core/src/frame/util";
 
 
 
@@ -28,16 +29,21 @@ function toProps(rule) {
     return prop;
 }
 
+function isNativeTag(tag){
+	return vue.getCurrentInstance().appContext.config.isNativeTag(tag) || ['span'].findIndex((v)=>{
+		return  v==tag;
+	})>=0;
+}
+
 function CreateNodeFactory() {
     var aliasMap = {};
     var CreateNode = function () {};
     extend(CreateNode.prototype,{
         make:function (tag,data,children) {
-            console.log('make',tag, toProps(data), children)
             return this.h(tag, toProps(data), children);
         },
         h: function h(tag, data, children) {
-            return vue.createVNode(vue.getCurrentInstance().appContext.config.isNativeTag(tag) ? tag : vue.resolveComponent(tag), data, children);
+            return vue.createVNode(isNativeTag(tag) ? tag : vue.resolveComponent(tag), data, children);
         },
         aliasMap: aliasMap
     })
@@ -273,38 +279,40 @@ var Select = vue.defineComponent({
 		type: String
 	},
 	components:{
-		ElSelect
+		ElSelect,
+		ElOption,
+
 	},
 	emits: ['update:modelValue'],
 	setup: function setup(props) {
 		var _toRefs = vue.toRefs(vue.inject('formCreateInject')),
 			options = _toRefs.options;
-
 		var value = vue.toRef(props, 'modelValue');
 
-		var _options = vue.computed(function () {
-			return Array.isArray(options) ? options : [];
-		});
+		// var _options = vue.computed(function () {
+		// 	return Array.isArray(options) ? options : [];
+		// });
 
+		// console.log('options',(options),_options);
 		return {
-			options: _options,
+			options: options,
 			value: value
 		};
 	},
-	render: function() {
+	render: function render() {
 		var _this = this,
 			_this$$slots$default,
 			_this$$slots;
+		// console.log('_options',)
 
-		console.log(_objectSpread2({
-			"default": function _default() {
-				return [_this.options.map(function (props, index) {
-					return vue.createVNode(vue.resolveComponent("ElOption"), vue.mergeProps(props, {
-						"key": '' + index + props.value
-					}), null);
-				}), (_this$$slots$default = (_this$$slots = _this.$slots)["default"]) === null || _this$$slots$default === void 0 ? void 0 : _this$$slots$default.call(_this$$slots)];
-			}
-		}, getSlot(this.$slots, ['default'])));
+		// _this.options = Object.keys(_this.options).map(function (key, index) {
+		// 	var props = _this.options[key];
+		// 	return vue.createVNode(vue.resolveComponent("ElOption"), vue.mergeProps(props, {
+		// 		"key": '' + index + props.value
+		// 	}), null);
+		// }), (_this$$slots$default = (_this$$slots = _this.$slots)["default"]) === null || _this$$slots$default === void 0 ? void 0 : _this$$slots$default.call(_this$$slots)
+		//
+		// console.log('options',_this.options);
 
 
 		return vue.createVNode(vue.resolveComponent("ElSelect"), vue.mergeProps(this.$attrs, {
@@ -312,7 +320,18 @@ var Select = vue.defineComponent({
 			"onUpdate:modelValue": function onUpdateModelValue(v) {
 				return _this.$emit('update:modelValue', v);
 			}
-		}));
+		},[
+
+		]), _objectSpread2({
+			"default": function _default() {
+				return [Object.keys(_this.options).map(function (key, index) {
+					var props = _this.options[key];
+					return vue.createVNode(vue.resolveComponent("ElOption"), vue.mergeProps(props, {
+						"key": '' + index + props.value
+					}), null);
+				}), (_this$$slots$default = (_this$$slots = _this.$slots)["default"]) === null || _this$$slots$default === void 0 ? void 0 : _this$$slots$default.call(_this$$slots)];
+			}
+		}, getSlot(this.$slots, ['default'])));
 	}
 });
 
@@ -331,6 +350,7 @@ function FormCreate(vm) {  //4776
 		formData: vue.reactive({}),
         fieldCtx: {},
         ctxs: {},
+		ref:'fcForm',
         appendData: vue.reactive({}),
         parsers: {},
         bindParser: function bindParser(ctx) {
@@ -376,18 +396,52 @@ function FormCreate(vm) {  //4776
         rules:vm.props.rule,
         use:use,
         vm:vm,
-        options: {form:{}},
+		options: vue.ref({}),
         init:function () {   //4812
             this.appendData = _objectSpread2(this.vm.props.modelValue, this.appendData);
             console.log('appendData',this.appendData);
 
             this.loadRule()
-            this.initOptions(this.vm.option || {});
+			this.initOptions(this.vm.props.option || {});
             this.clearCacheAll();
             this.$r = function () {
                 return this.renderRule.apply(this, arguments);
             };
         },
+		getDefaultOptions:function(){
+			return {
+				form: {
+					inline: false,
+					labelPosition: 'right',
+					labelWidth: '125px',
+					disabled: false,
+					size: undefined
+				},
+				row: {
+					show: true,
+					gutter: 0
+				},
+				submitBtn: {
+					type: 'primary',
+					loading: false,
+					disabled: false,
+					innerText: '提交',
+					show: true,
+					col: undefined,
+					click: undefined
+				},
+				resetBtn: {
+					type: 'default',
+					loading: false,
+					disabled: false,
+					icon: 'el-icon-refresh',
+					innerText: '重置',
+					show: false,
+					col: undefined,
+					click: undefined
+				}
+			};
+		},
         renderRule: function(rule, children, origin) {
             var type;
             type = rule.type;
@@ -406,11 +460,10 @@ function FormCreate(vm) {  //4776
             rules.map(function (_rule, index) {
                 var ctx;
                 ctx = new RuleContext(_this,_this.parseRule(_rule));
-                console.log('_rule',ctx);
+
 
                 _this.bindParser(ctx);
                 _this.sort.push(ctx.id);
-                console.log('_rule',_this.sort);
                 _this.setCtx(ctx);
                 return ctx;
             });
@@ -427,33 +480,28 @@ function FormCreate(vm) {  //4776
             };
          },
         parseRule(_rule){
-            // var def = this.baseRule();
-            // console.log(def);
 
 
             this.fullRule(_rule)
             this.appendValue(_rule);
-            // console.log(_rule);
-            // die;
-            //
-            console.log('_rule',_rule);
+
 
             return _rule;
         },
         appendValue: function appendValue(rule) {
-			console.log(this.appendData, rule.field)
+
             if (!rule.field || !hasProperty(this.appendData, rule.field)) return;
             rule.value = this.appendData[rule.field];
             delete this.appendData[rule.field];
         },
         fullRule(rule) {
             var def = this.baseRule();
-			console.log(rule);
+
             Object.keys(def).forEach(function (k) {
 
                 if (!hasProperty(rule, k)) rule[k] = def[k];
             });
-            console.log(rule);
+
             return rule;
         },
          setCtx(ctx){
@@ -490,7 +538,6 @@ function FormCreate(vm) {  //4776
                 _this.renderSlot(slotBag, _this.ctxs[k]);
             });
 
-            // console.log(this.$manager.render,'2333');
             return this.$managerRender(slotBag);
         },
         beforeRender(){
@@ -514,16 +561,27 @@ function FormCreate(vm) {  //4776
                     });
                 }
 
-                console.log(this.rule,'$managerRender');
                 return this.$r(this.rule, [this.makeRow(children)]);
         },
         makeFormBtn(){
             var vn = [];
-            vn.push(this.makeSubmitBtn());
+			if (!this.isFalse(this.options.submitBtn.show)) {
+				vn.push(this.makeSubmitBtn());
+			}
+			if (!this.isFalse(this.options.resetBtn.show)) {
+				vn.push(this.makeResetBtn());
+			}
+
+
+			if (!vn.length) {
+				return;
+			}
+
             var item = this.$r({
                 type: 'formItem',
                 key: "".concat(this.key, "fb")
             }, vn);
+
             return this.$r({
                 type: 'col',
                 props: {
@@ -535,7 +593,7 @@ function FormCreate(vm) {  //4776
         makeSubmitBtn: function makeSubmitBtn() {
             var text = '提交';
             var submitBtn = _objectSpread2({}, this.options.submitBtn);
-
+			var _this = this;
             return this.$r({
                 type: 'button',
                 props: submitBtn,
@@ -543,16 +601,72 @@ function FormCreate(vm) {  //4776
                     width: submitBtn.width
                 },
                 on: {
-                    click: function click() {
-                        console.log(111111);
-                        // fApi.submit();
-                        // var fApi = _this6.$handle.api;
-                        // submitBtn.click ? submitBtn.click(fApi) : fApi.submit();
+                    click: function() {
+						_this.submit();
+
                     }
                 },
                 key: "".concat(this.key, "b1")
             }, [text]);
         },
+		makeResetBtn: function makeResetBtn() {
+			var _this5 = this;
+			var resetBtn = this.options.resetBtn;
+			return this.$r({
+				type: 'button',
+				props: resetBtn,
+				style: {
+					width: resetBtn.width
+				},
+				on: {
+					click: function click() {
+						_this5.resetFields();
+					}
+				},
+				key: "".concat(this.key, "b2")
+			}, [resetBtn.innerText]);
+		},
+		resetFields: function resetFields(fields) {
+			// this.tidyFields(fields).forEach(function (field) {
+			// 	this.getCtxs(field).forEach(function (ctx) {
+			// 		h.$render.clearCache(ctx);
+			// 		ctx.rule.value = copy(ctx.defaultValue);
+			// 		h.refreshControl(ctx);
+			// 	});
+			// });
+		},
+		form: function form() {
+
+			return this.vm.refs[this.ref];
+		},
+		submit(successFn, failFn){
+			var _this = this;
+			return new Promise(function (resolve, reject) {
+				var formData = _this.getFormDatas();
+				_this.form().validate().then(function () {
+					if (is.Function(successFn)) {
+						return successFn(formData, _this);
+					}
+					if(is.Function(_this.options.onSubmit)){
+						return _this.options.onSubmit(formData,_this);
+					}
+				});
+			});
+		},
+		fields: function fields() {
+			return Object.keys(this.fieldCtx);
+		},
+		getFieldCtx:function(field) {
+			return (this.fieldCtx[field] || [])[0];
+		},
+		getFormDatas: function(fields) {
+			return  this.fields().reduce( (initial, id) =>{
+				var ctx = this.getFieldCtx(id);
+				if (!ctx) return initial;
+				initial[ctx.field] = copy(ctx.rule.value);
+				return initial;
+			}, copy(this.appendData));
+		},
         makeRow: function makeRow(children) {
             var row = this.options.row || {};
             return this.$r({
@@ -564,13 +678,14 @@ function FormCreate(vm) {  //4776
         },
 		makeWrap:function(ctx, children){
 
+
 			var _this3 = this;
 			var rule = ctx.prop;
 			var uni = "".concat(this.key).concat(ctx.key);
 
 			var isTitle = true;
 			var col = rule.col;
-			var labelWidth = 100;
+			var labelWidth = !col.labelWidth && !isTitle ? 0 : col.labelWidth;
 			return this.$r(mergeProps([rule.wrap, {
 				props: _objectSpread2(_objectSpread2({
 					labelWidth: labelWidth === void 0 ? labelWidth : toString(labelWidth)
@@ -588,11 +703,90 @@ function FormCreate(vm) {  //4776
 				}
 			}, isTitle ? {
 				label: function label() {
-					return 'w1w1w1';
+					return _this3.makeInfo(rule, uni);
 				}
 			} : {}))
 		},
+		isTooltip:function(info) {
 
+			return info.type === 'tooltip';
+		},
+		 isFalse:function(val) {
+			return val === false;
+		},
+		mergeProp: function mergeProp(ctx) {
+
+
+			ctx.prop = mergeProps([{
+				info: this.options.info || {},
+				wrap: this.options.wrap || {},
+				col: this.options.col || {}
+			}, ctx.prop], {
+				info: {
+					trigger: 'hover',
+					placement: 'top-start',
+					icon: 'el-icon-warning'
+				},
+				title: {},
+				col: {
+					span: 24
+				},
+				wrap: {}
+			}, {
+				normal: ['title', 'info', 'col', 'wrap']
+			});
+
+
+		},
+		makeInfo: function makeInfo(rule, uni) {
+
+
+			var _this4 = this;
+
+			var titleProp = rule.title;
+
+
+			var infoProp = rule.info;
+			var isTip = this.isTooltip(infoProp);
+			var form = this.options.form;
+			var children = [(titleProp.title || '') + (form.labelSuffix || form['label-suffix'] || '')];
+
+			var titleFn = function titleFn() {
+				// return titleProp;
+				return _this4.$r(mergeProps([titleProp, {
+					props: titleProp,
+					key: "".concat(uni, "tit"),
+					type: titleProp.type || 'span'
+				}]), children);
+			};
+
+			// if (!this.isFalse(infoProp.show) && (infoProp.info || infoProp["native"])) {
+			// 	if (infoProp.icon !== false) {
+			// 		children[infoProp.align !== 'left' ? 'unshift' : 'push'](this.$r({
+			// 			type: 'i',
+			// 			"class": infoProp.icon === true ? 'el-icon-warning' : infoProp.icon,
+			// 			key: "".concat(uni, "i")
+			// 		}, {}, true));
+			// 	}
+			//
+			// 	var prop = {
+			// 		type: infoProp.type || 'popover',
+			// 		props: _objectSpread2({}, infoProp),
+			// 		key: "".concat(uni, "pop")
+			// 	};
+			// 	var field = 'content';
+			//
+			// 	if (infoProp.info && !hasProperty(prop.props, field)) {
+			// 		prop.props[field] = infoProp.info;
+			// 	}
+			//
+			// 	return this.$r(mergeProps([infoProp, prop]), _defineProperty({}, titleProp.slot || (isTip ? 'default' : 'reference'), function () {
+			// 		return titleFn();
+			// 	}));
+			// }
+
+			return titleFn();
+		},
         renderSlot(slotBag, ctx, parent){
             slotBag.setSlot(ctx.rule.slot, this.renderCtx(ctx, parent));
         },
@@ -603,7 +797,7 @@ function FormCreate(vm) {  //4776
             return {};
         },
         renderCtx(ctx, parent){
-            console.log('makerenderCtx',!this.cache[ctx.id])
+
             var rule = ctx.rule;
             var _this = this;
 
@@ -632,10 +826,17 @@ function FormCreate(vm) {  //4776
 
             return this.getCache(ctx);
         },
+		 tidy:function(props, name) {
+			if (!hasProperty(props, name)) return;
+			if (is.String(props[name])) {
+				var _props$name;
+				props[name] = (_props$name = {}, _defineProperty(_props$name, name, props[name]), _defineProperty(_props$name, "show", true), _props$name);
+			}
+		},
         tidyRule: function tidyRule(_ref) {
             var prop = _ref.prop;
-            // tidy(prop, 'title');
-            // tidy(prop, 'info');
+            this.tidy(prop, 'title');
+            this.tidy(prop, 'info');
             return prop;
         },
 		ctxProp:function(ctx,custom){
@@ -645,7 +846,7 @@ function FormCreate(vm) {  //4776
 			var ref = ctx.ref,
 				key = ctx.key,
 				rule = ctx.rule;
-
+			this.mergeProp(ctx, custom);
 			var props = [{
 				ref: ref,
                 key: rule.key || "".concat(key, "fc"),
@@ -654,7 +855,7 @@ function FormCreate(vm) {  //4776
 			}];
 
 				var field = this.getModelField(ctx);
-				console.log('default11 ',field,_this.getFormData(ctx));
+
 				props.push({
 					on: _defineProperty({}, "update:".concat(field), function update(value) {
 						_this6.onInput(ctx, value);
@@ -756,8 +957,49 @@ function FormCreate(vm) {  //4776
                 formCreateInject: this.injectProp(ctx)
             }, vn);
         },
+		mergeOptionsRule: {
+			normal: ['form', 'row', 'info', 'submitBtn', 'resetBtn']
+		},
+		mergeOptions: function mergeOptions(args, opt) {
+			var _this2 = this;
+			return mergeProps(args.map(function (v) {
+				return _this2.tidyOptions(v);
+			}), opt, this.mergeOptionsRule);
+		},
+		tidyBool:function(opt, name) {
+			if (hasProperty(opt, name) && !is.Object(opt[name])) {
+				opt[name] = {
+					show: !!opt[name]
+				};
+			}
+		},
+		// validate: function validate(callback) {
+		// 	return new Promise(function (resolve, reject) {
+		// 		var forms = api.children;
+		// 		var all = [h.$manager.validate()];
+		// 		forms.forEach(function (v) {
+		// 			all.push(v.validate());
+		// 		});
+		// 		Promise.all(all).then(function () {
+		// 			resolve(true);
+		// 			callback && callback(true);
+		// 		})["catch"](function (e) {
+		// 			reject(e);
+		// 			callback && callback(e);
+		// 		});
+		// 	});
+		// },
+		tidyOptions: function tidyOptions(options) {
+			['submitBtn', 'resetBtn', 'row', 'info', 'wrap', 'col'].forEach( (name) =>{
+				this.tidyBool(options, name);
+			});
+			return options;
+		},
         initOptions(options){
-            this.updateOptions(options)
+
+			// this.options.value = this.mergeOptions(this.options.value, options);
+			this.options = this.mergeOptions([options], this.getDefaultOptions());
+            this.updateOptions()
         },
         injectProp: function injectProp(ctx) {
             var _this5 = this;
@@ -812,7 +1054,7 @@ function FormCreate(vm) {  //4776
 				_this.component(component.name, component);
 			});
             CreateNode.use(alias);
-            console.log('components',components);
+
 			extend(vm.appContext.components, components);
         }
     })

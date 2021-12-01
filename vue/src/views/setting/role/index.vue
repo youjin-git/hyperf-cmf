@@ -73,7 +73,9 @@
 			},
 			//添加
 			add(){
-				this.$modalForm(this.$HTTP.post('/admin/config/setting/create',{}));
+				this.$modalForm(this.$HTTP.post('/admin/config/setting/create',{})).then(res=>{
+
+				});
 			},
 			//编辑
 			table_edit(row){

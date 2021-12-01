@@ -37,11 +37,10 @@ function makeSlotBag() {
 
             var slots = {};
             Object.keys(slotBag).forEach(function (k) {
-                console.log(k);
+
                 slots[k] = function () {
                     return _this.getSlot(k);
                 };
-                console.log(slots[k]);
             });
             return slots;
         },
@@ -54,7 +53,6 @@ function makeSlotBag() {
 
             if (!bag) return this;
             var slots = is.Function(bag.getSlots) ? bag.getSlots() : bag;
-            console.log('mergeBag',bag);
             if (Array.isArray(bag) || vue.isVNode(bag)) {
                 this.setSlot(undefined, function () {
                     return bag;

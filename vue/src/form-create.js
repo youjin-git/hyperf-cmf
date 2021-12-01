@@ -5414,7 +5414,6 @@ var define = {};
     },
     makeResetBtn: function makeResetBtn() {
       var _this5 = this;
-
       var resetBtn = this.options.resetBtn;
       return this.$r({
         type: 'button',

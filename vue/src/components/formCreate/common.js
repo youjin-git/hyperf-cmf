@@ -5,7 +5,7 @@ function $del(target, field) {
     delete target[field];
 }
 function hasProperty(rule, k) {
-	console.log(rule,k);
+
 
     return Object.hasOwnProperty.call(rule, k);
 }
@@ -284,12 +284,17 @@ function deepExtend(origin) {
     }) : origin;
 }
 
+function copy(value) {
+	return deepCopy(value);
+}
+
 function deepCopy(value) {
     return deepExtend({}, {
         value: value
     }).value;
 }
 export {
+	copy,
 	$set,
     deepExtend,
 	getSlot,

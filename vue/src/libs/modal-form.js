@@ -40,15 +40,31 @@ export default function modalForm(app) {
             }
           }
         };
-		data.config.submitBtn = false
-		data.config.resetBtn = false
+        console.log('app',app);
+
 		if (!data.config.form) data.config.form = {}
 		if (!data.config.formData) data.config.formData = {}
 		data.config.formData = {...data.config.formData, ...config.formData}
 		data.config.form.labelWidth = data.config.form.labelWidth || '120px'
+		var formCreate = h(app.component('formCreate'), toProps({props:{rule: data.rule,option:{
+					onSubmit:(formData)=>{
 
+						//  http.post(data.action,formData).then((res) => {
+						// 				 done()
+						// 	 			this.$message.success(res.message || '提交成功')
+						// 	 			resolve(res)
+						//  }).catch(err => {
+						// 	this.$message.error(err.message || '提交失败')
+						// 	reject(err)
+						// }).finally(() => {
+						// 	instance.confirmButtonLoading = false
+						// })
 
-		var formCreate = h(app.component('formCreate'), toProps({props:{rule: data.rule}, on:{
+					},
+					submitBtn:{
+						show: false,
+					}
+				}}, on:{
 			getApi: (e) => {
 				fApi = e;
 			}
@@ -62,8 +78,24 @@ export default function modalForm(app) {
 			customClass: config.class || 'modal-form',
 			message: formCreate,
 			beforeClose: (action, instance, done) => {
-				console.log(fApi);
-				fApi.asubmit();
+
+				 if (action === 'confirm') {
+					 instance.confirmButtonLoading = true
+					 fApi.submit((formData)=>{
+					 			http[data.method.toLowerCase()](data.action, formData).then((res) => {
+									this.$message.success(res.message || '提交成功')
+						 			done()
+						 			resolve(res)
+						 		}).finally(() => {
+						 			instance.confirmButtonLoading = false
+						 		})
+					 })
+					 instance.confirmButtonLoading = false
+				 }else{
+					 instance.confirmButtonLoading = false
+					 done()
+				 }
+				// fApi.asubmit();
 				// if (action === 'confirm') {
 				// 	instance.confirmButtonLoading = true
 				// 	fApi.submit((formData) => {

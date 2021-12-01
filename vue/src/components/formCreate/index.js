@@ -67,7 +67,7 @@ function $FormCreate(FormCreate) {
 			var vm = vue.getCurrentInstance();
 			vm.setupState.fc.init(); //4928
 			// _this.$emit('itemMounted', api);
-			vm.emit('getApi', vm.setupState.fapi);
+			vm.emit('getApi', vm.setupState.fc);
 		}
     })
 }
