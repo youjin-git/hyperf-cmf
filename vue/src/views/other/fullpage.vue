@@ -10,23 +10,18 @@
 </template>
 
 <script>
-	export default {
-		name: 'fullpage',
-		data() {
-			return {
-
-			}
+export default {
+	name: "fullpage",
+	data() {
+		return {};
+	},
+	mounted() {},
+	methods: {
+		goBack() {
+			this.$router.go(-1);
 		},
-		mounted() {
-
-		},
-		methods: {
-			goBack(){
-				this.$router.go(-1)
-			}
-		}
-	}
+	},
+};
 </script>
 
-<style>
-</style>
+<style></style>

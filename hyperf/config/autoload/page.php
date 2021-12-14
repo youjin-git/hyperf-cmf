@@ -1,4 +1,4 @@
 <?php
 return [
-    'defaultLimit' => 15
+    'pageSize' => 15,
 ];

@@ -9,20 +9,17 @@
 </template>
 
 <script>
-	export default {
-		data() {
-			return {
-				visible: true
-			}
-		},
-		mounted() {
-			console.log("加载./dialog1组件完成")
-		},
-		methods: {
-
-		}
-	}
+export default {
+	data() {
+		return {
+			visible: true,
+		};
+	},
+	mounted() {
+		console.log("加载./dialog1组件完成");
+	},
+	methods: {},
+};
 </script>
 
-<style>
-</style>
+<style></style>

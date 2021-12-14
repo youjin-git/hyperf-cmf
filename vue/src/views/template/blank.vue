@@ -3,15 +3,14 @@
 </template>
 
 <script>
-	export default {
-		name: 'blank',
-		data() {
-			return {
-				title: "BLANK PAGE :)"
-			}
-		}
-	}
+export default {
+	name: "blank",
+	data() {
+		return {
+			title: "BLANK PAGE :)",
+		};
+	},
+};
 </script>
 
-<style>
-</style>
+<style></style>

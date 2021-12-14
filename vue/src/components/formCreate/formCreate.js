@@ -1,121 +1,149 @@
-import {is,copy,deepExtend,getSlot,deepCopy,hasProperty,mergeProps,$set,extend,_defineProperty,_objectSpread2,upper,_toConsumableArray,toLine,uniqueId,toCase,lower} from "./common";
-import {nameProp,BaseParser} from "./Prop";
-var {ElInput,ElSelect,ElOption} = require('element-plus')
+import {
+	is,
+	copy,
+	deepExtend,
+	getSlot,
+	deepCopy,
+	hasProperty,
+	mergeProps,
+	$set,
+	extend,
+	_defineProperty,
+	_objectSpread2,
+	upper,
+	_toConsumableArray,
+	toLine,
+	uniqueId,
+	toCase,
+	lower,
+} from "./common";
+import { nameProp, BaseParser } from "./Prop";
+var { ElInput, ElSelect, ElOption } = require("element-plus");
 
-var vue = require('vue');
-import {makeSlotBag} from "./makeSlotBag";
+var vue = require("vue");
+import { makeSlotBag } from "./makeSlotBag";
 // import {mergeGlobal} from "@/form-create-next/packages/core/src/frame/util";
 
-
-
 function toProps(rule) {
-    var prop = _objectSpread2({}, rule.props || {});
-    Object.keys(rule.on || {}).forEach(function (k) {
-        var name = "on".concat(upper(k));
-        if (Array.isArray(prop[name])) {
-            prop[name] = [].concat(_toConsumableArray(prop[name]), [rule.on[k]]);
-        } else if (prop[name]) {
-            prop[name] = [prop[name], rule.on[k]];
-        } else {
-            prop[name] = rule.on[k];
-        }
-    });
+	var prop = _objectSpread2({}, rule.props || {});
+	Object.keys(rule.on || {}).forEach(function (k) {
+		var name = "on".concat(upper(k));
+		if (Array.isArray(prop[name])) {
+			prop[name] = [].concat(_toConsumableArray(prop[name]), [
+				rule.on[k],
+			]);
+		} else if (prop[name]) {
+			prop[name] = [prop[name], rule.on[k]];
+		} else {
+			prop[name] = rule.on[k];
+		}
+	});
 
-    prop.key = rule.key;
-    prop.ref = rule.ref;
-    prop["class"] = rule["class"];
-    prop.style = rule.style;
-    if (prop.slot) delete prop.slot;
-    return prop;
+	prop.key = rule.key;
+	prop.ref = rule.ref;
+	prop["class"] = rule["class"];
+	prop.style = rule.style;
+	if (prop.slot) delete prop.slot;
+	return prop;
 }
 
-function isNativeTag(tag){
-	return vue.getCurrentInstance().appContext.config.isNativeTag(tag) || ['span'].findIndex((v)=>{
-		return  v==tag;
-	})>=0;
+function isNativeTag(tag) {
+	return (
+		vue.getCurrentInstance().appContext.config.isNativeTag(tag) ||
+		["span"].findIndex((v) => {
+			return v == tag;
+		}) >= 0
+	);
 }
 
 function CreateNodeFactory() {
-    var aliasMap = {};
-    var CreateNode = function () {};
-    extend(CreateNode.prototype,{
-        make:function (tag,data,children) {
-            return this.h(tag, toProps(data), children);
-        },
-        h: function h(tag, data, children) {
-            return vue.createVNode(isNativeTag(tag) ? tag : vue.resolveComponent(tag), data, children);
-        },
-        aliasMap: aliasMap
-    })
-    extend(CreateNode,{
-        aliasMap: aliasMap,
-        alias: function alias(_alias, name) {
-            aliasMap[_alias] = name;
-        },
-        use: function use(nodes) {
-            Object.keys(nodes).forEach(function (k) {
-                var line = toLine(k);  //button
-                var lower = toString(k).toLocaleLowerCase();  //button
-                var v = nodes[k];    //el-button
+	var aliasMap = {};
+	var CreateNode = function () {};
+	extend(CreateNode.prototype, {
+		make: function (tag, data, children) {
+			return this.h(tag, toProps(data), children);
+		},
+		h: function h(tag, data, children) {
+			return vue.createVNode(
+				isNativeTag(tag) ? tag : vue.resolveComponent(tag),
+				data,
+				children
+			);
+		},
+		aliasMap: aliasMap,
+	});
+	extend(CreateNode, {
+		aliasMap: aliasMap,
+		alias: function alias(_alias, name) {
+			aliasMap[_alias] = name;
+		},
+		use: function use(nodes) {
+			Object.keys(nodes).forEach(function (k) {
+				var line = toLine(k); //button
+				var lower = toString(k).toLocaleLowerCase(); //button
+				var v = nodes[k]; //el-button
 
-                [k, line, lower].forEach(function (n) {
-                    CreateNode.alias(k, v);
+				[k, line, lower].forEach(function (n) {
+					CreateNode.alias(k, v);
 
-                    CreateNode.prototype[n] = function (data, children) {
-                        return this.make(v, data, children);
-                    };
+					CreateNode.prototype[n] = function (data, children) {
+						return this.make(v, data, children);
+					};
+				});
+			});
+		},
+	});
 
-
-                });
-            });
-        }
-    })
-
-    return CreateNode;
+	return CreateNode;
 }
 
 var row = {
-    name: 'FcRow',
-    render: function render(_, ctx) {
-        return ctx.vNode.col({
-            props: {
-                span: 24
-            }
-        }, [ctx.vNode.row(ctx.prop, _)]);
-    }
+	name: "FcRow",
+	render: function render(_, ctx) {
+		return ctx.vNode.col(
+			{
+				props: {
+					span: 24,
+				},
+			},
+			[ctx.vNode.row(ctx.prop, _)]
+		);
+	},
 };
 
-var NAME$8 = 'fcRadio';
+var NAME$8 = "fcRadio";
 var Radio = vue.defineComponent({
 	name: NAME$8,
 	inheritAttrs: false,
 	props: {
 		modelValue: {
 			type: [String, Number],
-			"default": function _default() {
+			default: function _default() {
 				return [];
-			}
+			},
 		},
-		type: String
+		type: String,
 	},
-	emits: ['update:modelValue'],
+	emits: ["update:modelValue"],
 	setup: function setup(props, _) {
-		var _toRefs = vue.toRefs(vue.inject('formCreateInject')),
+		var _toRefs = vue.toRefs(vue.inject("formCreateInject")),
 			options = _toRefs.options;
 
 		var trueValue = vue.ref([]);
-		var value = vue.toRef(props, 'modelValue');
+		var value = vue.toRef(props, "modelValue");
 
 		var _options = vue.computed(function () {
 			return Array.isArray(options) ? options : [];
 		});
 
 		var update = function update() {
-			trueValue.value = _options.value.filter(function (opt) {
-				return opt.value === value.value;
-			}).reduce(function (initial, opt) {
-				return opt.label;
-			}, '');
+			trueValue.value = _options.value
+				.filter(function (opt) {
+					return opt.value === value.value;
+				})
+				.reduce(function (initial, opt) {
+					return opt.label;
+				}, "");
 		};
 
 		update();
@@ -124,19 +152,24 @@ var Radio = vue.defineComponent({
 			trueValue: trueValue,
 			value: value,
 			onInput: function onInput(n) {
-				_.emit('update:modelValue', _options.value.filter(function (opt) {
-					return opt.label === n;
-				}).reduce(function (initial, opt) {
-					return opt.value;
-				}, ''));
+				_.emit(
+					"update:modelValue",
+					_options.value
+						.filter(function (opt) {
+							return opt.label === n;
+						})
+						.reduce(function (initial, opt) {
+							return opt.value;
+						}, "")
+				);
 			},
-			update: update
+			update: update,
 		};
 	},
 	watch: {
 		modelValue: function modelValue() {
 			this.update();
-		}
+		},
 	},
 	render: function render() {
 		// var _this$$slots$default,
@@ -158,136 +191,137 @@ var Radio = vue.defineComponent({
 		// 		}), (_this$$slots$default = (_this$$slots = _this.$slots)["default"]) === null || _this$$slots$default === void 0 ? void 0 : _this$$slots$default.call(_this$$slots)];
 		// 	}
 		// }, getSlot(this.$slots, ['default'])));
-	}
+	},
 });
-
 
 var parsers = [row];
 
-var PRE = 'el';
+var PRE = "el";
 var alias = {
-    button: PRE + '-button',
-    icon: 'i',
-    slider: PRE + '-slider',
-    rate: PRE + '-rate',
-    upload: 'fc-upload',
-    cascader: PRE + '-cascader',
-    popover: PRE + '-popover',
-    tooltip: PRE + '-tooltip',
-    colorPicker: PRE + '-colorPicker',
-    timePicker: PRE + '-time-picker',
-    timeSelect: PRE + '-time-select',
-    datePicker: PRE + '-date-picker',
-    'switch': PRE + '-switch',
-    select: 'fc-select',
-    checkbox: 'fc-checkbox',
-    radio: 'fc-radio',
-    inputNumber: PRE + '-input-number',
-    number: PRE + '-input-number',
-    input: PRE + '-input',
-    formItem: PRE + '-form-item',
-    form: PRE + '-form',
-    frame: 'fc-frame',
-    col: PRE + '-col',
-    row: PRE + '-row',
-    tree: 'fc-tree',
-    autoComplete: PRE + '-autocomplete',
-    auto: PRE + '-autocomplete',
-    group: 'fc-group',
-    object: 'fc-sub-form',
-    subForm: 'fc-sub-form'
+	button: PRE + "-button",
+	icon: "i",
+	slider: PRE + "-slider",
+	rate: PRE + "-rate",
+	upload: "fc-upload",
+	cascader: PRE + "-cascader",
+	popover: PRE + "-popover",
+	tooltip: PRE + "-tooltip",
+	colorPicker: PRE + "-colorPicker",
+	timePicker: PRE + "-time-picker",
+	timeSelect: PRE + "-time-select",
+	datePicker: PRE + "-date-picker",
+	switch: PRE + "-switch",
+	select: "fc-select",
+	checkbox: "fc-checkbox",
+	radio: "fc-radio",
+	inputNumber: PRE + "-input-number",
+	number: PRE + "-input-number",
+	input: PRE + "-input",
+	formItem: PRE + "-form-item",
+	form: PRE + "-form",
+	frame: "fc-frame",
+	col: PRE + "-col",
+	row: PRE + "-row",
+	tree: "fc-tree",
+	autoComplete: PRE + "-autocomplete",
+	auto: PRE + "-autocomplete",
+	group: "fc-group",
+	object: "fc-sub-form",
+	subForm: "fc-sub-form",
 };
 
-
 function RuleContext(handle, rule) {
-    console.log(rule);
-    var id = uniqueId();
-    var isInput = !!rule.field;
-    extend(this, {
-        id: id,
-        ref: id,
-        rule: rule,
-        watch: [],
-        wrapRef: id + 'fi',
-        name: rule.name,
-        prop: _objectSpread2({}, rule),
-        el: undefined,
-        field: rule.field || undefined,
-        defaultValue: isInput ? deepCopy(rule.value) : undefined,
-    });
-    this.updateKey()
-    this.updateType();
+	console.log(rule);
+	var id = uniqueId();
+	var isInput = !!rule.field;
+	extend(this, {
+		id: id,
+		ref: id,
+		rule: rule,
+		watch: [],
+		wrapRef: id + "fi",
+		name: rule.name,
+		prop: _objectSpread2({}, rule),
+		el: undefined,
+		field: rule.field || undefined,
+		defaultValue: isInput ? deepCopy(rule.value) : undefined,
+	});
+	this.updateKey();
+	this.updateType();
 }
 
 var CreateNode = CreateNodeFactory();
 
+extend(RuleContext.prototype, {
+	updateType: function updateType() {
+		this.originType = this.rule.type;
+		this.type = toCase(this.rule.type);
+	},
+	updateKey: function updateKey(flag) {
+		this.key = uniqueId();
+		flag && this.parent && this.parent.updateKey(flag);
+	},
+	setParser: function setParser(parser) {
+		this.parser = parser;
 
-extend(RuleContext.prototype,{
-    updateType: function updateType() {
-        this.originType = this.rule.type;
-        this.type = toCase(this.rule.type);
-    },
-    updateKey: function updateKey(flag) {
-        this.key = uniqueId();
-        flag && this.parent && this.parent.updateKey(flag);
-    },
-    setParser: function setParser(parser) {
-        this.parser = parser;
-
-        parser.init(this);
-    },
-    defaultRender: function defaultRender(ctx, children) {
-        var prop = ctx.prop;
-        console.log('makedefaultRender',prop)
-        if (CreateNode.prototype[ctx.type]) return CreateNode.prototype[ctx.type](prop, children);
-        // if (this.vNode[ctx.originType]) return this.vNode[ctx.originType](prop, children);
-        return CreateNodeFactory().prototype.make(lower(ctx.originType), prop, children);
-    },
-})
-
-var NAME$9 = 'FcFragment';
-var fragment = vue.defineComponent({
-    name: NAME$9,
-    inheritAttrs: false,
-    props: ['formCreateInject'],
-    setup: function setup(props) {
-        var data = vue.toRef(props, 'formCreateInject'); // 获取这个props['formCreateInject']
-        var $inject = vue.reactive(_objectSpread2({}, data.value));
-        vue.watch(data, function () {
-            extend($inject, data.value);
-        });
-        vue.provide('formCreateInject', $inject);
-    },
-    render: function render() {
-        console.log('default11',this.$slots["default"]());
-
-        return this.$slots["default"]();
-    }
+		parser.init(this);
+	},
+	defaultRender: function defaultRender(ctx, children) {
+		var prop = ctx.prop;
+		console.log("makedefaultRender", prop);
+		if (CreateNode.prototype[ctx.type])
+			return CreateNode.prototype[ctx.type](prop, children);
+		// if (this.vNode[ctx.originType]) return this.vNode[ctx.originType](prop, children);
+		return CreateNodeFactory().prototype.make(
+			lower(ctx.originType),
+			prop,
+			children
+		);
+	},
 });
 
-var NAME$7 = 'fcSelect';
+var NAME$9 = "FcFragment";
+var fragment = vue.defineComponent({
+	name: NAME$9,
+	inheritAttrs: false,
+	props: ["formCreateInject"],
+	setup: function setup(props) {
+		var data = vue.toRef(props, "formCreateInject"); // 获取这个props['formCreateInject']
+		var $inject = vue.reactive(_objectSpread2({}, data.value));
+		vue.watch(data, function () {
+			extend($inject, data.value);
+		});
+		vue.provide("formCreateInject", $inject);
+	},
+	render: function render() {
+		console.log("default11", this.$slots["default"]());
+
+		return this.$slots["default"]();
+	},
+});
+
+var NAME$7 = "fcSelect";
 var Select = vue.defineComponent({
 	name: NAME$7,
 	inheritAttrs: false,
 	props: {
 		modelValue: {
 			type: Array,
-			"default": function _default() {
+			default: function _default() {
 				return [];
-			}
+			},
 		},
-		type: String
+		type: String,
 	},
-	components:{
+	components: {
 		ElSelect,
 		ElOption,
-
 	},
-	emits: ['update:modelValue'],
+	emits: ["update:modelValue"],
 	setup: function setup(props) {
-		var _toRefs = vue.toRefs(vue.inject('formCreateInject')),
+		var _toRefs = vue.toRefs(vue.inject("formCreateInject")),
 			options = _toRefs.options;
-		var value = vue.toRef(props, 'modelValue');
+		var value = vue.toRef(props, "modelValue");
 
 		// var _options = vue.computed(function () {
 		// 	return Array.isArray(options) ? options : [];
@@ -296,7 +330,7 @@ var Select = vue.defineComponent({
 		// console.log('options',(options),_options);
 		return {
 			options: options,
-			value: value
+			value: value,
 		};
 	},
 	render: function render() {
@@ -314,69 +348,94 @@ var Select = vue.defineComponent({
 		//
 		// console.log('options',_this.options);
 
-
-		return vue.createVNode(vue.resolveComponent("ElSelect"), vue.mergeProps(this.$attrs, {
-			"modelValue": this.value,
-			"onUpdate:modelValue": function onUpdateModelValue(v) {
-				return _this.$emit('update:modelValue', v);
-			}
-		},[
-
-		]), _objectSpread2({
-			"default": function _default() {
-				return [Object.keys(_this.options).map(function (key, index) {
-					var props = _this.options[key];
-					return vue.createVNode(vue.resolveComponent("ElOption"), vue.mergeProps(props, {
-						"key": '' + index + props.value
-					}), null);
-				}), (_this$$slots$default = (_this$$slots = _this.$slots)["default"]) === null || _this$$slots$default === void 0 ? void 0 : _this$$slots$default.call(_this$$slots)];
-			}
-		}, getSlot(this.$slots, ['default'])));
-	}
+		return vue.createVNode(
+			vue.resolveComponent("ElSelect"),
+			vue.mergeProps(
+				this.$attrs,
+				{
+					modelValue: this.value,
+					"onUpdate:modelValue": function onUpdateModelValue(v) {
+						return _this.$emit("update:modelValue", v);
+					},
+				},
+				[]
+			),
+			_objectSpread2(
+				{
+					default: function _default() {
+						return [
+							Object.keys(_this.options).map(function (
+								key,
+								index
+							) {
+								var props = _this.options[key];
+								return vue.createVNode(
+									vue.resolveComponent("ElOption"),
+									vue.mergeProps(props, {
+										key: "" + index + props.value,
+									}),
+									null
+								);
+							}),
+							(_this$$slots$default = (_this$$slots =
+								_this.$slots)["default"]) === null ||
+							_this$$slots$default === void 0
+								? void 0
+								: _this$$slots$default.call(_this$$slots),
+						];
+					},
+				},
+				getSlot(this.$slots, ["default"])
+			)
+		);
+	},
 });
 
+function FormCreate(vm) {
+	//4776
 
-function FormCreate(vm) {  //4776
+	var components = _defineProperty({}, fragment.name, fragment); //定义一个 FcFragment
 
-    var components = _defineProperty({}, fragment.name, fragment);  //定义一个 FcFragment
+	function use(fn, opt) {
+		// if (is.Function(fn.install)) fn.install(create, opt);else if (is.Function(fn)) fn(create, opt);
+		// return this;
+	}
 
-    function use(fn, opt) {
-        // if (is.Function(fn.install)) fn.install(create, opt);else if (is.Function(fn)) fn(create, opt);
-        // return this;
-    }
-
-    var _this = this;
-    extend(this,{
+	var _this = this;
+	extend(this, {
 		formData: vue.reactive({}),
-        fieldCtx: {},
-        ctxs: {},
-		ref:'fcForm',
-        appendData: vue.reactive({}),
-        parsers: {},
-        bindParser: function bindParser(ctx) {
-            ctx.setParser(BaseParser);
-        },
-		api:function(){
+		fieldCtx: {},
+		ctxs: {},
+		ref: "fcForm",
+		appendData: vue.reactive({}),
+		parsers: {},
+		bindParser: function bindParser(ctx) {
+			ctx.setParser(BaseParser);
+		},
+		api: function () {
 			return {
-				asubmit:()=>{
+				asubmit: () => {
 					console.log(111);
-					this.vm.emit('submit','111111',{});
-				}
+					this.vm.emit("submit", "111111", {});
+				},
 			};
 		},
-        parser:function(){
-            var data = nameProp.apply(void 0, arguments);
-            // if (!data.id || !data.prop) return;
-            var name = toCase(data.id);
-            var parser = data.prop;
-            var base = parser.merge === true ? parsers[name] : undefined;
-            this.parsers[name] = _objectSpread2(_objectSpread2({}, base || BaseParser), parser);
-            extend(vm.appContext.components, this.parsers);
-            // console.log("parser",this.parsers);
-            // maker[name] = creatorFactory(name);
-            // parser.maker && extend(maker, parser.maker);
-        },
-		component:function(id, component) {
+		parser: function () {
+			var data = nameProp.apply(void 0, arguments);
+			// if (!data.id || !data.prop) return;
+			var name = toCase(data.id);
+			var parser = data.prop;
+			var base = parser.merge === true ? parsers[name] : undefined;
+			this.parsers[name] = _objectSpread2(
+				_objectSpread2({}, base || BaseParser),
+				parser
+			);
+			extend(vm.appContext.components, this.parsers);
+			// console.log("parser",this.parsers);
+			// maker[name] = creatorFactory(name);
+			// parser.maker && extend(maker, parser.maker);
+		},
+		component: function (id, component) {
 			var name;
 			if (is.String(id)) {
 				name = toCase(id);
@@ -390,181 +449,181 @@ function FormCreate(vm) {  //4776
 			if (!name || !component) return;
 			components[name] = component;
 		},
-        nameCtx: {},
-        sort: [],
-        CreateNode: CreateNode,
-        rules:vm.props.rule,
-        use:use,
-        vm:vm,
+		nameCtx: {},
+		sort: [],
+		CreateNode: CreateNode,
+		rules: vm.props.rule,
+		use: use,
+		vm: vm,
 		options: vue.ref({}),
-        init:function () {   //4812
-            this.appendData = _objectSpread2(this.vm.props.modelValue, this.appendData);
-            console.log('appendData',this.appendData);
+		init: function () {
+			//4812
+			this.appendData = _objectSpread2(
+				this.vm.props.modelValue,
+				this.appendData
+			);
+			console.log("appendData", this.appendData);
 
-            this.loadRule()
+			this.loadRule();
 			this.initOptions(this.vm.props.option || {});
-            this.clearCacheAll();
-            this.$r = function () {
-                return this.renderRule.apply(this, arguments);
-            };
-        },
-		getDefaultOptions:function(){
+			this.clearCacheAll();
+			this.$r = function () {
+				return this.renderRule.apply(this, arguments);
+			};
+		},
+		getDefaultOptions: function () {
 			return {
 				form: {
 					inline: false,
-					labelPosition: 'right',
-					labelWidth: '125px',
+					labelPosition: "right",
+					labelWidth: "125px",
 					disabled: false,
-					size: undefined
+					size: undefined,
 				},
 				row: {
 					show: true,
-					gutter: 0
+					gutter: 0,
 				},
 				submitBtn: {
-					type: 'primary',
+					type: "primary",
 					loading: false,
 					disabled: false,
-					innerText: '提交',
+					innerText: "提交",
 					show: true,
 					col: undefined,
-					click: undefined
+					click: undefined,
 				},
 				resetBtn: {
-					type: 'default',
+					type: "default",
 					loading: false,
 					disabled: false,
-					icon: 'el-icon-refresh',
-					innerText: '重置',
+					icon: "el-icon-refresh",
+					innerText: "重置",
 					show: false,
 					col: undefined,
-					click: undefined
-				}
+					click: undefined,
+				},
 			};
 		},
-        renderRule: function(rule, children, origin) {
-            var type;
-            type = rule.type;
-            if (type) {
-                type = toCase(rule.type);
-                var alias = this.CreateNode.aliasMap[type];
-                if (alias) type = toCase(alias);
-            }
-            var slotBag = makeSlotBag();
-            return this.CreateNode.prototype.make(type,rule,slotBag.mergeBag(children).getSlots())
-        },
-        loadRule(){
-          let rules = this.rules;
+		renderRule: function (rule, children, origin) {
+			var type;
+			type = rule.type;
+			if (type) {
+				type = toCase(rule.type);
+				var alias = this.CreateNode.aliasMap[type];
+				if (alias) type = toCase(alias);
+			}
+			var slotBag = makeSlotBag();
+			return this.CreateNode.prototype.make(
+				type,
+				rule,
+				slotBag.mergeBag(children).getSlots()
+			);
+		},
+		loadRule() {
+			let rules = this.rules;
 
-          var _this = this;
-            rules.map(function (_rule, index) {
-                var ctx;
-                ctx = new RuleContext(_this,_this.parseRule(_rule));
+			var _this = this;
+			rules.map(function (_rule, index) {
+				var ctx;
+				ctx = new RuleContext(_this, _this.parseRule(_rule));
 
+				_this.bindParser(ctx);
+				_this.sort.push(ctx.id);
+				_this.setCtx(ctx);
+				return ctx;
+			});
+		},
+		baseRule() {
+			return {
+				props: {},
+				// on: {},
+				options: [],
+				children: [],
+				hidden: false,
+				display: true,
+				value: undefined,
+			};
+		},
+		parseRule(_rule) {
+			this.fullRule(_rule);
+			this.appendValue(_rule);
 
-                _this.bindParser(ctx);
-                _this.sort.push(ctx.id);
-                _this.setCtx(ctx);
-                return ctx;
-            });
-        },
-         baseRule() {
-            return {
-                props: {},
-                // on: {},
-                options: [],
-                children: [],
-                hidden: false,
-                display: true,
-                value: undefined
-            };
-         },
-        parseRule(_rule){
+			return _rule;
+		},
+		appendValue: function appendValue(rule) {
+			if (!rule.field || !hasProperty(this.appendData, rule.field))
+				return;
+			rule.value = this.appendData[rule.field];
+			delete this.appendData[rule.field];
+		},
+		fullRule(rule) {
+			var def = this.baseRule();
 
+			Object.keys(def).forEach(function (k) {
+				if (!hasProperty(rule, k)) rule[k] = def[k];
+			});
 
-            this.fullRule(_rule)
-            this.appendValue(_rule);
+			return rule;
+		},
+		setCtx(ctx) {
+			var id = ctx.id,
+				field = ctx.field,
+				name = ctx.name,
+				rule = ctx.rule;
+			this.ctxs[id] = ctx;
+			this.setIdCtx(ctx, field, "field");
+			this.setFormData(ctx, ctx.parser.toFormValue(rule.value, ctx));
+		},
+		setIdCtx: function setIdCtx(ctx, key, type) {
+			var field = "".concat(type, "Ctx");
+			if (!this[field][key]) {
+				this[field][key] = [ctx];
+			} else {
+				this[field][key].push(ctx);
+			}
+		},
+		$handleRender() {
+			if (this.vm.setupState.unique > 0) {
+				return this.$renderRender();
+			}
+		},
+		$renderRender() {
+			var _this = this;
+			this.beforeRender(); //5368
 
+			var slotBag = makeSlotBag();
 
-            return _rule;
-        },
-        appendValue: function appendValue(rule) {
+			this.sort.forEach(function (k) {
+				_this.renderSlot(slotBag, _this.ctxs[k]);
+			});
 
-            if (!rule.field || !hasProperty(this.appendData, rule.field)) return;
-            rule.value = this.appendData[rule.field];
-            delete this.appendData[rule.field];
-        },
-        fullRule(rule) {
-            var def = this.baseRule();
+			return this.$managerRender(slotBag);
+		},
+		beforeRender() {
+			var key = this.key,
+				ref = this.ref;
 
-            Object.keys(def).forEach(function (k) {
+			extend(this.rule, {
+				key: key,
+				ref: ref,
+			});
+			extend(this.rule.props, {
+				model: this.formData,
+			});
+		},
+		$managerRender(children) {
+			var _this2 = this;
+			if (children.slotLen()) {
+				children.setSlot(undefined, function () {
+					return _this2.makeFormBtn();
+				});
+			}
 
-                if (!hasProperty(rule, k)) rule[k] = def[k];
-            });
-
-            return rule;
-        },
-         setCtx(ctx){
-             var id = ctx.id,
-                 field = ctx.field,
-                 name = ctx.name,
-                 rule = ctx.rule;
-             this.ctxs[id] = ctx;
-             this.setIdCtx(ctx, field, 'field');
-             this.setFormData(ctx, ctx.parser.toFormValue(rule.value, ctx));
-        },
-        setIdCtx: function setIdCtx(ctx, key, type) {
-            var field = "".concat(type, "Ctx");
-            if (!this[field][key]) {
-                this[field][key] = [ctx];
-            } else {
-                this[field][key].push(ctx);
-            }
-        },
-        $handleRender(){
-            if(this.vm.setupState.unique>0){
-                return this.$renderRender()
-            }
-        },
-        $renderRender(){
-            var _this = this;
-            this.beforeRender(); //5368
-
-            var slotBag = makeSlotBag();
-
-
-            this.sort.forEach(function (k) {
-
-                _this.renderSlot(slotBag, _this.ctxs[k]);
-            });
-
-            return this.$managerRender(slotBag);
-        },
-        beforeRender(){
-            var key = this.key,
-                ref = this.ref;
-
-            extend(this.rule, {
-                key: key,
-                ref: ref
-            });
-            extend(this.rule.props, {
-                model: this.formData
-            });
-
-        },
-        $managerRender(children){
-                var _this2 = this;
-                if (children.slotLen()) {
-                    children.setSlot(undefined, function () {
-                        return _this2.makeFormBtn();
-                    });
-                }
-
-                return this.$r(this.rule, [this.makeRow(children)]);
-        },
-        makeFormBtn(){
-            var vn = [];
+			return this.$r(this.rule, [this.makeRow(children)]);
+		},
+		makeFormBtn() {
+			var vn = [];
 			if (!this.isFalse(this.options.submitBtn.show)) {
 				vn.push(this.makeSubmitBtn());
 			}
@@ -572,59 +631,69 @@ function FormCreate(vm) {  //4776
 				vn.push(this.makeResetBtn());
 			}
 
-
 			if (!vn.length) {
 				return;
 			}
 
-            var item = this.$r({
-                type: 'formItem',
-                key: "".concat(this.key, "fb")
-            }, vn);
+			var item = this.$r(
+				{
+					type: "formItem",
+					key: "".concat(this.key, "fb"),
+				},
+				vn
+			);
 
-            return this.$r({
-                type: 'col',
-                props: {
-                    span: 24
-                },
-                key: "".concat(this.key, "fc")
-            }, [item]);
-        },
-        makeSubmitBtn: function makeSubmitBtn() {
-            var text = '提交';
-            var submitBtn = _objectSpread2({}, this.options.submitBtn);
+			return this.$r(
+				{
+					type: "col",
+					props: {
+						span: 24,
+					},
+					key: "".concat(this.key, "fc"),
+				},
+				[item]
+			);
+		},
+		makeSubmitBtn: function makeSubmitBtn() {
+			var text = "提交";
+			var submitBtn = _objectSpread2({}, this.options.submitBtn);
 			var _this = this;
-            return this.$r({
-                type: 'button',
-                props: submitBtn,
-                style: {
-                    width: submitBtn.width
-                },
-                on: {
-                    click: function() {
-						_this.submit();
-
-                    }
-                },
-                key: "".concat(this.key, "b1")
-            }, [text]);
-        },
+			return this.$r(
+				{
+					type: "button",
+					props: submitBtn,
+					style: {
+						width: submitBtn.width,
+					},
+					on: {
+						click: function () {
+							_this.submit();
+						},
+					},
+					key: "".concat(this.key, "b1"),
+				},
+				[text]
+			);
+		},
 		makeResetBtn: function makeResetBtn() {
 			var _this5 = this;
 			var resetBtn = this.options.resetBtn;
-			return this.$r({
-				type: 'button',
-				props: resetBtn,
-				style: {
-					width: resetBtn.width
+			return this.$r(
+				{
+					type: "button",
+					props: resetBtn,
+					style: {
+						width: resetBtn.width,
+					},
+					on: {
+						click: function click() {
+							_this5.resetFields();
+						},
+					},
+					key: "".concat(this.key, "b2"),
 				},
-				on: {
-					click: function click() {
-						_this5.resetFields();
-					}
-				},
-				key: "".concat(this.key, "b2")
-			}, [resetBtn.innerText]);
+				[resetBtn.innerText]
+			);
 		},
 		resetFields: function resetFields(fields) {
 			// this.tidyFields(fields).forEach(function (field) {
@@ -636,49 +705,52 @@ function FormCreate(vm) {  //4776
 			// });
 		},
 		form: function form() {
-
 			return this.vm.refs[this.ref];
 		},
-		submit(successFn, failFn){
+		submit(successFn, failFn) {
 			var _this = this;
 			return new Promise(function (resolve, reject) {
 				var formData = _this.getFormDatas();
-				_this.form().validate().then(function () {
-					if (is.Function(successFn)) {
-						return successFn(formData, _this);
-					}
-					if(is.Function(_this.options.onSubmit)){
-						return _this.options.onSubmit(formData,_this);
-					}
-				});
+				_this
+					.form()
+					.validate()
+					.then(function () {
+						if (is.Function(successFn)) {
+							return successFn(formData, _this);
+						}
+						if (is.Function(_this.options.onSubmit)) {
+							return _this.options.onSubmit(formData, _this);
+						}
+					});
 			});
 		},
 		fields: function fields() {
 			return Object.keys(this.fieldCtx);
 		},
-		getFieldCtx:function(field) {
+		getFieldCtx: function (field) {
 			return (this.fieldCtx[field] || [])[0];
 		},
-		getFormDatas: function(fields) {
-			return  this.fields().reduce( (initial, id) =>{
+		getFormDatas: function (fields) {
+			return this.fields().reduce((initial, id) => {
 				var ctx = this.getFieldCtx(id);
 				if (!ctx) return initial;
 				initial[ctx.field] = copy(ctx.rule.value);
 				return initial;
 			}, copy(this.appendData));
 		},
-        makeRow: function makeRow(children) {
-            var row = this.options.row || {};
-            return this.$r({
-                type: 'row',
-                props: row,
-                "class": row["class"],
-                key: "".concat(this.key, "row")
-            }, children);
-        },
-		makeWrap:function(ctx, children){
-
-
+		makeRow: function makeRow(children) {
+			var row = this.options.row || {};
+			return this.$r(
+				{
+					type: "row",
+					props: row,
+					class: row["class"],
+					key: "".concat(this.key, "row"),
+				},
+				children
+			);
+		},
+		makeWrap: function (ctx, children) {
 			var _this3 = this;
 			var rule = ctx.prop;
 			var uni = "".concat(this.key).concat(ctx.key);
@@ -686,78 +758,107 @@ function FormCreate(vm) {  //4776
 			var isTitle = true;
 			var col = rule.col;
 			var labelWidth = !col.labelWidth && !isTitle ? 0 : col.labelWidth;
-			return this.$r(mergeProps([rule.wrap, {
-				props: _objectSpread2(_objectSpread2({
-					labelWidth: labelWidth === void 0 ? labelWidth : toString(labelWidth)
-				}, rule.wrap || {}), {}, {
-					prop: ctx.id,
-					rules: rule.validate
-				}),
-				"class": rule.className,
-				key: ctx.wrapRef,
-				ref: ctx.wrapRef,
-				type: 'formItem'
-			}]), _objectSpread2({
-				"default": function _default() {
-					return children;
-				}
-			}, isTitle ? {
-				label: function label() {
-					return _this3.makeInfo(rule, uni);
-				}
-			} : {}))
+			return this.$r(
+				mergeProps([
+					rule.wrap,
+					{
+						props: _objectSpread2(
+							_objectSpread2(
+								{
+									labelWidth:
+										labelWidth === void 0
+											? labelWidth
+											: toString(labelWidth),
+								},
+								rule.wrap || {}
+							),
+							{},
+							{
+								prop: ctx.id,
+								rules: rule.validate,
+							}
+						),
+						class: rule.className,
+						key: ctx.wrapRef,
+						ref: ctx.wrapRef,
+						type: "formItem",
+					},
+				]),
+				_objectSpread2(
+					{
+						default: function _default() {
+							return children;
+						},
+					},
+					isTitle
+						? {
+								label: function label() {
+									return _this3.makeInfo(rule, uni);
+								},
+						  }
+						: {}
+				)
+			);
 		},
-		isTooltip:function(info) {
-
-			return info.type === 'tooltip';
+		isTooltip: function (info) {
+			return info.type === "tooltip";
 		},
-		 isFalse:function(val) {
+		isFalse: function (val) {
 			return val === false;
 		},
 		mergeProp: function mergeProp(ctx) {
-
-
-			ctx.prop = mergeProps([{
-				info: this.options.info || {},
-				wrap: this.options.wrap || {},
-				col: this.options.col || {}
-			}, ctx.prop], {
-				info: {
-					trigger: 'hover',
-					placement: 'top-start',
-					icon: 'el-icon-warning'
+			ctx.prop = mergeProps(
+				[
+					{
+						info: this.options.info || {},
+						wrap: this.options.wrap || {},
+						col: this.options.col || {},
+					},
+					ctx.prop,
+				],
+				{
+					info: {
+						trigger: "hover",
+						placement: "top-start",
+						icon: "el-icon-warning",
+					},
+					title: {},
+					col: {
+						span: 24,
+					},
+					wrap: {},
 				},
-				title: {},
-				col: {
-					span: 24
-				},
-				wrap: {}
-			}, {
-				normal: ['title', 'info', 'col', 'wrap']
-			});
-
-
+				{
+					normal: ["title", "info", "col", "wrap"],
+				}
+			);
 		},
 		makeInfo: function makeInfo(rule, uni) {
-
-
 			var _this4 = this;
 
 			var titleProp = rule.title;
 
-
 			var infoProp = rule.info;
 			var isTip = this.isTooltip(infoProp);
 			var form = this.options.form;
-			var children = [(titleProp.title || '') + (form.labelSuffix || form['label-suffix'] || '')];
+			var children = [
+				(titleProp.title || "") +
+					(form.labelSuffix || form["label-suffix"] || ""),
+			];
 
 			var titleFn = function titleFn() {
 				// return titleProp;
-				return _this4.$r(mergeProps([titleProp, {
-					props: titleProp,
-					key: "".concat(uni, "tit"),
-					type: titleProp.type || 'span'
-				}]), children);
+				return _this4.$r(
+					mergeProps([
+						titleProp,
+						{
+							props: titleProp,
+							key: "".concat(uni, "tit"),
+							type: titleProp.type || "span",
+						},
+					]),
+					children
+				);
 			};
 
 			// if (!this.isFalse(infoProp.show) && (infoProp.info || infoProp["native"])) {
@@ -787,93 +888,105 @@ function FormCreate(vm) {  //4776
 
 			return titleFn();
 		},
-        renderSlot(slotBag, ctx, parent){
-            slotBag.setSlot(ctx.rule.slot, this.renderCtx(ctx, parent));
-        },
-        clearCacheAll: function clearCacheAll() {
-            this.cache = {};
-        },
-        renderChildren: function renderChildren(ctx) {
-            return {};
-        },
-        renderCtx(ctx, parent){
+		renderSlot(slotBag, ctx, parent) {
+			slotBag.setSlot(ctx.rule.slot, this.renderCtx(ctx, parent));
+		},
+		clearCacheAll: function clearCacheAll() {
+			this.cache = {};
+		},
+		renderChildren: function renderChildren(ctx) {
+			return {};
+		},
+		renderCtx(ctx, parent) {
+			var rule = ctx.rule;
+			var _this = this;
 
-            var rule = ctx.rule;
-            var _this = this;
-
-            if (!this.cache[ctx.id]) {
-                console.log(ctx);
-                this.tidyRule(ctx)
+			if (!this.cache[ctx.id]) {
+				console.log(ctx);
+				this.tidyRule(ctx);
 				this.ctxProp(ctx);
 				// this.setCache(ctx, undefined, parent);
-                var vn = function vn() {
-                    return _this.item(ctx, function () {
-                        var _vn = ctx.parser.render(_this.renderChildren(ctx), ctx);
+				var vn = function vn() {
+					return _this.item(ctx, function () {
+						var _vn = ctx.parser.render(
+							_this.renderChildren(ctx),
+							ctx
+						);
 						_vn = _this.makeWrap(ctx, _vn);
 
 						// if (!(!ctx.input && is.Undef(prop["native"])) && prop["native"] !== true) {
 						//
 						// }
 
-                        // _this.renderSides(_vn,ctx)
-                        return _vn;
-                    });
-                };
-                this.setCache(ctx, vn, parent);
-                ctx._vnode = vn;
-                return vn;
-            }
+						// _this.renderSides(_vn,ctx)
+						return _vn;
+					});
+				};
+				this.setCache(ctx, vn, parent);
+				ctx._vnode = vn;
+				return vn;
+			}
 
-            return this.getCache(ctx);
-        },
-		 tidy:function(props, name) {
+			return this.getCache(ctx);
+		},
+		tidy: function (props, name) {
 			if (!hasProperty(props, name)) return;
 			if (is.String(props[name])) {
 				var _props$name;
-				props[name] = (_props$name = {}, _defineProperty(_props$name, name, props[name]), _defineProperty(_props$name, "show", true), _props$name);
+				props[name] =
+					((_props$name = {}),
+					_defineProperty(_props$name, name, props[name]),
+					_defineProperty(_props$name, "show", true),
+					_props$name);
 			}
 		},
-        tidyRule: function tidyRule(_ref) {
-            var prop = _ref.prop;
-            this.tidy(prop, 'title');
-            this.tidy(prop, 'info');
-            return prop;
-        },
-		ctxProp:function(ctx,custom){
-		    console.log('ctxProp');
+		tidyRule: function tidyRule(_ref) {
+			var prop = _ref.prop;
+			this.tidy(prop, "title");
+			this.tidy(prop, "info");
+			return prop;
+		},
+		ctxProp: function (ctx, custom) {
+			console.log("ctxProp");
 
 			var _this6 = this;
 			var ref = ctx.ref,
 				key = ctx.key,
 				rule = ctx.rule;
 			this.mergeProp(ctx, custom);
-			var props = [{
-				ref: ref,
-                key: rule.key || "".concat(key, "fc"),
-				// key: rule.key || "".concat(key, "fc"),
-				slot: undefined,
-			}];
+			var props = [
+				{
+					ref: ref,
+					key: rule.key || "".concat(key, "fc"),
+					// key: rule.key || "".concat(key, "fc"),
+					slot: undefined,
+				},
+			];
 
-				var field = this.getModelField(ctx);
+			var field = this.getModelField(ctx);
 
-				props.push({
-					on: _defineProperty({}, "update:".concat(field), function update(value) {
+			props.push({
+				on: _defineProperty(
+					{},
+					"update:".concat(field),
+					function update(value) {
 						_this6.onInput(ctx, value);
-                        // this.emit("update:modelValue",value);
-                        // console.log('update',value);
-                        // console.log('make',field,_this.getFormData(ctx),_this.formData,ctx);
+						// this.emit("update:modelValue",value);
+						// console.log('update',value);
+						// console.log('make',field,_this.getFormData(ctx),_this.formData,ctx);
 						// console.log(_this6.formData)
-                        return;
-					}),
-					props: _defineProperty({}, field,_this.getFormData(ctx))
-				});
+						return;
+					}
+				),
+				props: _defineProperty({}, field, _this.getFormData(ctx)),
+			});
 
 			mergeProps(props, ctx.prop);
 
 			return ctx.prop;
 		},
 		getFormData: function getFormData(ctx) {
-		    console.log(this.formData[ctx.id]);
+			console.log(this.formData[ctx.id]);
 			return this.formData[ctx.id];
 		},
 		onInput: function onInput(ctx, value) {
@@ -897,7 +1010,7 @@ function FormCreate(vm) {  //4776
 		},
 		syncValue: function syncValue() {
 			if (this.deferSyncFn) {
-				return this.deferSyncFn.sync = true;
+				return (this.deferSyncFn.sync = true);
 			}
 			this.vm.setupState.updateValue(_objectSpread2({}));
 		},
@@ -905,8 +1018,8 @@ function FormCreate(vm) {  //4776
 			$set(this.formData, ctx.id, value);
 		},
 
-		getModelField(ctx){
-			return 'modelValue';
+		getModelField(ctx) {
+			return "modelValue";
 		},
 		clearCache: function clearCache(ctx) {
 			// if (!this.cache[ctx.id]) {
@@ -915,61 +1028,69 @@ function FormCreate(vm) {  //4776
 			// }
 			// if (this.cache[ctx.id].use === true || this.cache[ctx.id].parent) {
 
-            // if (this.cache[ctx.id].use === true || this.cache[ctx.id].parent) {
-                this.refresh();
-            // }
-            this.cache[ctx.id] = null;
+			// if (this.cache[ctx.id].use === true || this.cache[ctx.id].parent) {
+			this.refresh();
+			// }
+			this.cache[ctx.id] = null;
 
-            // }
+			// }
 			//
 			// var parent = this.cache[ctx.id].parent;
 			// console.log(this.cache);
 			// parent && this.clearCache(parent);
 		},
-        refresh(){
-		    // console.log('11111',this.vm.setupState.refresh());
+		refresh() {
+			// console.log('11111',this.vm.setupState.refresh());
 
-            this.vm.setupState.refresh();
-        },
-        // renderSides(vn,ctx,temp){
-        //     var prop = ctx[temp ? 'rule' : 'prop'];
-        //     console.log('renderSides',prop);
-        //     console.log([this.renderRule(prop.prefix), vn, this.renderRule(prop.suffix)]);
-        //
-        // },
-        setCache: function setCache(ctx, vnode, parent) {
-            this.cache[ctx.id] = {
-                vnode: vnode,
-                use: false,
-                parent: parent,
-                slot: ctx.rule.slot
-            };
-        },
-        getCache: function getCache(ctx) {
-            var cache = this.cache[ctx.id];
-            cache.use = true;
-            return cache.vnode;
-        },
-        item: function item(ctx, vn) {
-		    console.log('item',ctx)
-            return this.CreateNode.prototype.h('FcFragment', {
-                key: ctx.key,
-                formCreateInject: this.injectProp(ctx)
-            }, vn);
-        },
+			this.vm.setupState.refresh();
+		},
+		// renderSides(vn,ctx,temp){
+		//     var prop = ctx[temp ? 'rule' : 'prop'];
+		//     console.log('renderSides',prop);
+		//     console.log([this.renderRule(prop.prefix), vn, this.renderRule(prop.suffix)]);
+		//
+		// },
+		setCache: function setCache(ctx, vnode, parent) {
+			this.cache[ctx.id] = {
+				vnode: vnode,
+				use: false,
+				parent: parent,
+				slot: ctx.rule.slot,
+			};
+		},
+		getCache: function getCache(ctx) {
+			var cache = this.cache[ctx.id];
+			cache.use = true;
+			return cache.vnode;
+		},
+		item: function item(ctx, vn) {
+			console.log("item", ctx);
+			return this.CreateNode.prototype.h(
+				"FcFragment",
+				{
+					key: ctx.key,
+					formCreateInject: this.injectProp(ctx),
+				},
+				vn
+			);
+		},
 		mergeOptionsRule: {
-			normal: ['form', 'row', 'info', 'submitBtn', 'resetBtn']
+			normal: ["form", "row", "info", "submitBtn", "resetBtn"],
 		},
 		mergeOptions: function mergeOptions(args, opt) {
 			var _this2 = this;
-			return mergeProps(args.map(function (v) {
-				return _this2.tidyOptions(v);
-			}), opt, this.mergeOptionsRule);
+			return mergeProps(
+				args.map(function (v) {
+					return _this2.tidyOptions(v);
+				}),
+				opt,
+				this.mergeOptionsRule
+			);
 		},
-		tidyBool:function(opt, name) {
+		tidyBool: function (opt, name) {
 			if (hasProperty(opt, name) && !is.Object(opt[name])) {
 				opt[name] = {
-					show: !!opt[name]
+					show: !!opt[name],
 				};
 			}
 		},
@@ -990,83 +1111,81 @@ function FormCreate(vm) {  //4776
 		// 	});
 		// },
 		tidyOptions: function tidyOptions(options) {
-			['submitBtn', 'resetBtn', 'row', 'info', 'wrap', 'col'].forEach( (name) =>{
-				this.tidyBool(options, name);
-			});
+			["submitBtn", "resetBtn", "row", "info", "wrap", "col"].forEach(
+				(name) => {
+					this.tidyBool(options, name);
+				}
+			);
 			return options;
 		},
-        initOptions(options){
-
+		initOptions(options) {
 			// this.options.value = this.mergeOptions(this.options.value, options);
-			this.options = this.mergeOptions([options], this.getDefaultOptions());
-            this.updateOptions()
-        },
-        injectProp: function injectProp(ctx) {
-            var _this5 = this;
-            return {
-                api: "",
-                form:"",
-                field: ctx.field,
-                options: ctx.prop.options,
-                children: ctx.rule.children,
-                rule: ctx.rule,
-                prop: function () {
-                    var temp = _objectSpread2({}, ctx.prop);
-                    return temp.on = temp.on ? _objectSpread2({}, temp.on) : {}, temp;
-                }()
-            };
-        },
-        updateOptions(options){
-            this.update();
-        },
-        update(){
-            var form = this.options.form;
-            this.rule = {
-                props: _objectSpread2({}, form),
-                on: {
-                    submit: function submit(e) {
-                        e.preventDefault();
-                    }
-                },
-                "class": [form.className, form["class"], 'form-create'],
-                style: form.style,
-                type: 'form'
-            };
-        }
-    })
+			this.options = this.mergeOptions(
+				[options],
+				this.getDefaultOptions()
+			);
+			this.updateOptions();
+		},
+		injectProp: function injectProp(ctx) {
+			var _this5 = this;
+			return {
+				api: "",
+				form: "",
+				field: ctx.field,
+				options: ctx.prop.options,
+				children: ctx.rule.children,
+				rule: ctx.rule,
+				prop: (function () {
+					var temp = _objectSpread2({}, ctx.prop);
+					return (
+						(temp.on = temp.on ? _objectSpread2({}, temp.on) : {}),
+						temp
+					);
+				})(),
+			};
+		},
+		updateOptions(options) {
+			this.update();
+		},
+		update() {
+			var form = this.options.form;
+			this.rule = {
+				props: _objectSpread2({}, form),
+				on: {
+					submit: function submit(e) {
+						e.preventDefault();
+					},
+				},
+				class: [form.className, form["class"], "form-create"],
+				style: form.style,
+				type: "form",
+			};
+		},
+	});
 
-    var maker = {};
+	var maker = {};
 
-    parsers.forEach((parser)=>{
-        this.parser(parser);
-    });
-    Object.keys(maker).forEach(function (name) {
-        this.maker[name] = maker[name];
-    });
+	parsers.forEach((parser) => {
+		this.parser(parser);
+	});
+	Object.keys(maker).forEach(function (name) {
+		this.maker[name] = maker[name];
+	});
 
-    CreateNode.use({
-        fragment: 'fcFragment'
-    });
+	CreateNode.use({
+		fragment: "fcFragment",
+	});
 
-    extend(this,{
-        install:()=>{
-        	[Radio,Select].forEach(function (component) {
+	extend(this, {
+		install: () => {
+			[Radio, Select].forEach(function (component) {
 				_this.component(component.name, component);
 			});
-            CreateNode.use(alias);
+			CreateNode.use(alias);
 
 			extend(vm.appContext.components, components);
-        }
-    })
-
-
-
-
+		},
+	});
 }
 
-
-
-
-export  {
-    FormCreate
-}
+export { FormCreate };
