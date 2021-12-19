@@ -1,0 +1,40 @@
+version: '3.8'
+services:
+   bt:
+     image: yj_bt
+     #network_mode: "host"
+     ports:
+        - 9501:9501
+        - 8888:8888
+        - 3306:3306
+     expose:
+        - "3306"  
+        - "8080" 
+     volumes:
+        - ./data:/data
+     networks:
+        - net-app
+   node:
+     image: node:latest
+     container_name: yj-node
+   php:
+     image: php:latest
+     networks:
+        - net-app
+   jenkins:
+     image: yj_jenkins
+     #network_mode: "host"
+     ports:
+       - 8080:8080
+       - 50000:50000
+     networks:
+        - net-app
+     volumes:
+        - ./jenkins_home:/var/jenkins_home
+        - ./data:/data
+        - /var/run/docker.sock:/var/run/docker.sock
+        - /usr/bin/docker:/usr/bin/docker
+        - /usr/local/bin/docker-compose:/usr/local/bin/docker-compose
+networks:
+    net-app:
+
