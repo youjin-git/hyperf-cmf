@@ -1,12 +1,12 @@
 <?php
 
 namespace {{ namespace }};
-use App\Models\BaseModel;
+use App\Model\Model;
 
 
-class {{ class }} extends BaseModel
+class {{ class }} extends Model
 {
-    protected $table = '{{ class }}';
+    protected $table = '{{ table }}';
 
     protected $fillable = [
     ];

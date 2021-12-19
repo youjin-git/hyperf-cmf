@@ -1,3 +1,4 @@
+var vue = require("vue");
 function $set(target, field, value) {
 	target[field] = value;
 }
@@ -81,6 +82,9 @@ function _typeof(obj) {
 				: typeof obj;
 		};
 	}
+}
+function _isSlot(s) {
+	return typeof s === 'function' || Object.prototype.toString.call(s) === '[object Object]' && !vue.isVNode(s);
 }
 
 var _extends =
@@ -375,6 +379,7 @@ export {
 	extend,
 	toLine,
 	upper,
+	_isSlot,
 	_objectSpread2,
 	_defineProperty,
 	mergeProps,

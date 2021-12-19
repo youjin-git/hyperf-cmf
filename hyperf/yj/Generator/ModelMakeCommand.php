@@ -1,15 +1,20 @@
 <?php
 
-namespace App\Console\Generator;
+namespace Yj\Generator;
 
-use Illuminate\Console\Concerns\CreatesMatchingTest;
-use Illuminate\Console\GeneratorCommand;
-use Illuminate\Support\Str;
-use Symfony\Component\Console\Input\InputOption;
+//use Illuminate\Console\Concerns\CreatesMatchingTest;
+//use Illuminate\Support\Str;
+//use Symfony\Component\Console\Input\InputOption;
+//use Hyperf\Command\Command as HyperfCommand;
+use Hyperf\Command\Annotation\Command;
+use Hyperf\Utils\Collection;
+use Hyperf\Utils\Composer;
+use Hyperf\Utils\Str;
 
+#[Command]
 class ModelMakeCommand extends GeneratorCommand
 {
-    use CreatesMatchingTest;
+//    use CreatesMatchingTest;
 
     /**
      * The console command name.
@@ -18,19 +23,22 @@ class ModelMakeCommand extends GeneratorCommand
      */
     protected $name = 'create:model';
 
+
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a new Eloquent model class';
+    protected $description = 'Create a new Eloquent dao class';
 
     /**
      * The type of class being generated.
      *
      * @var string
      */
-    protected $type = 'Model';
+    protected $type = '';
+
+    protected $Suffix = '.php';
 
     /**
      * Execute the console command.
@@ -39,40 +47,9 @@ class ModelMakeCommand extends GeneratorCommand
      */
     public function handle()
     {
-
-        if (parent::handle() === false && !$this->option('force')) {
-            return false;
-        }
-
-        if ($this->option('all')) {
-            $this->input->setOption('factory', true);
-            $this->input->setOption('seed', true);
-            $this->input->setOption('migration', true);
-            $this->input->setOption('controller', true);
-            $this->input->setOption('policy', true);
-            $this->input->setOption('resource', true);
-        }
-
-        if ($this->option('factory')) {
-            $this->createFactory();
-        }
-
-        if ($this->option('migration')) {
-            $this->createMigration();
-        }
-
-        if ($this->option('seed')) {
-            $this->createSeeder();
-        }
-
-        if ($this->option('controller') || $this->option('resource') || $this->option('api')) {
-            $this->createController();
-        }
-
-        if ($this->option('policy')) {
-            $this->createPolicy();
-        }
+        parent::handle();
     }
+
 
     /**
      * Get the destination class path.
@@ -80,44 +57,44 @@ class ModelMakeCommand extends GeneratorCommand
      * @param string $name
      * @return string
      */
-    protected function getPath($name)
+    protected function getPath($name, $extension = '.php')
     {
-        $name = Str::replaceFirst($this->rootNamespace(), '', $name);
-        $name = $name . 'Model';
-        return $this->laravel['path'] . '/' . str_replace('\\', '/', $name) . '.php';
+        foreach ($this->getAutoloadRules() as $prefix => $prefixPath) {
+            if (strpos($name, $prefix) === 0) {
+                return $prefixPath . str_replace('\\', '/', substr($name, strlen($prefix))) . $extension;
+            }
+        }
+//        return str_replace('\\', '/', ($name)) . $extension;
     }
 
 
     protected function qualifyClass($name)
     {
 
-        $name = ltrim($name, '\\/');
-
-        $name = str_replace('/', '\\', $name);
-
-
         $rootNamespace = $this->rootNamespace();
+        $className = $rootNamespace;
+        $className = $name->transform(function ($item) {
+                return Str::ucfirst($item);
+            })->reduce(function ($classNameValue, $item) {
+                return $classNameValue . '\\' . $item;
+            }, $className) . $this->type;
+        return $className;
 
-        if (Str::startsWith($name, $rootNamespace)) {
-            return $name;
-        }
-
-        return $this->qualifyClass(
-            $this->getDefaultNamespace(trim($rootNamespace, '\\')) . '\\' . $name
-        );
     }
 
-//    protected function getNameInput()
-//    {
-//        return Str::studly(trim($this->argument('name')));
-//    }
+
+    protected function rootNamespace()
+    {
+        return 'App\Model';
+    }
+
 
     protected function replaceClass($stub, $name)
     {
-        $class = str_replace($this->getNamespace($name) . '\\', '', $name);
-        $class = Str::studly($class) . 'Model';
 
-        return str_replace(['DummyClass', '{{ class }}', '{{class}}'], $class, $stub);
+        $class = str_replace($this->getNamespace($name) . '\\', '', $name);
+
+        return str_replace(['{{ class }}', '{{class}}'], $class, $stub);
     }
 
     /**
@@ -186,6 +163,14 @@ class ModelMakeCommand extends GeneratorCommand
         ]));
     }
 
+    public function buildClass($name)
+    {
+        $stub = $this->getFilesFactory()->read($this->getStub());
+        return $this->replaceNamespace($stub, $name)
+            ->replaceTable($stub, $name)
+            ->replaceClass($stub, $name);
+    }
+
     /**
      * Create a policy file for the model.
      *
@@ -208,10 +193,7 @@ class ModelMakeCommand extends GeneratorCommand
      */
     protected function getStub()
     {
-
-        return $this->option('pivot')
-            ? $this->resolveStubPath('/stubs/model.pivot.stub')
-            : $this->resolveStubPath('/stubs/model.stub');
+        return ('yj/Generator/stubs/model.stub');
     }
 
     /**
@@ -222,7 +204,7 @@ class ModelMakeCommand extends GeneratorCommand
      */
     protected function resolveStubPath($stub)
     {
-        return file_exists($customPath = $this->laravel->basePath(trim($stub, '/')))
+        return file_exists($customPath = $this->laravel->basePath(trim($stub, ' / ')))
             ? $customPath
             : __DIR__ . $stub;
     }
@@ -238,24 +220,5 @@ class ModelMakeCommand extends GeneratorCommand
         return is_dir(app_path('Models')) ? $rootNamespace . '\\Models' : $rootNamespace;
     }
 
-    /**
-     * Get the console command options.
-     *
-     * @return array
-     */
-    protected function getOptions()
-    {
-        return [
-            ['all', 'a', InputOption::VALUE_NONE, 'Generate a migration, seeder, factory, policy, and resource controller for the model'],
-            ['controller', 'c', InputOption::VALUE_NONE, 'Create a new controller for the model'],
-            ['factory', 'f', InputOption::VALUE_NONE, 'Create a new factory for the model'],
-            ['force', null, InputOption::VALUE_NONE, 'Create the class even if the model already exists'],
-            ['migration', 'm', InputOption::VALUE_NONE, 'Create a new migration file for the model'],
-            ['policy', null, InputOption::VALUE_NONE, 'Create a new policy for the model'],
-            ['seed', 's', InputOption::VALUE_NONE, 'Create a new seeder for the model'],
-            ['pivot', 'p', InputOption::VALUE_NONE, 'Indicates if the generated model should be a custom intermediate table model'],
-            ['resource', 'r', InputOption::VALUE_NONE, 'Indicates if the generated controller should be a resource controller'],
-            ['api', null, InputOption::VALUE_NONE, 'Indicates if the generated controller should be an API controller'],
-        ];
-    }
+
 }

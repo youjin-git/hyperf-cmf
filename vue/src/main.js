@@ -13,7 +13,7 @@ import Codemirror from "codemirror-editor-vue3";
 import "codemirror-editor-vue3/dist/style.css";
 const app = createApp(App);
 
-// app.component("formCreate", formCreate);
+app.component("formCreate", formCreate);
 app.use(store);
 app.use(router);
 app.use(ElementPlus, { size: "small" });

@@ -15,4 +15,6 @@ trait interactsWithIO
         }
         return $this->input->getArgument($key);
     }
+
+
 }

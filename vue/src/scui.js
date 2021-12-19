@@ -27,7 +27,9 @@ export default {
 		//挂载全局对象
 		app.config.globalProperties.$CONFIG = config;
 		app.config.globalProperties.$TOOL = tool;
-		app.config.globalProperties.$HTTP = http;
+		app.config.globalProperties.$HTTP = function(){
+			return http.reflush();
+		}
 		app.config.globalProperties.$modalForm = modalForm(app);
 
 		app.config.globalProperties.$API = api;
