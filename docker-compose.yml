@@ -36,5 +36,4 @@ services:
 networks:
     net-app:
 
-      
 
