@@ -16,9 +16,9 @@ return [
             'driver' => \Hyperf\Filesystem\Adapter\LocalAdapterFactory::class,
             'root' => __DIR__ . '/../../public',
         ],
-        'yj' => [
+        'base_path' => [
             'driver' => \Hyperf\Filesystem\Adapter\LocalAdapterFactory::class,
-            'root' => BASE_PATH . '/yj',
+            'root' => BASE_PATH,
         ],
         'ftp' => [
             'driver' => \Hyperf\Filesystem\Adapter\FtpAdapterFactory::class,

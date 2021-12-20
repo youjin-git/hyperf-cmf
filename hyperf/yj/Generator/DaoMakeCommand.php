@@ -37,6 +37,7 @@ class DaoMakeCommand extends GeneratorCommand
      */
     protected $type = 'Dao';
 
+
     protected $Suffix = '.php';
 
     /**
@@ -47,6 +48,13 @@ class DaoMakeCommand extends GeneratorCommand
     public function handle()
     {
         parent::handle();
+    }
+
+    public function buildClass($name)
+    {
+        $stub = $this->getFilesFactory()->read($this->getStub());
+        return $this->replaceNamespace($stub, $name)
+            ->replaceClass($stub, $name);
     }
 
 
@@ -60,7 +68,7 @@ class DaoMakeCommand extends GeneratorCommand
     {
         foreach ($this->getAutoloadRules() as $prefix => $prefixPath) {
             if (strpos($name, $prefix) === 0) {
-                return BASE_PATH . '/' . $prefixPath . str_replace('\\', '/', substr($name, strlen($prefix))) . $extension;
+                return $prefixPath . str_replace('\\', '/', substr($name, strlen($prefix))) . $extension;
             }
         }
     }
@@ -68,10 +76,6 @@ class DaoMakeCommand extends GeneratorCommand
 
     protected function qualifyClass($name)
     {
-
-        $name = ltrim($name, '\\/');
-        $name = str_replace('/', '\\', $name);
-        $name = _Collect(explode('\\', $name));
 
         $rootNamespace = $this->rootNamespace();
         $className = $rootNamespace;
@@ -82,42 +86,20 @@ class DaoMakeCommand extends GeneratorCommand
             }, $className) . $this->type;
         return $className;
 
-
-//        if (Str::startsWith($name, $rootNamespace)) {
-//            return $name;
-//        }
-//
-//        dd($rootNamespace . '\\' . $name);
-
-//        return $this->qualifyClass(
-//            $rootNamespace . '\\' . $name
-//        );
     }
 
 
     protected function rootNamespace()
     {
-        return 'App\Model';
+        return 'App\Dao';
     }
-
-//    protected function getNameInput()
-//    {
-//        return Str::studly(trim($this->argument('name')));
-//    }
 
     protected function replaceClass($stub, $name)
     {
-        $class = str_replace($this->getNamespace($name) . '\\', '', $name);
-        $class = Str::studly($class) . 'Model';
 
-        return str_replace(['DummyClass', '{
-        {
-            class }
-    }', '{
-        {
-            class
-        }
-    }'], $class, $stub);
+        $class = str_replace($this->getNamespace($name) . '\\', '', $name);
+
+        return str_replace(['{{ class }}', '{{class}}'], $class, $stub);
     }
 
     /**
@@ -168,23 +150,7 @@ class DaoMakeCommand extends GeneratorCommand
         ]);
     }
 
-    /**
-     * Create a controller for the model.
-     *
-     * @return void
-     */
-    protected function createController()
-    {
-        $controller = Str::studly(class_basename($this->argument('name')));
 
-        $modelName = $this->qualifyClass($this->getNameInput());
-
-        $this->call('make:controller', array_filter([
-            'name' => "{$controller}Controller",
-            '--model' => $this->option('resource') || $this->option('api') ? $modelName : null,
-            '--api' => $this->option('api'),
-        ]));
-    }
 
     /**
      * Create a policy file for the model.
@@ -208,31 +174,7 @@ class DaoMakeCommand extends GeneratorCommand
      */
     protected function getStub()
     {
-        return ('Generator/stubs/model.stub');
-    }
-
-    /**
-     * Resolve the fully-qualified path to the stub.
-     *
-     * @param string $stub
-     * @return string
-     */
-    protected function resolveStubPath($stub)
-    {
-        return file_exists($customPath = $this->laravel->basePath(trim($stub, ' / ')))
-            ? $customPath
-            : __DIR__ . $stub;
-    }
-
-    /**
-     * Get the default namespace for the class.
-     *
-     * @param string $rootNamespace
-     * @return string
-     */
-    protected function getDefaultNamespace($rootNamespace)
-    {
-        return is_dir(app_path('Models')) ? $rootNamespace . '\\Models' : $rootNamespace;
+        return ('yj/Generator/stubs/dao.stub');
     }
 
 

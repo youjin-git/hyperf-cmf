@@ -1,4 +1,5 @@
 import {
+	_isSlot,
 	is,
 	copy,
 	deepExtend,
@@ -111,6 +112,415 @@ var row = {
 	},
 };
 
+function Creator(type, title, field, value, props) {
+	this._data = extend(baseRule(), {
+		type: type,
+		title: title,
+		field: field,
+		value: value,
+		props: props || {}
+	});
+	this.event = this.on;
+}
+
+function baseRule() {
+	return {
+		props: {},
+		on: {},
+		options: [],
+		children: [],
+		hidden: false,
+		display: true,
+		value: undefined
+	};
+}
+
+function creatorFactory(name, init) {
+	return function (title, field, value) {
+		var props = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+		var maker = new Creator(name, title, field, value, props);
+
+		if (init) {
+			if (is.Function(init)) init(maker);else maker.props(init);
+		}
+
+		return maker;
+	};
+}
+
+var name$4 = 'hidden';
+var hidden = {
+	name: name$4,
+	maker: _defineProperty({}, name$4, function (field, value) {
+		return creatorFactory(name$4)('', field, value);
+	}),
+	render: function render() {
+		return [];
+	}
+};
+
+
+var NAME$4 = 'fcGroup';
+var Group = vue.defineComponent({
+	name: NAME$4,
+	props: {
+		field: String,
+		rule: Array,
+		expand: Number,
+		options: Object,
+		button: {
+			type: Boolean,
+			"default": true
+		},
+		max: {
+			type: Number,
+			"default": 0
+		},
+		min: {
+			type: Number,
+			"default": 0
+		},
+		modelValue: {
+			type: Array,
+			"default": function _default() {
+				return [];
+			}
+		},
+		disabled: {
+			type: Boolean,
+			"default": false
+		},
+		syncDisabled: {
+			type: Boolean,
+			"default": true
+		},
+		fontSize: {
+			type: Number,
+			"default": 28
+		},
+		onBeforeRemove: {
+			type: Function,
+			"default": function _default() {}
+		},
+		onBeforeAdd: {
+			type: Function,
+			"default": function _default() {}
+		}
+	},
+	inject: ['formCreateInject'],
+	data: function data() {
+		return {
+			len: 0,
+			cacheRule: {},
+			cacheValue: {},
+			form: vue.markRaw(this.formCreateInject.form.$form())
+		};
+	},
+	emits: ['update:modelValue', 'change', 'itemMounted', 'remove'],
+	watch: {
+		disabled: function disabled(n) {
+			if (this.syncDisabled) {
+				var lst = this.cacheRule;
+				Object.keys(lst).forEach(function (k) {
+					lst[k].$f.disabled(n);
+				});
+			}
+		},
+		expand: function expand(n) {
+			var d = n - this.modelValue.length;
+
+			if (d > 0) {
+				this.expandRule(d);
+			}
+		},
+		modelValue: {
+			handler: function handler(n) {
+				var _this = this;
+
+				n = n || [];
+				var keys = Object.keys(this.cacheRule),
+					total = keys.length,
+					len = total - n.length;
+
+				if (len < 0) {
+					for (var i = len; i < 0; i++) {
+						this.addRule(n.length + i);
+					}
+
+					for (var _i = 0; _i < total; _i++) {
+						this.setValue(keys[_i], n[_i]);
+					}
+				} else {
+					if (len > 0) {
+						for (var _i2 = 0; _i2 < len; _i2++) {
+							this.removeRule(keys[total - _i2 - 1]);
+						}
+
+						this.subForm();
+					}
+
+					n.forEach(function (val, i) {
+						_this.setValue(keys[i], n[i]);
+					});
+				}
+			},
+			deep: true
+		}
+	},
+	methods: {
+		_value: function _value(v) {
+			return v && hasProperty(v, this.field) ? v[this.field] : v;
+		},
+		cache: function cache(k, val) {
+			this.cacheValue[k] = JSON.stringify(val);
+		},
+		input: function input(value) {
+			this.$emit('update:modelValue', value);
+			this.$emit('change', value);
+		},
+		formData: function formData(key, _formData) {
+			var _this2 = this;
+
+			var cacheRule = this.cacheRule;
+			var keys = Object.keys(cacheRule);
+
+			if (keys.filter(function (k) {
+				return cacheRule[k].$f;
+			}).length !== keys.length) {
+				return;
+			}
+
+			var value = keys.map(function (k) {
+				var data = key === k ? _formData : _objectSpread2({}, _this2.cacheRule[k].$f.form);
+				var value = _this2.field ? data[_this2.field] || null : data;
+
+				_this2.cache(k, value);
+
+				return value;
+			});
+			this.input(value);
+		},
+		setValue: function setValue(key, value) {
+			var field = this.field;
+
+			if (field) {
+				value = _defineProperty({}, field, this._value(value));
+			}
+
+			if (this.cacheValue[key] === JSON.stringify(field ? value[field] : value)) {
+				return;
+			}
+
+			this.cache(key, value);
+		},
+		addRule: function addRule(i, emit) {
+			var _this3 = this;
+
+			var rule = this.formCreateInject.form.copyRules(this.rule || []);
+			var options = this.options ? _objectSpread2({}, this.options) : {
+				submitBtn: false,
+				resetBtn: false
+			};
+			this.cacheRule[++this.len] = {
+				rule: rule,
+				options: options
+			};
+
+			if (emit) {
+				vue.nextTick(function () {
+					return _this3.$emit('add', rule, Object.keys(_this3.cacheRule).length - 1);
+				});
+			}
+		},
+		add$f: function add$f(i, key, $f) {
+			var _this4 = this;
+
+			this.cacheRule[key].$f = $f;
+			this.subForm();
+			vue.nextTick(function () {
+				if (_this4.syncDisabled) {
+					$f.disabled(_this4.disabled);
+				}
+
+				_this4.$emit('itemMounted', $f, Object.keys(_this4.cacheRule).indexOf(key));
+			});
+		},
+		subForm: function subForm() {
+			var _this5 = this;
+
+			this.formCreateInject.subForm(Object.keys(this.cacheRule).map(function (k) {
+				return _this5.cacheRule[k].$f;
+			}));
+		},
+		removeRule: function removeRule(key, emit) {
+			var _this6 = this;
+
+			var index = Object.keys(this.cacheRule).indexOf(key);
+			delete this.cacheRule[key];
+			delete this.cacheValue[key];
+
+			if (emit) {
+				vue.nextTick(function () {
+					return _this6.$emit('remove', index);
+				});
+			}
+		},
+		add: function add() {
+			if (this.disabled || false === this.onBeforeAdd(this.modelValue)) {
+				return;
+			}
+
+			this.modelValue.push(this.field ? null : {});
+			this.$emit('update:modelValue', this.modelValue);
+		},
+		del: function del(index, key) {
+			if (this.disabled || false === this.onBeforeRemove(this.modelValue, index)) {
+				return;
+			}
+
+			this.removeRule(key, true);
+			this.subForm();
+			this.modelValue.splice(index, 1);
+			this.input(this.modelValue);
+		},
+		addIcon: function addIcon(key) {
+			return vue.createVNode("i", {
+				"key": "a".concat(key),
+				"class": "el-icon-circle-plus-outline",
+				"style": "font-size:".concat(this.fontSize, "px;cursor:").concat(this.disabled ? 'not-allowed;color:#c9cdd4' : 'pointer', ";"),
+				"onClick": this.add
+			}, null);
+		},
+		delIcon: function delIcon(index, key) {
+			var _this7 = this;
+
+			return vue.createVNode("i", {
+				"key": "d".concat(key),
+				"class": "el-icon-remove-outline",
+				"style": "font-size:".concat(this.fontSize, "px;cursor:").concat(this.disabled ? 'not-allowed;color:#c9cdd4' : 'pointer;color:#606266', ";"),
+				"onClick": function onClick() {
+					return _this7.del(index, key);
+				}
+			}, null);
+		},
+		makeIcon: function makeIcon(total, index, key) {
+			var _this8 = this;
+
+			if (this.$slots.button) {
+				return this.$slots.button({
+					total: total,
+					index: index,
+					vm: this,
+					key: key,
+					del: function del() {
+						return _this8.del(index, key);
+					},
+					add: this.add
+				});
+			}
+
+			if (index === 0) {
+				return [this.max !== 0 && total >= this.max ? null : this.addIcon(key), this.min === 0 || total > this.min ? this.delIcon(index, key) : null];
+			}
+
+			if (index >= this.min) {
+				return this.delIcon(index, key);
+			}
+		},
+		emitEvent: function emitEvent(name, args, index, key) {
+			this.$emit.apply(this, [name].concat(_toConsumableArray(args), [this.cacheRule[key].$f, index]));
+		},
+		expandRule: function expandRule(n) {
+			for (var i = 0; i < n; i++) {
+				this.modelValue.push(this.field ? null : {});
+			}
+		}
+	},
+	created: function created() {
+		var d = (this.expand || 0) - this.modelValue.length;
+
+		if (d > 0) {
+			this.expandRule(d);
+		}
+
+		for (var i = 0; i < this.modelValue.length; i++) {
+			this.addRule(i);
+		}
+	},
+	render: function render() {
+		var _this9 = this;
+
+		var keys = Object.keys(this.cacheRule);
+		var button = this.button;
+		var Type = this.form;
+		return keys.length === 0 ? this.$slots["default"] ? this.$slots["default"]({
+			vm: this,
+			add: this.add
+		}) : vue.createVNode("i", {
+			"key": 'a_def',
+			"class": "el-icon-circle-plus-outline",
+			"style": "font-size:".concat(this.fontSize, "px;vertical-align:middle;color:").concat(this.disabled ? '#c9cdd4;cursor: not-allowed' : '#606266;cursor:pointer', ";"),
+			"onClick": this.add
+		}, null) : vue.createVNode("div", {
+			"key": 'con'
+		}, [keys.map(function (key, index) {
+			var _slot;
+
+			var _this9$cacheRule$key = _this9.cacheRule[key],
+				rule = _this9$cacheRule$key.rule,
+				options = _this9$cacheRule$key.options;
+			return vue.createVNode(vue.resolveComponent("ElRow"), {
+				"align": "middle",
+				"type": "flex",
+				"key": key,
+				"style": "border-bottom:1px dashed #DCDFE6;margin-bottom:10px;"
+			}, {
+				"default": function _default() {
+					return [vue.createVNode(vue.resolveComponent("ElCol"), {
+						"span": button ? 20 : 24
+					}, {
+						"default": function _default() {
+							return [vue.createVNode(vue.resolveComponent("ElFormItem"), null, {
+								"default": function _default() {
+									return [vue.createVNode(Type, {
+										"key": key,
+										"onUpdate:modelValue": function onUpdateModelValue(formData) {
+											return _this9.formData(key, formData);
+										},
+										"modelValue": _this9.field ? _defineProperty({}, _this9.field, _this9._value(_this9.modelValue[index])) : _this9.modelValue[index],
+										"onEmit-event": function onEmitEvent(name) {
+											for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+												args[_key - 1] = arguments[_key];
+											}
+
+											return _this9.emitEvent(name, args, index, key);
+										},
+										"onUpdate:api": function onUpdateApi($f) {
+											return _this9.add$f(index, key, $f);
+										},
+										"rule": rule,
+										"option": options,
+										"extendOption": true
+									}, null)];
+								}
+							})];
+						}
+					}), button ? vue.createVNode(vue.resolveComponent("ElCol"), {
+						"span": 2,
+						"pull": 1,
+						"push": 1
+					}, _isSlot(_slot = _this9.makeIcon(keys.length, index, key)) ? _slot : {
+						"default": function _default() {
+							return [_slot];
+						}
+					}) : null];
+				}
+			});
+		})]);
+	}
+});
+
+
 var NAME$8 = "fcRadio";
 var Radio = vue.defineComponent({
 	name: NAME$8,
@@ -194,7 +604,8 @@ var Radio = vue.defineComponent({
 	},
 });
 
-var parsers = [row];
+
+var parsers = [row,hidden];
 
 var PRE = "el";
 var alias = {
@@ -225,7 +636,8 @@ var alias = {
 	tree: "fc-tree",
 	autoComplete: PRE + "-autocomplete",
 	auto: PRE + "-autocomplete",
-	group: "fc-group",
+	// group: "fc-group",
+	group: "el-group",
 	object: "fc-sub-form",
 	subForm: "fc-sub-form",
 };
@@ -478,7 +890,7 @@ function FormCreate(vm) {
 					labelPosition: "right",
 					labelWidth: "125px",
 					disabled: false,
-					size: undefined,
+					size: 'mini',
 				},
 				row: {
 					show: true,
@@ -1178,7 +1590,7 @@ function FormCreate(vm) {
 
 	extend(this, {
 		install: () => {
-			[Radio, Select].forEach(function (component) {
+			[Radio, Select,Group].forEach(function (component) {
 				_this.component(component.name, component);
 			});
 			CreateNode.use(alias);

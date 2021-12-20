@@ -4,10 +4,17 @@
 				<div class="left-panel">
 					<el-button
 						type="primary"
+						icon="el-icon-plus"
+						@click="onAdd"
+					>添加
+					</el-button>
+					<el-button
+						type="primary"
 						icon="el-icon-download"
 						@click="handleGenCodes"
 						>生成代码
 					</el-button>
+
 				</div>
 			</el-header>
 			<el-main class="nopadding">
@@ -56,7 +63,7 @@ export default {
 	data() {
 		return {
 			formParams: { id: 1 },
-			apiObj: this.$HTTP.url("/admin/code/code/lists"),
+			apiObj: this.$HTTP().url("/admin/code/code/lists"),
 			tableData: [],
 			queryParams: {
 				table_name: undefined,
@@ -66,12 +73,18 @@ export default {
 	},
 	async created() {},
 	methods: {
-
+		onAdd(){
+			this.$modalForm(
+				this.$HTTP().post("/admin/generator/generator_table/form")
+			).then((res) => {});
+		},
 		//表格选择后回调事件
 		selectionChange(selection) {
 			this.selection = selection;
 		},
-
+		preview(){
+			console.log(this.$refs.preview)
+		},
 		// 装载数据表后处理方法
 		confirm() {
 			this.handleSuccess();

@@ -86,10 +86,19 @@ class http {
 		method: "post",
 		params: {},
 	};
+
 	beforeSuccessCallback = [];
 	axiosConfig = {};
 	url(url) {
 		url && (this.config.url = url);
+		return this;
+	}
+	reflush(){
+		this.config = {
+			url: "",
+			method: "post",
+			params: {},
+		}
 		return this;
 	}
 	axiosRequest() {
@@ -126,9 +135,7 @@ class http {
 	post(url, params) {
 		this.config.method = "post";
 		this.url(url);
-		console.log(this);
 		this.params(params);
-
 		return this.request();
 	}
 	params(params = {}) {
@@ -161,4 +168,4 @@ class http {
 	}
 }
 
-export default new http();
+export default (new http());

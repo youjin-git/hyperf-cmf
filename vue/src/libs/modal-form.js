@@ -51,7 +51,6 @@ export default function modalForm(app) {
 							},
 						},
 					};
-					console.log("app", app);
 
 					if (!data.config.form) data.config.form = {};
 					if (!data.config.formData) data.config.formData = {};
@@ -67,18 +66,7 @@ export default function modalForm(app) {
 							props: {
 								rule: data.rule,
 								option: {
-									onSubmit: (formData) => {
-										//  http.post(data.action,formData).then((res) => {
-										// 				 done()
-										// 	 			this.$message.success(res.message || '提交成功')
-										// 	 			resolve(res)
-										//  }).catch(err => {
-										// 	this.$message.error(err.message || '提交失败')
-										// 	reject(err)
-										// }).finally(() => {
-										// 	instance.confirmButtonLoading = false
-										// })
-									},
+									size:"mini",
 									submitBtn: {
 										show: false,
 									},
@@ -95,6 +83,7 @@ export default function modalForm(app) {
 					console.log(formCreate);
 
 					this.$msgbox({
+						buttonSize:'mini',
 						dangerouslyUseHTMLString: true,
 						title: data.title,
 						customClass: config.class || "modal-form",

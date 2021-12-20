@@ -86,4 +86,8 @@ abstract class AbstractController
         succ(formToData($form));
     }
 
+    protected function getRoute($action)
+    {
+        return $this->route . '/' . $action;
+    }
 }
