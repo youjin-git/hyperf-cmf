@@ -38,7 +38,7 @@ jobs:
         uses: actions/checkout@v2
       - name: deplay 
         run: |
-          cd /ansible
+          cd ansible/
           pip install ansible
           ansible-playbook -i hosts run.yaml --extra-vars "ansible_ssh_pass=${{ secrets.SSH_PASSWORD }}"
                  
