@@ -8,8 +8,6 @@
 import colorTool from "@/utils/color";
 
 
-
-
 export default {
 	name: "App",
 	created() {
