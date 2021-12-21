@@ -1,0 +1,18 @@
+---
+- hosts: remote
+  gather_facts: F
+  remote_user: root
+  vars:
+    ansible_cnnection: ssh
+    ansible_user: root
+  tasks:
+     - name: "helloworld"
+       shell : echo 111
+       register: result
+     - name: Show debug  
+       debug: var=result.stdout verbosity=0
+     - name: Stop the old container
+       shell: cd /docker-compose/hyperf-cmf/
+       shell: docker-compose rm -f
+     - name: Stop the old container 
+       shell: docker-compose up -d

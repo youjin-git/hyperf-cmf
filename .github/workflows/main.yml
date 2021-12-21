@@ -1,33 +1,46 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Docker Image build and push
 
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
+env:
+  TKE_IMAGE_URL: registry.cn-hangzhou.aliyuncs.com   
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
+    
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-
+      - name: docker login 
+        run: |
+          docker login -u ${{ secrets.ALI_DOCKER_USERNAME }} -p '${{ secrets.ALI_DOCKER_PASSWORD }}' ${TKE_IMAGE_URL}
       # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+      - name: docker 
+        run: docker build -t yj_test .
 
-      - name: ls
-        run: ls
+      # Runs a set of commands using the runners shell
+      - name: docker ls 
+        run: docker images
+      
+
+deploy:
+   runs-on: ubuntu-latest
+   needs: build
+   steps: 
+    - name: checkout
+      uses: actions/checkout@v2
+    - name: deplay 
+      run: /
+        cd ansible/
+        pip install ansible
+        ansible-playbook -i hosts run.yaml --extra-vars "ansible_ssh_pass=${{ secrets.SSH_PASSWORD }}"
+
