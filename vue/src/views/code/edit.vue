@@ -1,5 +1,5 @@
 <template>
-	<el-drawer title="修改生成配置1" v-model="drawer" size="80%">
+	<el-drawer title="修改生成配置2020-12-21" v-model="drawer" size="80%">
 		<el-form
 			ref="form"
 			:model="form"
