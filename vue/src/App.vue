@@ -3,7 +3,6 @@
 		<router-view></router-view>
 	</el-config-provider>
 </template>
-
 <script>
 import colorTool from "@/utils/color";
 
