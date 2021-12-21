@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin\Generator;
 
+use App\Dao\Generator\GeneratorTableDao;
 use App\Dao\System\GroupDao;
 use App\Form\Elm;
 use App\Middleware\CheckLoginMiddleware;
@@ -27,6 +28,7 @@ use Hyperf\DbConnection\Db;
 use Hyperf\HttpServer\Annotation\AutoController;
 use App\Controller\AbstractController;
 use Hyperf\Di\Annotation\Inject;
+use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
 use Hyperf\Utils\Context;
 use App\Middleware\CheckAdminMiddleware;
@@ -39,6 +41,12 @@ class GeneratorTableController extends AbstractController
 {
 
     protected $route = 'admin/generator/generator_table';
+
+    /**
+     * @Inject()
+     * @var GeneratorTableDao
+     */
+    protected $generatorTableDao;
 
     public function form()
     {
@@ -63,9 +71,11 @@ class GeneratorTableController extends AbstractController
 
     }
 
+
+    
     public function add()
     {
-
+        $this->generatorTableDao->create();
     }
 
 

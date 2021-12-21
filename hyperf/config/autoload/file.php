@@ -17,7 +17,7 @@ return [
             'root' => __DIR__ . '/../../public',
         ],
         'base_path' => [
-            'driver' => \Hyperf\Filesystem\Adapter\LocalAdapterFactory::class,
+            'driver' => \Yj\Factory\LocalAdapterFactory::class,
             'root' => BASE_PATH,
         ],
         'ftp' => [

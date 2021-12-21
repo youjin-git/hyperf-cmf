@@ -80,7 +80,7 @@ class DaoMakeCommand extends GeneratorCommand
         $rootNamespace = $this->rootNamespace();
         $className = $rootNamespace;
         $className = $name->transform(function ($item) {
-                return Str::ucfirst($item);
+                return Str::studly($item);
             })->reduce(function ($classNameValue, $item) {
                 return $classNameValue . '\\' . $item;
             }, $className) . $this->type;
@@ -149,7 +149,6 @@ class DaoMakeCommand extends GeneratorCommand
             'name' => "{$seeder}Seeder",
         ]);
     }
-
 
 
     /**

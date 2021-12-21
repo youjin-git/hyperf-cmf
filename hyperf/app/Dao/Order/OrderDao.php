@@ -8,14 +8,13 @@ use App\Constants\OrderStatus;
 use App\Dao\BaseDao;
 use Hyperf\Database\Model\Builder;
 
-
 class OrderDao extends BaseDao
 {
     public function MakeWith(): array
     {
         return ['orderProduct' => function (\Hyperf\Database\Model\Relations\HasMany $query) {
             $query->with('product');
-        },'user'];
+        }, 'user'];
     }
 
     public function MakeWhere(Builder $query, $params)
