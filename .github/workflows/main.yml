@@ -30,17 +30,15 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: docker ls 
         run: docker images
-      
-
-deploy:
-   runs-on: ubuntu-latest
-   needs: build
-   steps: 
-    - name: checkout
-      uses: actions/checkout@v2
-    - name: deplay 
-      run: /
-        cd ansible/
-        pip install ansible
-        ansible-playbook -i hosts run.yaml --extra-vars "ansible_ssh_pass=${{ secrets.SSH_PASSWORD }}"
+    deploy:
+      runs-on: ubuntu-latest
+      needs: build
+      steps: 
+        - name: checkout
+          uses: actions/checkout@v2
+        - name: deplay 
+          run: /
+            cd ansible/
+            pip install ansible
+            ansible-playbook -i hosts run.yaml --extra-vars "ansible_ssh_pass=${{ secrets.SSH_PASSWORD }}"
                  
