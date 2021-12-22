@@ -37,6 +37,7 @@ class GeneratorCommand extends HyperfCommand
     {
 
         $name = $this->qualifyClass($this->getNameInput());
+    
         $path = $this->getPath($name);
 
         if ($this->alreadyExists()) {
