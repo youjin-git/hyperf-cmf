@@ -43,5 +43,5 @@ jobs:
           cd ansible/
           pip install ansible
           sudo apt-get install sshpass
-          ansible-playbook -i hosts --ask-vault-pass setup.yml  run.yaml  --ask-become-pass
+          ansible-playbook -i hosts --ask-vault-pass   run.yaml  --ask-become-pass
                  
