@@ -40,5 +40,6 @@ jobs:
         run: |
           cd ansible/
           pip install ansible
+          yum install sshpass
           ansible-playbook -i hosts run.yaml --extra-vars "ansible_ssh_pass=${{ secrets.SSH_PASSWORD }}"
                  
