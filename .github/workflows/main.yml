@@ -28,7 +28,7 @@ jobs:
       - name: docker 
         run: docker build -t ${TKE_IMAGE_URL} .
       - name: docker push
-        run: docker push ${TKE_IMAGE_URL}
+        run: docker push ${DOCKER_IMAGE_SOURCE}
       # Runs a set of commands using the runners shell
       - name: docker ls 
         run: docker images
