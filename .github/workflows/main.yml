@@ -9,6 +9,7 @@ on:
     branches: [ master ]
 env:
   TKE_IMAGE_URL: registry.cn-hangzhou.aliyuncs.com   
+  DOCKER_IMAGE_SOURCE: registry.cn-hangzhou.aliyuncs.com/zhouwenchang/hyperf-cmf:latest
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -25,8 +26,9 @@ jobs:
           docker login -u ${{ secrets.ALI_DOCKER_USERNAME }} -p '${{ secrets.ALI_DOCKER_PASSWORD }}' ${TKE_IMAGE_URL}
       # Runs a single command using the runners shell
       - name: docker 
-        run: docker build -t yj_test .
-
+        run: docker build -t ${TKE_IMAGE_URL} .
+      - name: docker push
+        run: docker push ${TKE_IMAGE_URL}
       # Runs a set of commands using the runners shell
       - name: docker ls 
         run: docker images
@@ -40,6 +42,6 @@ jobs:
         run: |
           cd ansible/
           pip install ansible
-          pip install sshpass
+          sudo apt-get install sshpass
           ansible-playbook -i hosts run.yaml --extra-vars "ansible_ssh_pass=${{ secrets.SSH_PASSWORD }}"
                  
