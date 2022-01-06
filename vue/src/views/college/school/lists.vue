@@ -2,12 +2,18 @@
 	<el-container>
 		<el-header>
 			<div class="left-panel">
-<!--				<el-button-->
-<!--					type="primary"-->
-<!--					icon="el-icon-download"-->
-<!--					@click="handleGenCodes"-->
-<!--				>生成代码-->
-<!--				</el-button>-->
+				<yj-upload
+					v-model="imgurl3"
+					:apiObj="uploadApi"
+					accept=".xls,.xlsx"
+					:on-success="success"
+				>
+					<el-button
+						type="primary"
+						@click="handleGenCodes"
+					>导入学校数据
+					</el-button>
+				</yj-upload>
 			</div>
 		</el-header>
 		<el-main class="nopadding">

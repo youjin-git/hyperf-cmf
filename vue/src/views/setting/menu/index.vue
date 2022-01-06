@@ -11,6 +11,7 @@
 				</el-header>
 				<el-main class="nopadding">
 					<el-tree
+						default-expand-all
 						ref="menu"
 						class="menu"
 						node-key="id"

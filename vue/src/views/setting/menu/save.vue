@@ -227,7 +227,7 @@ export default {
 		//保存
 		async save() {
 			this.loading = true;
-			var res = await this.$HTTP
+			var res = await this.$HTTP()
 				.post("/admin/system/system_menu/edit", this.form)
 				.then((res) => {
 					this.$message.success("保存成功");

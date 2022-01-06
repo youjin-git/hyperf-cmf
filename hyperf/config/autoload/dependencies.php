@@ -15,5 +15,6 @@ use Hyperf\Contract\LengthAwarePaginatorInterface;
 use Yj\Dependencies\LengthAwarePaginator;
 
 return [
+    \Hyperf\HttpServer\Router\DispatcherFactory::class => \Yj\Apidog\DispatcherFactory::class,
     LengthAwarePaginatorInterface::class => LengthAwarePaginator::class,
 ];

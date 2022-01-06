@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /**
  * This file is part of Hyperf.
  *
@@ -16,7 +17,7 @@ use Hyperf\Apidog\Middleware\ApiValidationMiddleware;
 return [
     'http' => [
         CorsMiddleware::class,
-        Hyperf\Apidog\Middleware\ApiValidationMiddleware::class,
+//        Hyperf\Apidog\Middleware\ApiValidationMiddleware::class,
         \Hyperf\Validation\Middleware\ValidationMiddleware::class,
 
     ],

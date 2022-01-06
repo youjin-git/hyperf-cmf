@@ -114,12 +114,6 @@ abstract class Model extends BaseModel implements CacheableInterface
     }
 
 
-    public function lists($limit = 15)
-    {
-        return $this->paginate($limit);
-    }
-
-
     public function checkAttributes($attribute, $callback, $empty = '')
     {
         if (!is_array($attribute)) {

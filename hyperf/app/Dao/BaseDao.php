@@ -75,20 +75,8 @@ abstract class BaseDao
 
     public function __call($method, $parameters)
     {
-        dump($method);
 
         return tap($this->getModel()->newQuery(), function ($query) {
-
         })->{$method}(...$parameters);
-//        if (strpos($method, 'Dao') !== false) {
-//            $this->setBaseMethods($method, $parameters);
-//            return $this;
-//        }
-//        return tap($this->getModel()->newQuery(), function ($query) {
-//            foreach ($this->baseMethods as [$method, $params]) {
-//                $this->{$method . 'Scope'}($query, $params);
-//            }
-//            $this->baseMethods = [];
-//        })->{$method}(...$parameters);
     }
 }

@@ -21,14 +21,7 @@ class SystemMenuService extends BaseService
     public function list($params)
     {
         $data = $this->systemMenuDao->DaoWhere($params)->getList();
-        $except = [
-//            'title',
-//            'type',
-//            'icon',
-//            'active',
-//            'hidden',
-//            'hiddenBreadcrumb'
-        ];
+
         $data->transform(function ($item) use ($except) {
             $item = collect($item);
             $item->offsetSet('meta', $item->only($except));
@@ -39,6 +32,8 @@ class SystemMenuService extends BaseService
 
     public function edit($id, Collection $params)
     {
+        $this->systemMenuDao->check($id,$params);
+
         $systemMenuData = $this->systemMenuDao->DaoWhere([
             'id' => $id
         ])->firstOr(fn() => _Error('不存在数据'));
@@ -48,6 +43,7 @@ class SystemMenuService extends BaseService
 
     public function add(Collection $params)
     {
+        $this->systemMenuDao->check($id,$params);
 
         return $this->systemMenuDao->create($params->toArray());
     }

@@ -21,6 +21,7 @@ use App\Model\Project;
 use App\Model\User;
 use App\Model\UserAuthentication;
 use App\Model\UserProject;
+use App\Request\Admin\Generator\GeneratorTableAddRequest;
 use App\Service\AdminService;
 use FormBuilder\Driver\CustomComponent;
 
@@ -52,8 +53,7 @@ class GeneratorTableController extends AbstractController
     {
         $id = $this->request->input('id');
         if ($id) {
-            $formData = [];
-//            $formData = $this->groupService->first($id)->toArray();
+            $formData = $this->generatorTableDao->first($id)->toArray();
         } else {
             $formData = [];
         }
@@ -68,14 +68,15 @@ class GeneratorTableController extends AbstractController
 
     public function lists()
     {
-
+        $data = $this->generatorTableDao->lists($this->request->post());
+        _SUCCESS($data);
     }
 
 
-    
-    public function add()
+    public function add(GeneratorTableAddRequest $request)
     {
-        $this->generatorTableDao->create();
+        $this->generatorTableDao->add($request->collection());
+        _SUCCESS();
     }
 
 

@@ -52,8 +52,9 @@ class ConfigController extends AbstractController
      */
     protected $configModel;
 
-    public function create($id,$formData=[]){
-        $form =  Elm::createForm('4399');
+    public function create($id, $formData = [])
+    {
+        $form = Elm::createForm('4399');
         $form->setRule([
             Elm::select('pid', '上级分类', 0)->options(function () {
                 $data = [];
@@ -74,11 +75,12 @@ class ConfigController extends AbstractController
         succ(formToData($lists));
     }
 
-    public function customer($id,$formData=[]){
+    public function customer($id, $formData = [])
+    {
         $formData = $this->configValueModel->_get([
-            'customer_tel','customer_qq','customer_wx'
+            'customer_tel', 'customer_qq', 'customer_wx'
         ]);
-        $form =  Elm::createForm('4399');
+        $form = Elm::createForm('4399');
         $form->setRule([
             Elm::input('customer_tel', '手机号码')->disabled(true),
             Elm::input('customer_wx', '微信')->disabled(true),
@@ -96,20 +98,24 @@ class ConfigController extends AbstractController
 
     public function lists()
     {
-        $lists = $this->configModel->lists();
+        $lists = $this->configModel;
         succ($lists);
     }
-    public function all(){
-            $data = $this->configClassifyModel->get();
+
+    public function all()
+    {
+        $data = $this->configClassifyModel->get();
 
 
     }
-    public function update(){
-            $params = $this->request->all();
-            foreach($params as $key=>$v){
-                    $v = json_encode($v);
-                    $this->configValueModel->where('key',$key)->update(['value'=>$v]);
-            }
-            succ();
+
+    public function update()
+    {
+        $params = $this->request->all();
+        foreach ($params as $key => $v) {
+            $v = json_encode($v);
+            $this->configValueModel->where('key', $key)->update(['value' => $v]);
+        }
+        succ();
     }
 }

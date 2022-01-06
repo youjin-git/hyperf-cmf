@@ -46,7 +46,6 @@ class IndexController extends AbstractController
      */
     public function index()
     {
-        dd(11111111111111);
         return $this->render->render('index');
     }
 

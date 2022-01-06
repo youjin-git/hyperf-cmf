@@ -5,6 +5,7 @@ import http from "@/utils/request";
 import { permission, rolePermission } from "./utils/permission";
 import scTable from "./components/scTable";
 import yjTable from "./components/yjTable";
+import yjUpload from "./components/yjUpload";
 import scFilterBar from "./components/scFilterBar";
 import scUpload from "./components/scUpload";
 import scUploadMultiple from "./components/scUpload/multiple";
@@ -39,9 +40,11 @@ export default {
 		//注册全局组件
 
 		app.component("scTable", scTable);
+
 		app.component("yjTable", yjTable);
 		app.component("scFilterBar", scFilterBar);
 		app.component("scUpload", scUpload);
+		app.component("yjUpload", yjUpload);
 		app.component("scUploadMultiple", scUploadMultiple);
 		app.component("scFormTable", scFormTable);
 		app.component("scTableSelect", scTableSelect);

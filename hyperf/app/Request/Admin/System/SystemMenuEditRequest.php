@@ -26,7 +26,6 @@ class SystemMenuEditRequest extends BaseRequest
             'path' => 'required',
             'hidden' => 'required',
             'component' => 'required',
-            'color' => 'nullable',
             'active' => 'nullable',
             'hidden_breadcrumb' => 'nullable',
         ];

@@ -17,7 +17,15 @@ return [
         ],
         'ignore_annotations' => [
             'mixin',
-            'day'
+            'Notes',
+            'PostApi',
+            'ApiController',
+            'Hyperf\Apidog\Annotation\ApiController',
+            'Hyperf\Apidog\Annotation\PostApi',
+            'Hyperf\Apidog\Annotation\FormData',
+            'Hyperf\Apidog\Annotation\GetApi',
+            'day',
+            'time'
         ],
     ],
 ];
