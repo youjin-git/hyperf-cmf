@@ -6,6 +6,7 @@
  */
 
 import CryptoJS from "crypto-js";
+import {$set} from "@/utils/common";
 
 const tool = {};
 
@@ -178,5 +179,20 @@ tool.crypto = {
 		},
 	},
 };
+
+var _extends = Object.assign ||
+	function (a) {
+		for (var b, c = 1; c < arguments.length; c++) {
+			for (var d in ((b = arguments[c]), b)) {
+				Object.prototype.hasOwnProperty.call(b, d) && $set(a, d, b[d]);
+			}
+		}
+
+		return a;
+};
+
+tool.extend = function(){
+	return _extends.apply(this, arguments);
+}
 
 export default tool;

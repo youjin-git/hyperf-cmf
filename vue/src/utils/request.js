@@ -17,7 +17,7 @@ axios.interceptors.request.use(
 				sysConfig.TOKEN_PREFIX + token;
 		}
 		if (!sysConfig.REQUEST_CACHE && config.method == "get") {
-			config.params = config.params || {};
+			config.params = config.params || new FormData();
 			config.params["_"] = new Date().getTime();
 		}
 		Object.assign(config.headers, sysConfig.HEADERS);
@@ -84,9 +84,8 @@ class http {
 	config = {
 		url: "",
 		method: "post",
-		params: {},
+		params: new FormData(),
 	};
-
 	beforeSuccessCallback = [];
 	axiosConfig = {};
 	url(url) {
@@ -97,7 +96,7 @@ class http {
 		this.config = {
 			url: "",
 			method: "post",
-			params: {},
+			params: new FormData(),
 		}
 		return this;
 	}
@@ -133,13 +132,27 @@ class http {
 	}
 
 	post(url, params) {
+		console.log(params)
 		this.config.method = "post";
 		this.url(url);
 		this.params(params);
 		return this.request();
 	}
-	params(params = {}) {
-		this.config.params = Object.assign(this.config.params, params);
+	params(params = new FormData()) {
+		console.log(params)
+		if(params instanceof FormData){
+			for (const item of params.keys()) {
+				this.config.params.append(item, params.get(item))
+			}
+		}else{
+			console.log(this.config.params);
+			for (const item of Object.keys(params)) {
+				this.config.params.append(item, params[item])
+			}
+		}
+
+		// this.config.params = Object.assign(this.config.params, params);
+		// this.config.params.push
 		return this;
 	}
 	get(url, params) {

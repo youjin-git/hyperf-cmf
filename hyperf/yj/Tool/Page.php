@@ -16,12 +16,15 @@ class Page
 
     protected $count = null;
 
+    /**
+     * @var Collection
+     */
     protected $data = [];
 
     /**
      * @return Collection
      */
-    public function __invoke($data, int $page = null)
+    public function __invoke($data, int $page = 1)
     {
 
         $this->setCurrentPage($page);
@@ -38,7 +41,7 @@ class Page
 
     public function setCurrentPage($page)
     {
-        $this->page = is_null($page) ? di()->get(RequestInterface::class)->input('page', 1) : $page;
+        $this->page = (int)(is_null($page) ? di()->get(RequestInterface::class)->input('page', 1) : $page);
     }
 
     /**
@@ -63,11 +66,17 @@ class Page
      */
     public function Paginator()
     {
+        dump([
+            $this->data->forPage($this->page, $this->getPageSize())->values(),
+            $this->count,
+            (int)$this->getPageSize(),
+            $this->page
+        ]);
         return make(LengthAwarePaginatorInterface::class,
             [
                 $this->data->forPage($this->page, $this->getPageSize())->values(),
                 $this->count,
-                $this->getPageSize(),
+                (int)$this->getPageSize(),
                 $this->page
             ]);
     }

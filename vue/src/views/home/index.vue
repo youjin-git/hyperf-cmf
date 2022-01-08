@@ -31,7 +31,6 @@ export default {
 		};
 	},
 	created() {
-		this.dashboard = this.$TOOL.data.get("USER_INFO").dashboard || "0";
 	},
 	mounted() {},
 	methods: {

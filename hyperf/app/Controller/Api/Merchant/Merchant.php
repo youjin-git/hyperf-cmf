@@ -5,6 +5,7 @@ namespace App\Controller\Api\Merchant;
 
 
 use App\Controller\AbstractController;
+use App\Model\Product\Product;
 use App\Service\Product\ProductService;
 use Hyperf\Apidog\Annotation\ApiController;
 use Hyperf\Apidog\Annotation\FormData;
@@ -26,11 +27,13 @@ class Merchant extends AbstractController
      * @PostApi(path="detail", description="获取用户信息")
      * @FormData(key="id|id", rule="required")
      */
-    public function detail(){
+    public function detail()
+    {
         $data = $this->getValidatorData();
-        $datail = $this->productServer->detail($data['id'],[],['merchant']);
+        $datail = $this->productServer->detail($data['id'], [], ['merchant']);
         succ($datail);
+
     }
 
-    
+
 }

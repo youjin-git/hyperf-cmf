@@ -11,12 +11,17 @@ declare(strict_types=1);
  */
 return [
     'scan' => [
+        'collectors' => [
+            \Yj\Apidog\AnnotationCollector::class,
+        ],
         'paths' => [
             BASE_PATH . '/app',
             BASE_PATH . '/yj',
         ],
         'ignore_annotations' => [
             'mixin',
+            'User',
+            'Date',
             'Notes',
             'PostApi',
             'ApiController',

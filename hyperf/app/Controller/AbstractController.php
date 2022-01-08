@@ -55,7 +55,7 @@ abstract class AbstractController
     protected function getValidatorData($fielid = '')
     {
         if ($fielid) {
-            return Context::get('validator.data')[$fielid];
+            return Context::get('validator.data')->get($fielid);
         }
         return Context::get('validator.data');
     }

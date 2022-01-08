@@ -47,7 +47,7 @@ class GroupDataController extends AbstractController
 
 
     /**
-     * @PostApi(path="form", description="获取用户信息")
+     * @PostApi(path="form", description="获取用户信息")s-
      * @FormData(key="id|id", rule="required")
      * @FormData(key="group_id|group_id", rule="required")
      */

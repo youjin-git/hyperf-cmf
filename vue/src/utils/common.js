@@ -107,6 +107,7 @@ function uniqueId() {
 		Number("".concat(Date.now()).concat(++id)).toString(36)
 	);
 }
+
 function extend() {
 	return _extends.apply(this, arguments);
 }

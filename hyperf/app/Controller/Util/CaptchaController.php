@@ -26,10 +26,9 @@ use Gregwar\Captcha\CaptchaBuilder;
 use Gregwar\Captcha\PhraseBuilder;
 use Psr\Container\ContainerInterface;
 use Hyperf\Snowflake\IdGeneratorInterface;
-use Hyperf\Apidog\Annotation\ApiController;
-use Hyperf\Apidog\Annotation\FormData;
 use Hyperf\Apidog\Annotation\PostApi;
 use Hyperf\Apidog\Annotation\GetApi;
+use Yj\Apidog\Annotation\ApiController;
 
 /**
  * @ApiController(tag="验证码",prefix="util/captcha",description="")
@@ -43,14 +42,14 @@ class CaptchaController extends AbstractController
     protected $container;
 
     /**
-     * @GetApi(path="get", description="图片验证码")
-     * @PostApi(path="get", description="图片验证码")
+     * @\Yj\Apidog\Annotation\GetApi(path="get", description="图片验证码")
+     * @\Yj\Apidog\Annotation\PostApi(path="get", description="图片验证码")
      */
     public function get()
     {
 
 
-        $builder = new CaptchaBuilder(null,new PhraseBuilder(4));
+        $builder = new CaptchaBuilder(null, new PhraseBuilder(4));
         $builder->build();
 //        p($this->container);
         $cache = $this->container->get(\Psr\SimpleCache\CacheInterface::class);
@@ -59,31 +58,33 @@ class CaptchaController extends AbstractController
         $key = (string)$generator->generate();
 //        $key = uniqid(microtime(true), true);
         $code = $builder->getPhrase();
-        $cache->set('captcha' . $key,$code,600);
+        $cache->set('captcha' . $key, $code, 600);
         $image = $builder->inline();
-        succ(compact('key','image','code'));
+        succ(compact('key', 'image', 'code'));
     }
 
-    public function check($key,$code){
+    public function check($key, $code)
+    {
         $cache = $this->container->get(\Psr\SimpleCache\CacheInterface::class);
-        $_code  = $cache->get('captcha' . $key);
+        $_code = $cache->get('captcha' . $key);
 
         if (!$_code) {
             err('验证码过期');
         }
 
         if (strtolower($_code) != strtolower($code)) {
-           err('验证码错误');
+            err('验证码错误');
         }
         //删除code
         $cache->delete('captcha' . $key);
         return true;
     }
 
-    public function checkCode(string $key,string $code){
+    public function checkCode(string $key, string $code)
+    {
         $cache = $this->container->get(\Psr\SimpleCache\CacheInterface::class);
 
-        $_code  = $cache->get('captcha' . $key);
+        $_code = $cache->get('captcha' . $key);
 
         if (!$_code) {
             err('验证码过期');

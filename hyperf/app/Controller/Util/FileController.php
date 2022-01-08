@@ -24,10 +24,11 @@ use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\RequestMapping;
 use Gregwar\Captcha\CaptchaBuilder;
 use League\Flysystem\Filesystem;
-use Hyperf\Apidog\Annotation\ApiController;
-use Hyperf\Apidog\Annotation\FormData;
-use Hyperf\Apidog\Annotation\PostApi;
-use Hyperf\Apidog\Annotation\GetApi;
+use Yj\Apidog\Annotation\ApiController;
+use Yj\Apidog\Annotation\FormData;
+use Yj\Apidog\Annotation\GetApi;
+use Yj\Apidog\Annotation\PostApi;
+
 
 /**
  * @ApiController(tag="文件管理",prefix="util/file",description="")
@@ -60,32 +61,33 @@ class FileController extends AbstractController
      */
     public function upload()
     {
-        $file = $this->request->file('file')?:err('file is empty');
+        $file = $this->request->file('file') ?: err('file is empty');
 
         $stream = fopen($file->getRealPath(), 'r+');
 
-        $filePath = $this->getFilePath('img',$file->getExtension());
+        $filePath = $this->getFilePath('img', $file->getExtension());
 
-        if(!$this->filesystem->writeStream( $filePath, $stream)){
-             err('writeStream is wrong');
+        if (!$this->filesystem->writeStream($filePath, $stream)) {
+            err('writeStream is wrong');
         }
 
         //插入数据库
-        $file = $this->fileModel->create(['name'=>$file->getClientFilename(),'path'=>$filePath,'size'=>$file->getSize()]);
+        $file = $this->fileModel->create(['name' => $file->getClientFilename(), 'path' => $filePath, 'size' => $file->getSize()]);
 
         fclose($stream);
 
-        if($this->request->input('type') == 'tinymce'){
-            return $this->response->json( ['location'=> $this->configValueModel->_get('site_url').$filePath]);
-        }else{
-            succ(['id'=>$file->id,'path'=>$filePath,'src'=>$this->configValueModel->_get('site_url').$filePath]);
+        if ($this->request->input('type') == 'tinymce') {
+            return $this->response->json(['location' => $this->configValueModel->_get('site_url') . $filePath]);
+        } else {
+            succ(['id' => $file->id, 'path' => $filePath, 'src' => $this->configValueModel->_get('site_url') . $filePath]);
 
         }
 
     }
 
-    public function getFilePath($type='img',$ext=''){
-        $path = '/update/'.$type.'/'.date('ymd'). '/' .time().rand(1000,9999).'.'.$ext;
+    public function getFilePath($type = 'img', $ext = '')
+    {
+        $path = '/update/' . $type . '/' . date('ymd') . '/' . time() . rand(1000, 9999) . '.' . $ext;
         return $path;
     }
 
@@ -94,16 +96,15 @@ class FileController extends AbstractController
      * @PostApi(path="get_path", description="")
      * @FormData(key="id|文件id", rule="required")
      */
-    public function get_path(){
+    public function get_path()
+    {
         $id = $this->request->input('id');
 
-        if(empty($id)){
+        if (empty($id)) {
             succ('');
-        }else{
+        } else {
             succ($this->fileModel->getFullPath($id));
 
         }
-
-
     }
 }

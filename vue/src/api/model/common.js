@@ -3,10 +3,10 @@ import http from "@/utils/request";
 
 export default {
 	upload: {
-		url: `${config.API_URL}/upload`,
+		url: `${config.API_URL}/util/file/upload`,
 		name: "文件上传",
 		post: async function (data, config = {}) {
-			return await http.post(this.url, data, config);
+			return await http.post(this.url, data);
 		},
 	},
 	file: {

@@ -21,9 +21,7 @@
 				append-to-body
 				:z-index="9999"
 			></el-image>
-			<a v-else :href="img" class="file" target="_blank"
-				><i class="el-icon-document"></i
-			></a>
+			<a v-else :href="img" class="file" target="_blank"><i class="el-icon-document"></i></a>
 		</div>
 		<div
 			v-else
@@ -210,18 +208,20 @@ export default {
 			this.loading = true;
 		},
 		success(res) {
+			console.log(res);
+
 			this.loading = false;
 			this.tempImg = "";
-			var os = this.onSuccess(res);
-			if (os != undefined && os == false) {
-				return false;
-			}
-			var response = config.parseData(res);
-			if (response.code != config.successCode) {
-				this.$message.warning(response.msg || "上传文件未知错误");
-			} else {
-				this.img = response.src;
-			}
+			// var os = this.onSuccess(res);
+			// if (os != undefined && os == false) {
+			// 	return false;
+			// }
+			// var response = config.parseData(res);
+			// if (response.code != config.successCode) {
+			// 	this.$message.warning(response.msg || "上传文件未知错误");
+			// } else {
+			// 	this.img = response.src;
+			// }
 		},
 		error(err) {
 			this.$notify.error({
@@ -236,6 +236,7 @@ export default {
 			this.img = "";
 		},
 		request(param) {
+			console.log(param);
 			var apiObj = config.apiObj;
 			if (this.apiObj) {
 				apiObj = this.apiObj;
@@ -243,6 +244,7 @@ export default {
 			const data = new FormData();
 			var file = this.cropper ? this.cropperUploadFile : param.file;
 			data.append("file", file);
+			console.log(data);
 			apiObj
 				.post(data)
 				.then((res) => {

@@ -15,13 +15,14 @@ if (!function_exists('app')) {
      *
      * @param string|null $abstract
      * @param array $parameters
+     * @return
      */
     function app($abstract = null, array $parameters = [])
     {
         if (is_null($abstract)) {
             return ApplicationContext::getContainer();
         }
-        return ApplicationContext::getContainer()->get($abstract, $parameters);
+        return ApplicationContext::getContainer()->make($abstract, $parameters);
     }
 }
 

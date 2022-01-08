@@ -26,6 +26,11 @@ class CorsMiddleware implements MiddlewareInterface
             return $response;
         }
 
+        if ($request->getUri()->getPath() == '/favicon.ico') {
+            return $response;
+        }
+
+
         return $handler->handle($request);
     }
 }

@@ -17,6 +17,7 @@ use Hyperf\Apidog\Middleware\ApiValidationMiddleware;
 return [
     'http' => [
         CorsMiddleware::class,
+        \Yj\Apidog\Middleware\ApiValidationMiddleware::class,
 //        Hyperf\Apidog\Middleware\ApiValidationMiddleware::class,
         \Hyperf\Validation\Middleware\ValidationMiddleware::class,
 

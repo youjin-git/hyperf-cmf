@@ -22,12 +22,12 @@ export default (error, vm) => {
 
 	console.warn(`[SCUI error]: ${error}`);
 	console.error(error);
-	//throw error;
+	throw error;
 
-	vm.$nextTick(() => {
-		vm.$notify.error({
-			title: errorName,
-			message: error,
-		});
-	});
+	// vm.$nextTick(() => {
+	// 	vm.$notify.error({
+	// 		title: errorName,
+	// 		message: error,
+	// 	});
+	// });
 };

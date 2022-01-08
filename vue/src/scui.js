@@ -61,6 +61,6 @@ export default {
 		app.directive("copy", copy);
 
 		//全局代码错误捕捉
-		app.config.errorHandler = errorHandler;
+		// app.config.errorHandler = errorHandler;
 	},
 };

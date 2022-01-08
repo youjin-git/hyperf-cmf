@@ -4,6 +4,7 @@
 namespace Yj\Apidog;
 
 use Hyperf\HttpServer\Annotation\Controller;
+use Hyperf\HttpServer\Annotation\Mapping;
 use Hyperf\HttpServer\Router\DispatcherFactory as HyperfDispatcherFactory;
 use Yj\Apidog\Annotation\ApiController;
 
@@ -20,6 +21,7 @@ class DispatcherFactory extends HyperfDispatcherFactory
         $router = $this->getRouter($annotation->server);
         $prefix = $this->getPrefix($className, $annotation->prefix);
 
+
         foreach ($methodMetadata as $methodName => $values) {
             $methodMiddlewares = $middlewares;
             if (isset($values)) {
@@ -27,13 +29,18 @@ class DispatcherFactory extends HyperfDispatcherFactory
                 $methodMiddlewares = array_unique($methodMiddlewares);
             }
             foreach ($values as $mapping) {
+                if (!($mapping instanceof Mapping)) {
+                    continue;
+                }
+                if (!isset($mapping->methods)) {
+                    continue;
+                }
                 $path = $mapping->path;
                 if ($path === '') {
                     $path = $prefix;
                 } elseif ($path[0] !== '/') {
                     $path = $prefix . '/' . $path;
                 }
-                dump($mapping->methods, $path, $className, $methodName);
                 $router->addRoute($mapping->methods, $path, [$className, $methodName], [
                     'middleware' => $methodMiddlewares,
                 ]);
@@ -43,7 +50,6 @@ class DispatcherFactory extends HyperfDispatcherFactory
 
     protected function initAnnotationRoute(array $collector): void
     {
-
         foreach ($collector as $className => $metadata) {
             if (isset($metadata['_c'][ApiController::class])) {
                 $middlewares = $this->handleMiddleware($metadata['_c']);
