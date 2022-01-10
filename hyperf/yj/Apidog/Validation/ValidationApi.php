@@ -36,10 +36,15 @@ class ValidationApi
 
         $FormDataRules = $FormDataAnnotations->mapWithKeys(function ($item) {
             return [$item->key => $item->rule];
-        })->toArray();
+        });
 
-        $Request = app(BaseRequest::class);
-        $Request->setRules($FormDataRules);
+
+        $FormDataDefault = $FormDataAnnotations->where('default', '!==', null)->mapWithKeys(function ($item) {
+            return [$item->key => $item->default];
+        });
+
+
+        $Request = app(BaseRequest::class)->setDefault($FormDataDefault)->setRules($FormDataRules);
         $Request->validateResolved();
         Context::set('validator.data', $Request->collection());
 

@@ -47,10 +47,24 @@ class BaseRequest extends FormRequest
     }
 
 
-    public function setRules($rules = [])
+    public function setDefault(Collection $default){
+        if($default->isNotEmpty()){
+            $validator = $this->getValidatorInstance();
+            $validatorData = $validator->getData();
+           $default->each(function ($value,$key)use(&$validatorData){
+                    if(!isset($validatorData[$key])){
+                        $validatorData[$key] = $value;
+                    }
+            });
+            $validator->setData($validatorData);
+        }
+        return $this;
+    }
+
+    public function setRules(Collection $rules)
     {
         $validator = $this->getValidatorInstance();
-        $validator->setRules($rules);
+        $validator->setRules($rules->toArray());
         return $this;
     }
 

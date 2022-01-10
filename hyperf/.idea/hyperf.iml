@@ -6,7 +6,7 @@
       <sourceFolder url="file://$MODULE_DIR$/app" isTestSource="false" packagePrefix="App\" />
       <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/spec" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" packagePrefix="HyperfTest\" />
+      <sourceFolder url="file://$MODULE_DIR$/./test" isTestSource="true" packagePrefix="HyperfTest\" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/bacon/bacon-qr-code" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/cache/adapter-common" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/cache/filesystem-adapter" />

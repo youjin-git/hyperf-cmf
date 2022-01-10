@@ -1,3 +1,4 @@
 .idea
 /hyperf/vendor
+/hyperf/.idea
 /hyperf_bak

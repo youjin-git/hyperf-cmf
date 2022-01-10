@@ -113,6 +113,7 @@ class MenuController extends AbstractController
         //获取权限
         $uid = Context::get('uid');
         $rules = $this->adminServer->getRules($uid);
+        dump($rules);
         $lists = $this->menuModel
             ->orderBy('sort')
             ->where(function ($query) use ($rules) {

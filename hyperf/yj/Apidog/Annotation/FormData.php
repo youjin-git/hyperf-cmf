@@ -27,7 +27,6 @@ class FormData implements AnnotationInterface
 
     public function collectMethod(string $className, ?string $target): void
     {
-        dump($className, $target);
         AnnotationCollector::collectMethod($className, $target, static::class, $this);
     }
 

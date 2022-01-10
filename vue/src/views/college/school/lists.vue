@@ -115,7 +115,12 @@
 		},
 		async created() {},
 		methods: {
+			success(res){
+				console.log(res);
+				this.$HTTP().post('/import/school',res).then(res=>{
 
+				});
+			},
 			//表格选择后回调事件
 			selectionChange(selection) {
 				this.selection = selection;

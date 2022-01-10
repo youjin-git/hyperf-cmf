@@ -65,6 +65,7 @@ router.beforeEach(async (to, from, next) => {
 	//加载API路由
 	if (!isGetApiRouter) {
 		let menu = await Store.dispatch("getMenus");
+		console.log(menu);
 		var apiRouter = filterAsyncRouter(menu);
 		apiRouter = flatAsyncRoutes(apiRouter);
 		console.log(apiRouter);

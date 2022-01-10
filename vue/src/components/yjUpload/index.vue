@@ -212,7 +212,7 @@ export default {
 
 			this.loading = false;
 			this.tempImg = "";
-			// var os = this.onSuccess(res);
+			var os = this.onSuccess(res);
 			// if (os != undefined && os == false) {
 			// 	return false;
 			// }
