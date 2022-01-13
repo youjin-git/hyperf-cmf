@@ -22,8 +22,10 @@ class CodeController extends AdminController
      */
     protected $DatabaseService;
 
+
     public function lists()
     {
+
         $data = $this->DatabaseService->getTables();
         _SUCCESS($data);
     }

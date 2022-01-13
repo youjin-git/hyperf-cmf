@@ -30,7 +30,7 @@ return [
                 Event::ON_FINISH => [Hyperf\Framework\Bootstrap\FinishCallback::class, 'onFinish'],
                 Event::ON_REQUEST => [Hyperf\HttpServer\Server::class, 'onRequest'],
             ],
-        ],
+        ]
     ],
     'settings' => [
         'task_worker_num'=>1,

@@ -34,7 +34,7 @@
 								<span class="do">
 									<i
 										class="el-icon-plus"
-										@click.stop="add(node, data)"
+										@click.stop="onAdd(node, data)"
 									></i>
 								</span>
 							</span>
@@ -46,7 +46,7 @@
 						type="primary"
 						size="mini"
 						icon="el-icon-plus"
-						@click="add()"
+						@click="onAdd()"
 					></el-button>
 					<el-button
 						type="danger"
@@ -123,7 +123,7 @@ export default {
 			);
 		},
 		//增加
-		async add(node, data) {
+		async onAdd(node, data) {
 			var newMenuName = "未命名" + newMenuIndex++;
 			var newMenuData = {
 				pid: data ? data.id : 0,
@@ -134,7 +134,7 @@ export default {
 				type: "menu",
 			};
 			this.menuloading = true;
-			var res = await this.$HTTP
+			var res = await this.$HTTP()
 				.showSuccessInfo("添加成功")
 				.post("/admin/system/system_menu/add", newMenuData)
 				.catch((res) => {

@@ -98,6 +98,7 @@ class http {
 			method: "post",
 			params: new FormData(),
 		}
+		this.beforeSuccessCallback = [];
 		return this;
 	}
 	axiosRequest() {
@@ -116,6 +117,8 @@ class http {
 	}
 	request() {
 		return this.axiosRequest().then(({ status, data, message, code }) => {
+			var isReject = false;
+			console.log(this.config.url,status,data,this.beforeSuccessCallback);
 			switch (status) {
 				case 0:
 				case 200:
@@ -125,6 +128,29 @@ class http {
 						message: message,
 						type: "error",
 					});
+					break;
+				case 40001:
+					ElMessageBox.confirm(
+						'proxy will permanently delete the file. Continue?',
+						'Warning',
+						{
+							confirmButtonText: 'OK',
+							cancelButtonText: 'Cancel',
+							type: 'warning',
+						}
+						)
+						.then(() => {
+							ElMessage({
+								type: 'success',
+								message: 'Delete completed',
+							})
+						})
+						.catch(() => {
+							ElMessage({
+								type: 'info',
+								message: 'Delete canceled',
+							})
+						})
 					break;
 			}
 			return Promise.reject({ message, data, status });

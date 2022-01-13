@@ -2,18 +2,28 @@
 	<el-container>
 		<el-header>
 			<div class="left-panel">
+				<el-button
+					icon="el-icon-plus"
+					type="primary"
+					@click="onAdd()"
+				>
+					添加
+				</el-button>
 				<yj-upload
+
 					v-model="imgurl3"
 					:apiObj="uploadApi"
 					accept=".xls,.xlsx"
 					:on-success="success"
 				>
 					<el-button
+						icon="el-icon-plus"
 						type="primary"
 						@click="handleGenCodes"
 					>导入学校数据
 					</el-button>
 				</yj-upload>
+
 			</div>
 		</el-header>
 		<el-main class="nopadding">
@@ -115,6 +125,11 @@
 		},
 		async created() {},
 		methods: {
+			onAdd(){
+				this.$modalForm(
+					this.$HTTP().post("/admin/generator/generator_table/form")
+				).then((res) => {});
+			},
 			success(res){
 				console.log(res);
 				this.$HTTP().post('/import/school',res).then(res=>{

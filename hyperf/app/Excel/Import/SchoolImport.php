@@ -23,7 +23,7 @@ class SchoolImport implements  ToCollection
     public function collection(Collection $collection)
     {
 
-//        dump($collection);
+        dump($collection);
 //        dump(111);
         // TODO: Implement collect() method.
     }

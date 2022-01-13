@@ -1,15 +1,14 @@
-// (function (global, factory) {
-//     factory(exports, require('vue'), require('element-plus'))
-// }(this,function(exports,vue,ElementPlus){
+import {defineComponent,getCurrentInstance,toRefs,reactive,markRaw} from "vue";
 
-var vue = require("vue");
 var ElementPlus = require("element-plus");
+
 var { ElInput } = require("element-plus");
+
 import { FormCreate } from "./formCreate";
 import { _objectSpread2 } from "./common";
 function $FormCreate(FormCreate) {
 	var NAME$8 = "FormCreate";
-	return vue.defineComponent({
+	return defineComponent({
 		name: NAME$8,
 		components: {
 			...ElementPlus,
@@ -47,10 +46,10 @@ function $FormCreate(FormCreate) {
 			return this.fc.$handleRender();
 		},
 		setup: function setup(props) {
-			var vm = vue.getCurrentInstance();
-			let { rule, modelValue } = vue.toRefs(props);
+			var vm = getCurrentInstance();
+			let { rule, modelValue } = toRefs(props);
 			var fc = new FormCreate(vm);
-			var data = vue.reactive({
+			var data = reactive({
 				destroyed: false,
 				isShow: true,
 				unique: 1,
@@ -62,10 +61,10 @@ function $FormCreate(FormCreate) {
 
 			return _objectSpread2(
 				{
-					fc: vue.markRaw(fc),
-					fapi: vue.markRaw(fapi),
+					fc: markRaw(fc),
+					fapi: markRaw(fapi),
 				},
-				vue.toRefs(data),
+				toRefs(data),
 				{},
 				{
 					refresh: function refresh() {
@@ -75,10 +74,10 @@ function $FormCreate(FormCreate) {
 			);
 		},
 		created: function created() {
-			var vm = vue.getCurrentInstance();
-			vm.setupState.fc.init(); //4928
+			var vm = getCurrentInstance();
+			vm.ctx.fc.init(); //4928
 			// _this.$emit('itemMounted', api);
-			vm.emit("getApi", vm.setupState.fc);
+			vm.emit("getApi", vm.ctx.fc);
 		},
 	});
 }

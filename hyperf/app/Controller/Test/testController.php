@@ -1,7 +1,7 @@
 <?php
 
-
 namespace App\Controller\Test;
+
 
 
 use App\Controller\AbstractController;
@@ -12,6 +12,7 @@ use Hyperf\Di\Annotation\Inject;
 use Hyperf\Guzzle\ClientFactory;
 use Yj\Apidog\Annotation\ApiController;
 use Yj\Apidog\Annotation\FormData;
+use Yj\Apidog\Annotation\GetApi;
 use Yj\Apidog\Annotation\PostApi;
 
 /**
@@ -32,15 +33,20 @@ class testController extends AbstractController
      */
     protected $menu;
 
+
     /**
-     * @PostApi(path="test")
-     * @FormData(key="test2",rule="required|min:3")
-     * @FormData(key="test1",rule="required|min:3")
+     * @GetApi(path="test")
      */
     public function test()
     {
+
+
+        dump(22);
         dump($params = $this->getValidatorData());
-        _SUCCESS(11);
+        _SUCCESS(11111111111);
+
+
+
 //        $path = 'exp004.xlsx';
 //        $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
 //        $objPHPExcel = $reader->load(config('file.storage.local.root') . '/' . $path);
