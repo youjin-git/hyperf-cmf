@@ -37,9 +37,13 @@ class testController extends AbstractController
      * @FormData(key="test2",rule="required|min:3")
      * @FormData(key="test1",rule="required|min:3")
      */
+    #[
+
+    ]
     public function test()
     {
         dump($params = $this->getValidatorData());
+
         _SUCCESS(11);
 //        $path = 'exp004.xlsx';
 //        $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
