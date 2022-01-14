@@ -37,16 +37,17 @@ class testController extends AbstractController
     /**
      * @GetApi(path="test")
      */
+    #[
+
+    ]
     public function test()
     {
 
 
         dump(22);
         dump($params = $this->getValidatorData());
-        _SUCCESS(11111111111);
 
-
-
+        _SUCCESS(11);
 //        $path = 'exp004.xlsx';
 //        $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
 //        $objPHPExcel = $reader->load(config('file.storage.local.root') . '/' . $path);

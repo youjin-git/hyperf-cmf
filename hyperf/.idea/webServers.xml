@@ -10,7 +10,7 @@
         </fileTransfer>
       </webServer>
       <webServer id="8de09708-a958-4e7a-b7ec-fad854628680" name="data" url="http://150.158.155.57">
-        <fileTransfer rootFolder="/docker-compose/hyperf-cmf/data" accessType="SFTP" host="150.158.155.57" port="22" sshConfigId="4d242693-c6bd-4631-b6ca-fdacc9f22aac" sshConfig="root@150.158.155.57:22 password">
+        <fileTransfer rootFolder="/docker-compose/hyperf-cmf/data1" accessType="SFTP" host="150.158.155.57" port="22" sshConfigId="1275ccb3-ae0a-4860-a647-c586ef8956bd" sshConfig="root@150.158.155.57:22 password">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>
