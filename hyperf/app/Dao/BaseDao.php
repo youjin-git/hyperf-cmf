@@ -50,7 +50,7 @@ abstract class BaseDao
 
     public function __construct()
     {
-        $modelClass = str_replace(['\Dao', 'Dao'], ['\Model', ''], get_class($this));
+        $modelClass = str_replace(['\Dao', 'Daos'], ['\Model', ''], get_class($this));
         $this->baseDao = App($modelClass);
     }
 

@@ -61,7 +61,6 @@ class Setting extends AbstractController
                     $configClassifyData = $this->configClassify->select(['name as label','id  as value'])->get()->toArray();
                     dump($configClassifyData);
                     return array_merge([['value' => 0, 'label' => '请选择']],$configClassifyData);
-
                 })->props(['props' => ['checkStrictly' => true, 'emitPath' => false]]),
                 Elm::select('user_type', '后台类型', 0)->options([
                     ['label' => '总后台配置', 'value' => 0],
