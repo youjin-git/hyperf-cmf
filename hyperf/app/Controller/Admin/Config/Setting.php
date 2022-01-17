@@ -53,9 +53,12 @@ class Setting extends AbstractController
         'value-label'=>'value-label',
     ];
 
+
     public function create(){
             $id = $this->request->input('id');
+
             $form = Elm::createForm($id?'admin/config/setting/edit':'admin/config/setting/add');
+
             $form->setRule([
                 Elm::cascader('config_classify_id', '上级分类')->options(function () {
                     $configClassifyData = $this->configClassify->select(['name as label','id  as value'])->get()->toArray();

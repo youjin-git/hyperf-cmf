@@ -35,11 +35,8 @@ class testController extends AbstractController
 
 
     /**
-     * @GetApi(path="test")
+     * @GetApi(path="test1")
      */
-    #[
-
-    ]
     public function test()
     {
 

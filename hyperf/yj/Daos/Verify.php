@@ -43,7 +43,6 @@ class Verify
         return $this->params;
     }
 
-
     public function setParams($params)
     {
         $this->params = collect($params);

@@ -29,9 +29,7 @@ use FormBuilder\Factory\Elm;
 use App\Middleware\CheckAdminMiddleware;
 
 
-/**
- * @AutoController()
- */
+
 class ConfigController extends AbstractController
 {
     /**

@@ -44,7 +44,7 @@ class GeneratorCommand extends HyperfCommand
 
         }
         $this->makeDir($path);
-
+        dump(111);
         $stub = $this->getFilesFactory()->put($path, $this->buildClass($name));
 
         dd($stub, $path);

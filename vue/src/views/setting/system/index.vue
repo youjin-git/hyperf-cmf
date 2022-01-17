@@ -1,40 +1,14 @@
 <template>
 	<el-main>
 		<el-card shadow="never">
-			<el-tabs tab-position="top">
-				<el-tab-pane label="系统设置">
-					<el-form
-						ref="form"
-						:model="sys"
-						label-width="100px"
-						style="margin-top: 20px"
+			<el-tabs v-model="currentId" tab-position="top" @tab-click="changeTab">
+				<el-tab-pane
+					v-for="(item,index) in headerList"
+					:name="item.id.toString()"
+					:key="index"
+					:label="item.name"
 					>
-						<el-form-item label="系统名称">
-							<el-input v-model="sys.name"></el-input>
-						</el-form-item>
-						<el-form-item label="LogoUrl">
-							<el-input v-model="sys.logoUrl"></el-input>
-						</el-form-item>
-						<el-form-item label="登录开关">
-							<el-switch v-model="sys.login"></el-switch>
-							<div class="el-form-item-msg" data-v-b33b3cf8="">
-								关闭后普通用户无法登录，仅允许管理员角色登录
-							</div>
-						</el-form-item>
-						<el-form-item label="密码验证规则">
-							<el-input v-model="sys.passwordRules"></el-input>
-						</el-form-item>
-						<el-form-item label="版权信息">
-							<el-input
-								type="textarea"
-								:autosize="{ minRows: 4 }"
-								v-model="sys.copyright"
-							></el-input>
-						</el-form-item>
-						<el-form-item>
-							<el-button type="primary">保存</el-button>
-						</el-form-item>
-					</el-form>
+						<formCreate v-if="rules.length!==0" :option="option" :rule="rules" />
 				</el-tab-pane>
 
 				<el-tab-pane label="短信配置">
@@ -190,6 +164,12 @@ export default {
 				appKey: "",
 				secretKey: "",
 			},
+			rules:[
+
+			],
+			option:[],
+			currentId:0,
+			headerList:[],
 			setting: [
 				{
 					key: "file_serve",
@@ -218,7 +198,22 @@ export default {
 			],
 		};
 	},
+	mounted() {
+		this.getConfig();
+	},
 	methods: {
+		getConfig(){
+			this.$HTTP().post('/admin/config_classify/lists').then(res=>{
+				this.headerList = res;
+			});
+		},
+		changeTab(){
+			this.$HTTP().post('/admin/config_classify/create_form',{tab_id:this.currentId}).then(res=>{
+				this.rules = res.rule
+				this.title = res.title
+				this.FromData = res
+			});
+		},
 		table_add() {
 			var newRow = {
 				key: "",

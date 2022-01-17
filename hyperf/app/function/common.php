@@ -77,12 +77,14 @@ function systemConfig($keys)
 if (!function_exists('formToData')) {
     function formToData(\FormBuilder\Form $form): array
     {
+
         $rule = $form->formRule();
         $action = $form->getAction();
         $method = $form->getMethod();
         $title = $form->getTitle();
         $config = (object)$form->formConfig();
-        return compact('rule', 'action', 'method', 'title', 'config');
+        $class='';
+        return compact('rule', 'action', 'method', 'title', 'config','class');
     }
 }
 
@@ -328,6 +330,8 @@ function float_number($number)
 
 function list_to_tree($array, $val = 0, $id = 'id', $pid = 'pid', $child = 'children')
 {
+    $array = collect($array)->toArray();
+
     if (empty($array)) {
         return [];
     }
@@ -335,6 +339,7 @@ function list_to_tree($array, $val = 0, $id = 'id', $pid = 'pid', $child = 'chil
     foreach ($array as $key => $v) {
         $tree[$v[$id]] = &$array[$key];
     }
+
     $tree1 = [];
     foreach ($array as $key => $v) {
         if ($v[$pid] == $val) {
@@ -397,6 +402,35 @@ if (!function_exists('_GetLastSql')) {
             $sql['_query'] = $query;
         }
         dump(array_column($sqls, '_query'));
+    }
+}
+
+
+
+if (!function_exists('_CascaderData')) {
+    function _CascaderData(\Hyperf\Utils\Collection $array, $id='id', $pid = 'pid', $val = 0, $level = 0, $child='children'): array
+    {
+        $array = $array->toArray();
+
+        if (empty($array)) {
+            return [];
+        }
+        $tree = [];
+
+        foreach ($array as $key => $v) {
+            $tree[$v[$id]] = &$array[$key];
+        }
+        $tree1 = [];
+        foreach ($array as $key => $v) {
+            if ($v[$pid] == $val) {
+                $tree1[] = &$array[$key];
+            } else {
+                if (isset($tree[$v[$pid]])) {
+                    $tree[$v[$pid]][$child][] = &$array[$key];
+                }
+            }
+        }
+        return $tree1;
     }
 }
 

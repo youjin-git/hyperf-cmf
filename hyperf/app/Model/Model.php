@@ -35,7 +35,7 @@ use function Swoole\Coroutine\Http\request;
  * @property int getList
  * @method static BaseModel | Collection getList($columns = [], $pageName = 'page', $page = null)
  */
-abstract class Model extends BaseModel implements CacheableInterface
+ class Model extends BaseModel implements CacheableInterface
 {
 
     use Cacheable;

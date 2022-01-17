@@ -19,8 +19,6 @@ class TestDao extends BaseDao
     public function DaoWhere(array $params)
     {
         return $this->getDaoQuery($params, function (Verify $verify) {
-            $verify->field('id')->isNotNull();
-
             $verify('id', function (Builder $query, $id) {
                 $query->where('id', $id);
             });

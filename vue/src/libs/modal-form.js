@@ -10,67 +10,79 @@ import {
 	extend,
 	component,
 } from "vue";
-import formCreate from "@/components/formCreate";
+
 import { toProps } from "./common.js";
+import formCreateFactory from "@/components/formCreate/core";
 
 let fApi;
 let unique = 1;
 
 const uniqueId = () => ++unique;
-// const uniqueId = () => {
-//   unique++
-//   unique++
-// }
 
-// var modalForm =  defineComponent({
-// 	render() {
-// 		return h('div');
-// 	}
-// })
-// export default modalForm;
-// import formCreate from '../form-create'
-// import formCreate from '@/components/formCreate/index.js'
+import formCreate from '../components/formCreate/index'
 
-//
+
+var formCreateGlobalOptions = {
+	form:{
+		labelWidth:	'120px',
+	},
+	submitBtn: {
+		show: false,
+	},
+	size:"mini",
+	upload:{
+		props: {
+			onSuccess(res, file) {
+				if (res.status === 200) {
+					console.log(file);
+					file.url = res.data.src;
+				} else {
+					this.$Message.error(res.msg);
+				}
+			},
+		},
+	}
+};
+
+
 export default function modalForm(app) {
 	return function (formRequestPromise, config = {}) {
+
 		return new Promise((resolve, reject) => {
 			formRequestPromise
 				.then((data) => {
-					data.config.global = {
-						upload: {
-							props: {
-								onSuccess(res, file) {
-									if (res.status === 200) {
-										console.log(file);
-										file.url = res.data.src;
-									} else {
-										this.$Message.error(res.msg);
-									}
-								},
+					// console.log(data.config);
+					 data.config = Object.assign(data.config,formCreateGlobalOptions);
+
+
+					// Object.assign(formCreateglobalOptions,)
+
+					// if (!data.config.form) data.config.form = {};
+					// if (!data.config.formData) data.config.formData = {};
+					// data.config.formData = {
+					// 	...data.config.formData,
+					// 	...config.formData,
+					// };
+					// data.config.form.labelWidth =
+					// 	data.config.form.labelWidth || "120px";
+					console.log('options:',toProps({
+						props: {
+							rule: data.rule,
+							option:data.config,
+						},
+						on: {
+							getApi: (e) => {
+								fApi = e;
 							},
 						},
-					};
+					}));
 
-					if (!data.config.form) data.config.form = {};
-					if (!data.config.formData) data.config.formData = {};
-					data.config.formData = {
-						...data.config.formData,
-						...config.formData,
-					};
-					data.config.form.labelWidth =
-						data.config.form.labelWidth || "120px";
-					var formCreate = h(
-						app.component("formCreate"),
+					const formCreateMessage = h(
+						formCreate.$form(),
 						toProps({
 							props: {
 								rule: data.rule,
-								option: {
-									size:"mini",
-									submitBtn: {
-										show: false,
-									},
-								},
+								option:data.config,
 							},
 							on: {
 								getApi: (e) => {
@@ -80,14 +92,12 @@ export default function modalForm(app) {
 						})
 					);
 
-					console.log(formCreate);
-
 					this.$msgbox({
 						buttonSize:'mini',
 						dangerouslyUseHTMLString: true,
 						title: data.title,
 						customClass: config.class || "modal-form",
-						message: formCreate,
+						message: formCreateMessage,
 						beforeClose: (action, instance, done) => {
 							if (action === "confirm") {
 								instance.confirmButtonLoading = true;

@@ -7,13 +7,13 @@ import router from "./router";
 import store from "./store";
 import { createApp } from "vue";
 import App from "./App.vue";
-import formCreate from "@/components/formCreate/index.js";
 
 import Codemirror from "codemirror-editor-vue3";
 import "codemirror-editor-vue3/dist/style.css";
+import formCreate from "@/components/formCreate";
 const app = createApp(App);
 
-app.component("formCreate", formCreate);
+app.component("formCreate", formCreate.$form());
 app.use(store);
 app.use(router);
 app.use(ElementPlus, { size: "small" });

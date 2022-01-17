@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace App\Controller\Admin;
+namespace App\Controller\Admin\Config;
 
 use App\Exception\FooException;
 use App\Exception\Handler\AppExceptionHandler;
@@ -22,7 +22,6 @@ use App\Model\Model;
 use App\Model\User;
 use Carbon\Carbon;
 use FormBuilder\Driver\CustomComponent;
-
 use Hyperf\DbConnection\Db;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\AutoController;
@@ -31,9 +30,11 @@ use Hyperf\HttpServer\Annotation\Middleware;
 use HyperfAdmin\BaseUtils\Constants\ErrorCode;
 use HyperfAdmin\BaseUtils\JWT;
 use App\Middleware\CheckAdminMiddleware;
+use Yj\Apidog\Annotation\ApiController;
+use Yj\Apidog\Annotation\PostApi;
 
 /**
- * @AutoController()
+ * @ApiController(prefix="/admin/config_classify")
  * @Middleware(CheckAdminMiddleware::class)
  */
 class ConfigClassifyController extends AbstractController
@@ -58,7 +59,10 @@ class ConfigClassifyController extends AbstractController
      */
     protected $configValueModel;
 
-
+    /**
+     * @PostApi(path="lists")
+     * @return void
+     */
     public function lists()
     {
             $lists =  $this->configClassifyModel->where('status',1)->get();
@@ -66,6 +70,11 @@ class ConfigClassifyController extends AbstractController
             succ($lists);
     }
 
+    /**
+     * @PostApi(path="create_form")
+     * @return void
+     * @throws \FormBuilder\Exception\FormBuilderException
+     */
     public function createForm(){
 
         ($config_classify_id = $this->request->input('tab_id')) || err('tab_id is empty');
@@ -75,7 +84,7 @@ class ConfigClassifyController extends AbstractController
 
         $more = [];
         foreach($configs as $v){
-             $more[] = $v['key'];
+            $more[] = $v['key'];
         }
 
         $formData =  $this->configValueModel->more($more);

@@ -1,14 +1,15 @@
 <?php
 
-namespace {{ namespace }};
+namespace App\Dao\System;
+use App\Model\System\SystemConfigClassify;
 use \Yj\Daos\BaseDao;
 use Hyperf\Database\Model\Builder;
 use Yj\Daos\Verify;
 
 /**
- * @var {{ class }}
+ * @var SystemConfigClassify
  */
-class {{ class }} extends BaseDao
+class SystemConfigClassifyDao extends BaseDao
 {
 
     public function DaoWhere(array $params)

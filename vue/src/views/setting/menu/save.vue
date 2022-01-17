@@ -46,16 +46,16 @@
 							>
 						</el-radio-group>
 					</el-form-item>
-					<el-form-item label="别名" prop="name">
-						<el-input
-							v-model="form.name"
-							clearable
-							placeholder="菜单别名"
-						></el-input>
-						<div class="el-form-item-msg">
-							系统唯一且与内置组件名一致，否则导致缓存失效。如类型为Iframe的菜单，别名将代替源地址显示在地址栏
-						</div>
-					</el-form-item>
+<!--					<el-form-item label="别名" prop="name">-->
+<!--						<el-input-->
+<!--							v-model="form.name"-->
+<!--							clearable-->
+<!--							placeholder="菜单别名"-->
+<!--						></el-input>-->
+<!--						<div class="el-form-item-msg">-->
+<!--							系统唯一且与内置组件名一致，否则导致缓存失效。如类型为Iframe的菜单，别名将代替源地址显示在地址栏-->
+<!--						</div>-->
+<!--					</el-form-item>-->
 					<el-form-item label="菜单图标" prop="meta.icon">
 						<sc-icon-select
 							v-model="form.icon"

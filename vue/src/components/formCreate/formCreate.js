@@ -19,8 +19,9 @@ import {
 	lower,
 } from "./common";
 
+
 import { nameProp, BaseParser } from "./Prop";
-var { ElInput, ElSelect, ElOption } = require("element-plus");
+var { ElInput, ElSelect, ElOption,ElRadio,ElRadioButton,ElRadioGroup} = require("element-plus");
 
 var vue = require("vue");
 import { makeSlotBag } from "./makeSlotBag";
@@ -537,14 +538,18 @@ var Radio = vue.defineComponent({
 	},
 	emits: ["update:modelValue"],
 	setup: function setup(props, _) {
-		var _toRefs = vue.toRefs(vue.inject("formCreateInject")),
-			options = _toRefs.options;
+
+		const {options} = vue.toRefs(vue.inject("formCreateInject"));
+
+
 
 		var trueValue = vue.ref([]);
+
 		var value = vue.toRef(props, "modelValue");
 
+
 		var _options = vue.computed(function () {
-			return Array.isArray(options) ? options : [];
+			return Array.isArray(options.value) ? options.value : [];
 		});
 
 		var update = function update() {
@@ -582,28 +587,34 @@ var Radio = vue.defineComponent({
 			this.update();
 		},
 	},
+	components: {
+		ElRadioGroup,
+		ElRadio,
+		ElRadioButton,
+	},
 	render: function render() {
-		// var _this$$slots$default,
-		// 	_this$$slots,
-		// 	_this = this;
-		// var name = this.type === 'button' ? 'ElRadioButton' : 'ElRadio';
-		// var Type = vue.resolveComponent(name);
-		// return vue.createVNode(vue.resolveComponent("ElRadioGroup"), vue.mergeProps(this.$attrs, {
-		// 	"modelValue": this.trueValue,
-		// 	"onUpdate:modelValue": this.onInput
-		// }), _objectSpread2({
-		// 	"default": function _default() {
-		// 		return [_this.options.map(function (opt, index) {
-		// 			var props = _objectSpread2({}, opt);
-		// 			delete props.value;
-		// 			return vue.createVNode(Type, vue.mergeProps(props, {
-		// 				"key": name + index + opt.value
-		// 			}), null);
-		// 		}), (_this$$slots$default = (_this$$slots = _this.$slots)["default"]) === null || _this$$slots$default === void 0 ? void 0 : _this$$slots$default.call(_this$$slots)];
-		// 	}
-		// }, getSlot(this.$slots, ['default'])));
+		var _this$$slots$default,
+			_this$$slots,
+			_this = this;
+		var name = this.type === 'button' ? 'ElRadioButton' : 'ElRadio';
+		var Type = vue.resolveComponent(name);
+		return vue.createVNode(vue.resolveComponent("ElRadioGroup"), vue.mergeProps(this.$attrs, {
+			"modelValue": this.trueValue,
+			"onUpdate:modelValue": this.onInput
+		}), _objectSpread2({
+			"default": function _default() {
+				return [_this.options.map(function (opt, index) {
+					var props = _objectSpread2({}, opt);
+					delete props.value;
+					return vue.createVNode(Type, vue.mergeProps(props, {
+						"key": name + index + opt.value
+					}), null);
+				}), (_this$$slots$default = (_this$$slots = _this.$slots)["default"]) === null || _this$$slots$default === void 0 ? void 0 : _this$$slots$default.call(_this$$slots)];
+			}
+		}, getSlot(this.$slots, ['default'])));
 	},
 });
+
 
 
 var parsers = [row,hidden];
@@ -1537,6 +1548,7 @@ function FormCreate(vm) {
 				[options],
 				this.getDefaultOptions()
 			);
+			console.log('initOptions',this.options);
 			this.updateOptions();
 		},
 		injectProp: function injectProp(ctx) {
@@ -1560,8 +1572,10 @@ function FormCreate(vm) {
 		updateOptions(options) {
 			this.update();
 		},
-		update() {
+		update() { //生产from
 			var form = this.options.form;
+			console.log('生产form',form);
+
 			this.rule = {
 				props: _objectSpread2({}, form),
 				on: {
@@ -1601,4 +1615,4 @@ function FormCreate(vm) {
 	});
 }
 
-export { FormCreate };
+export default FormCreate;
