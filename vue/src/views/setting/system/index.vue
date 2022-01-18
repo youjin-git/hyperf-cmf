@@ -2,14 +2,17 @@
 	<el-main>
 		<el-card shadow="never">
 			<el-tabs v-model="currentId" tab-position="top" @tab-click="changeTab">
+
 				<el-tab-pane
 					v-for="(item,index) in headerList"
 					:name="item.id.toString()"
 					:key="index"
 					:label="item.name"
 					>
-						<formCreate v-if="rules.length!==0" :option="option" :rule="rules" />
+
+						<formCreate class="ConfigformCreate" v-if="rules.length!==0" :option="option" :rule="rules" />
 				</el-tab-pane>
+
 
 				<el-tab-pane label="短信配置">
 					<el-form
@@ -148,6 +151,8 @@
 </template>
 
 <script>
+import {extend} from "@/utils/common";
+
 export default {
 	name: "system",
 	data() {
@@ -209,6 +214,7 @@ export default {
 		},
 		changeTab(){
 			this.$HTTP().post('/admin/config_classify/create_form',{tab_id:this.currentId}).then(res=>{
+				this.option = extend({'size':'large'},res.config)
 				this.rules = res.rule
 				this.title = res.title
 				this.FromData = res
@@ -237,4 +243,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.ConfigformCreate{
+	margin-top: 20px;
+}
+</style>

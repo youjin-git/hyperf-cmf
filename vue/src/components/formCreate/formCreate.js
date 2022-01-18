@@ -1044,7 +1044,7 @@ function FormCreate(vm) {
 				});
 			}
 
-			return this.$r(this.rule, [this.makeRow(children)]);
+			return this.$r(this.rule,this.options.row.show === false? children.getSlots():[this.makeRow(children)]);
 		},
 		makeFormBtn() {
 			var vn = [];
@@ -1174,55 +1174,91 @@ function FormCreate(vm) {
 				children
 			);
 		},
+		isTitle: function isTitle(rule) {
+			if (this.options.form.title === false) return false;
+			var title = rule.title;
+			return !((!title.title && !title["native"]) || this.isFalse(title.show));
+		},
+		makeCol(rule, uni, children) {
+			const col = rule.col;
+			return this.$r({
+				class: col.class,
+				type: 'col',
+				props: col || {span: 24},
+				key: `${uni}col`
+			}, children);
+		},
 		makeWrap: function (ctx, children) {
-			var _this3 = this;
-			var rule = ctx.prop;
-			var uni = "".concat(this.key).concat(ctx.key);
+			const rule = ctx.prop;
+			const uni = `${this.key}${ctx.key}`;
+			const col = rule.col;
+			const isTitle = this.isTitle(rule);
+			const labelWidth = (!col.labelWidth && !isTitle) ? 0 : col.labelWidth;
+			const {inline, col: _col} = this.rule.props;
+			const item = (rule.wrap.show)===false ? children : this.$r(mergeProps([rule.wrap, {
+				props: {
+					labelWidth: labelWidth === void 0 ? labelWidth : toString(labelWidth),
+					label: isTitle ? rule.title.title : undefined,
+					...(rule.wrap || {}),
+					prop: ctx.id,
+					rules: rule.validate,
+				},
+				class: rule.className,
+				key: `${uni}fi`,
+				ref: ctx.wrapRef,
+				type: 'formItem',
+			}]), {default: () => children, ...(isTitle ? {label: () => this.makeInfo(rule, uni)} : {})});
+			return (inline === true || _col===false || (col.show)===false) ? item : this.makeCol(rule, uni, [item]);
 
-			var isTitle = true;
-			var col = rule.col;
-			var labelWidth = !col.labelWidth && !isTitle ? 0 : col.labelWidth;
-			return this.$r(
-				mergeProps([
-					rule.wrap,
-					{
-						props: _objectSpread2(
-							_objectSpread2(
-								{
-									labelWidth:
-										labelWidth === void 0
-											? labelWidth
-											: toString(labelWidth),
-								},
-								rule.wrap || {}
-							),
-							{},
-							{
-								prop: ctx.id,
-								rules: rule.validate,
-							}
-						),
-						class: rule.className,
-						key: ctx.wrapRef,
-						ref: ctx.wrapRef,
-						type: "formItem",
-					},
-				]),
-				_objectSpread2(
-					{
-						default: function _default() {
-							return children;
-						},
-					},
-					isTitle
-						? {
-								label: function label() {
-									return _this3.makeInfo(rule, uni);
-								},
-						  }
-						: {}
-				)
-			);
+
+			// var _this3 = this;
+			// var rule = ctx.prop;
+			// var uni = "".concat(this.key).concat(ctx.key);
+			//
+			// var isTitle = true;
+			// var col = rule.col;
+			// var labelWidth = !col.labelWidth && !isTitle ? 0 : col.labelWidth;
+			// return this.$r(
+			// 	mergeProps([
+			// 		rule.wrap,
+			// 		{
+			// 			props: _objectSpread2(
+			// 				_objectSpread2(
+			// 					{
+			// 						labelWidth:
+			// 							labelWidth === void 0
+			// 								? labelWidth
+			// 								: toString(labelWidth),
+			// 					},
+			// 					rule.wrap || {}
+			// 				),
+			// 				{},
+			// 				{
+			// 					prop: ctx.id,
+			// 					rules: rule.validate,
+			// 				}
+			// 			),
+			// 			class: rule.className,
+			// 			key: ctx.wrapRef,
+			// 			ref: ctx.wrapRef,
+			// 			type: "formItem",
+			// 		},
+			// 	]),
+			// 	_objectSpread2(
+			// 		{
+			// 			default: function _default() {
+			// 				return children;
+			// 			},
+			// 		},
+			// 		isTitle
+			// 			? {
+			// 					label: function label() {
+			// 						return _this3.makeInfo(rule, uni);
+			// 					},
+			// 			  }
+			// 			: {}
+			// 	)
+			// );
 		},
 		isTooltip: function (info) {
 			return info.type === "tooltip";
@@ -1599,9 +1635,13 @@ function FormCreate(vm) {
 		this.maker[name] = maker[name];
 	});
 
-	CreateNode.use({
-		fragment: "fcFragment",
-	});
+	// CreateNode.use({
+	// 	fragment: "fcFragment",
+	// });
+
+	function componentAlias(alias) {
+		CreateNode.use(alias);
+	}
 
 	extend(this, {
 		install: () => {

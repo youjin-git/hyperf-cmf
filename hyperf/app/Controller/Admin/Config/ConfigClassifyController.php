@@ -80,18 +80,14 @@ class ConfigClassifyController extends AbstractController
         ($config_classify_id = $this->request->input('tab_id')) || err('tab_id is empty');
         $title = $this->configClassifyModel->where('id',$config_classify_id)->value('name');
         $configs = $this->configModel->where('classify_id',$config_classify_id)->where('status',1)->get();
-
-
         $more = [];
         foreach($configs as $v){
             $more[] = $v['key'];
         }
-
         $formData =  $this->configValueModel->more($more);
-
         $components = $this->getRule($configs->toArray());
         $form = Elm::createForm('/admin/config/update', $components);
-        $lists = $form->setTitle($title)->formData($formData);
+        $lists = $form->setTitle($title)->setConfig(['form'=>['size'=>'small','labelWidth'=>'200rpx','labelPosition'=>'top']])->formData($formData);
         succ(formToData($lists));
     }
 
