@@ -6,7 +6,7 @@ import alias from "./core/alias";
 function install(FormCreate){
 
 	//重命名组建
-	FormCreate.componentAlias(alias);
+	// FormCreate.componentAlias(alias);
 
 	//自定义组件
 	// components.forEach(component => {

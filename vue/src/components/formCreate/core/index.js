@@ -9,7 +9,7 @@ import is from "@/utils/lib/typs";
 export default function formCreateFactory(config){
 
 	function componentAlias(alias) {
-        CreateNode.use(alias);
+        // CreateNode.use(alias);
     }
 
 	function component(id,component){
@@ -33,7 +33,7 @@ export default function formCreateFactory(config){
 	}
 
 
-	useAttr(create);
+	// useAttr(create);
 
 	return extend({
 		$form

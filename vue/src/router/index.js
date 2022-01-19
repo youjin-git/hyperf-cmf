@@ -40,9 +40,11 @@ router.beforeEach(async (to, from, next) => {
 
 	let token = tool.data.get("TOKEN");
 
-	if (to.path === "/login") {
+	if (to.path === "/login" || to.path === "/test") {
 		//删除路由(替换当前layout路由)
-		router.addRoute(routes[0]);
+		console.log(routes);
+		// router.addRoute(routes[0]);
+		// router.addRoute(routes[1]);
 		//删除路由(404)
 		routes_404_r();
 		isGetApiRouter = false;
