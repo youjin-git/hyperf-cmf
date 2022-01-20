@@ -17,6 +17,14 @@ const routes = [
 			title: "登录",
 		},
 	},
+	{
+		path: "/test",
+		component: () =>
+			import(/* webpackChunkName: "login" */ "@/views/test/index"),
+		meta: {
+			title: "登录",
+		},
+	},
 ];
 
 export default routes;

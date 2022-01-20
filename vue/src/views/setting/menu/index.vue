@@ -117,6 +117,9 @@ export default {
 		},
 		//树拖拽
 		nodeDrop(draggingNode, dropNode, dropType) {
+			console.log(draggingNode, dropNode, dropType)
+			console.log(draggingNode.data.id, dropNode.data.id, dropType);
+			this.$HTTP().post('/admin/m');
 			this.$refs.save.setData({});
 			this.$message(
 				`拖拽对象：${draggingNode.data.meta.title}, 释放对象：${dropNode.data.meta.title}, 释放对象的位置：${dropType}`

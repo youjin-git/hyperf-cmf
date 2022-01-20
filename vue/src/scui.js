@@ -22,6 +22,8 @@ import time from "./directives/time";
 import copy from "./directives/copy";
 import errorHandler from "./utils/errorHandler";
 import modalForm from "@/libs/modal-form";
+const collect = require('collect.js');
+
 
 export default {
 	install(app) {
@@ -31,6 +33,7 @@ export default {
 		app.config.globalProperties.$HTTP = function(){
 			return http.reflush();
 		}
+		app.config.globalProperties.collect = collect;
 		app.config.globalProperties.$modalForm = modalForm(app);
 
 		app.config.globalProperties.$API = api;

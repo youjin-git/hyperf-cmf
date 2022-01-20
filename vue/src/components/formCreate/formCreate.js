@@ -1,3 +1,4 @@
+var vue = require("vue");
 import {
 	_isSlot,
 	is,
@@ -17,88 +18,21 @@ import {
 	uniqueId,
 	toCase,
 	lower,
+	toProps,
 } from "./common";
 
 
 import { nameProp, BaseParser } from "./Prop";
 var { ElInput, ElSelect, ElOption,ElRadio,ElRadioButton,ElRadioGroup} = require("element-plus");
 
-var vue = require("vue");
+import {CreateNodeFactory} from '@/components/formCreate/core/factory/node';
+
 import { makeSlotBag } from "./makeSlotBag";
 // import {mergeGlobal} from "@/form-create-next/packages/core/src/frame/util";
 
-function toProps(rule) {
-	var prop = _objectSpread2({}, rule.props || {});
-	Object.keys(rule.on || {}).forEach(function (k) {
-		var name = "on".concat(upper(k));
-		if (Array.isArray(prop[name])) {
-			prop[name] = [].concat(_toConsumableArray(prop[name]), [
-				rule.on[k],
-			]);
-		} else if (prop[name]) {
-			prop[name] = [prop[name], rule.on[k]];
-		} else {
-			prop[name] = rule.on[k];
-		}
-	});
 
-	prop.key = rule.key;
-	prop.ref = rule.ref;
-	prop["class"] = rule["class"];
-	prop.style = rule.style;
-	if (prop.slot) delete prop.slot;
-	return prop;
-}
 
-function isNativeTag(tag) {
-	return (
-		vue.getCurrentInstance().appContext.config.isNativeTag(tag) ||
-		["span"].findIndex((v) => {
-			return v == tag;
-		}) >= 0
-	);
-}
 
-function CreateNodeFactory() {
-	var aliasMap = {};
-	var CreateNode = function () {};
-	extend(CreateNode.prototype, {
-		make: function (tag, data, children) {
-			return this.h(tag, toProps(data), children);
-		},
-		h: function h(tag, data, children) {
-			return vue.createVNode(
-				isNativeTag(tag) ? tag : vue.resolveComponent(tag),
-				data,
-				children
-			);
-		},
-		aliasMap: aliasMap,
-	});
-	extend(CreateNode, {
-		aliasMap: aliasMap,
-		alias: function alias(_alias, name) {
-			aliasMap[_alias] = name;
-		},
-		use: function use(nodes) {
-			Object.keys(nodes).forEach(function (k) {
-				var line = toLine(k); //button
-				var lower = toString(k).toLocaleLowerCase(); //button
-				var v = nodes[k]; //el-button
-
-				[k, line, lower].forEach(function (n) {
-					CreateNode.alias(k, v);
-
-					CreateNode.prototype[n] = function (data, children) {
-						return this.make(v, data, children);
-					};
-				});
-			});
-		},
-	});
-
-	return CreateNode;
-}
 
 var row = {
 	name: "FcRow",
@@ -951,7 +885,6 @@ function FormCreate(vm) {
 			rules.map(function (_rule, index) {
 				var ctx;
 				ctx = new RuleContext(_this, _this.parseRule(_rule));
-
 				_this.bindParser(ctx);
 				_this.sort.push(ctx.id);
 				_this.setCtx(ctx);
@@ -1008,14 +941,15 @@ function FormCreate(vm) {
 			}
 		},
 		$handleRender() {
-			if (this.vm.setupState.unique > 0) {
+		
+			// if (this.vm.setupState.unique > 0) {
+				// this.vm.setupState.unique--;
 				return this.$renderRender();
-			}
+			// }
 		},
 		$renderRender() {
 			var _this = this;
 			this.beforeRender(); //5368
-
 			var slotBag = makeSlotBag();
 
 			this.sort.forEach(function (k) {
@@ -1066,7 +1000,6 @@ function FormCreate(vm) {
 				},
 				vn
 			);
-
 			return this.$r(
 				{
 					type: "col",
@@ -1405,6 +1338,25 @@ function FormCreate(vm) {
 			this.tidy(prop, "title");
 			this.tidy(prop, "info");
 			return prop;
+		},
+		reloadRule:function(rules){
+			console.log('reloadRule',rules);
+			const ctxs = {...this.ctxs};
+			console.log('reloadRule',ctxs);
+			this.initData(rules);
+			this.rules = rules;
+			this.loadRule();
+			this.refresh();
+
+		},
+		initData(rules) {
+			extend(this, {
+				ctxs: {},
+				fieldCtx: {},
+				nameCtx: {},
+				sort: [],
+				rules,
+			});
 		},
 		ctxProp: function (ctx, custom) {
 			console.log("ctxProp");

@@ -1,15 +1,14 @@
 <template>
 	<el-main>
 		<el-card shadow="never">
-			<el-tabs v-model="currentId" tab-position="top" @tab-click="changeTab">
-
+			<el-tabs v-model="currentId" tab-position="top">
+						
 				<el-tab-pane
 					v-for="(item,index) in headerList"
 					:name="item.id.toString()"
 					:key="index"
 					:label="item.name"
 					>
-
 						<formCreate class="ConfigformCreate" v-if="rules.length!==0" :option="option" :rule="rules" />
 				</el-tab-pane>
 
@@ -203,6 +202,15 @@ export default {
 			],
 		};
 	},
+	watch:{
+		currentId(val){
+	
+			this.$nextTick(res=>{
+				this.changeTab();
+			})
+			
+		}
+	},
 	mounted() {
 		this.getConfig();
 	},
@@ -210,6 +218,7 @@ export default {
 		getConfig(){
 			this.$HTTP().post('/admin/config_classify/lists').then(res=>{
 				this.headerList = res;
+				this.currentId = this.collect(res).first().id.toString();
 			});
 		},
 		changeTab(){

@@ -1,4 +1,4 @@
-import {defineComponent,getCurrentInstance,toRefs,reactive,markRaw} from "vue";
+import {defineComponent,getCurrentInstance,toRefs,reactive,markRaw,watch} from "vue";
 var ElementPlus = require("element-plus");
 
 const NAME = 'FormCreate';
@@ -51,9 +51,15 @@ export  default  function $FormCreate(FormCreate) {
 				updateValue: JSON.stringify(modelValue),
 			});
 
+
+
 			const fc = new FormCreate(vm);
 			fc.install();
 			const fapi = fc.api();
+
+			watch( () => [...rule.value],function(n){
+					fc.reloadRule(rule.value);
+			})
 
 			return {
 				fc: markRaw(fc),
