@@ -76,7 +76,6 @@ class ConfigClassifyController extends AbstractController
      * @throws \FormBuilder\Exception\FormBuilderException
      */
     public function createForm(){
-
         ($config_classify_id = $this->request->input('tab_id')) || err('tab_id is empty');
         $title = $this->configClassifyModel->where('id',$config_classify_id)->value('name');
         $configs = $this->configModel->where('classify_id',$config_classify_id)->where('status',1)->get();

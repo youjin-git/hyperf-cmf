@@ -21,7 +21,7 @@ class SystemMenuService extends BaseService
     public function list($params)
     {
         $data = $this->systemMenuDao->DaoWhere($params)->getList();
-
+        $except = [];
         $data->transform(function ($item) use ($except) {
             $item = collect($item);
             $item->offsetSet('meta', $item->only($except));

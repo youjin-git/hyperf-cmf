@@ -13,12 +13,15 @@ use App\Service\System\SystemMenuService;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\AutoController;
 use Hyperf\HttpServer\Annotation\Middleware;
+use Yj\Apidog\Annotation\ApiController;
+use Yj\Apidog\Annotation\FormData;
+use Yj\Apidog\Annotation\PostApi;
 
 
 /**
  * User: 尤金
  * @Middleware(CheckAdminMiddleware::class)
- * @AutoController()
+ * @ApiController(prefix="/admin/menu")
  */
 class SystemMenuController extends AbstractController
 {
@@ -28,7 +31,11 @@ class SystemMenuController extends AbstractController
      */
     public $systemMenuService;
 
-    public function list()
+    /**
+     * @PostApi(path="lists")
+     * @return void
+     */
+    public function lists()
     {
         $params = $this->request->all();
         $data = $this->systemMenuService->page(false)->list($params);
@@ -36,6 +43,11 @@ class SystemMenuController extends AbstractController
         _SUCCESS($data);
     }
 
+    /**
+     * @PostApi(path="add")
+     * @param SystemMenuAddRequest $request
+     * @return void
+     */
     public function add(SystemMenuAddRequest $request)
     {
         $params = $request->collection();
@@ -46,6 +58,11 @@ class SystemMenuController extends AbstractController
         _SUCCESS();
     }
 
+    /**
+     * @PostApi(path="edit")
+     * @param SystemMenuEditRequest $request
+     * @return void
+     */
     public function edit(SystemMenuEditRequest $request)
     {
         $params = $request->collection();
@@ -53,5 +70,14 @@ class SystemMenuController extends AbstractController
             _GetLastSql();
             $data ? _SUCCESS() : _Error();
         });
+    }
+
+    /**
+     * @PostApi(path="set-position",description="设置位置")
+     * @FormData(key="")
+     * @return void
+     */
+    public function setPosition(){
+
     }
 }

@@ -24,10 +24,7 @@ use Hyperf\HttpServer\Annotation\Middleware;
 use Hyperf\Utils\Context;
 use App\Middleware\CheckAdminMiddleware;
 
-/**
- * @AutoController()
- * @Middleware(CheckAdminMiddleware::class)
- */
+
 class MenuController extends AbstractController
 {
 
