@@ -11,7 +11,7 @@
 							@click="showMenu(item)"
 						>
 							<i :class="item.meta.icon || 'el-icon-menu'"></i>
-							<p>{{ item.meta.title }}</p>
+							<p>{{ item.meta.title }}11</p>
 						</li>
 					</ul>
 				</el-scrollbar>
@@ -180,6 +180,7 @@ export default {
 		},
 		//转换外部链接的路由
 		filterUrl(map) {
+	
 			var newMap = [];
 			map &&
 				map.forEach((item) => {
@@ -198,6 +199,7 @@ export default {
 					}
 					newMap.push(item);
 				});
+						console.log('filterUrl',newMap);
 			return newMap;
 		},
 	},

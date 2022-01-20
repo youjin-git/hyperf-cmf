@@ -126,6 +126,8 @@ function filterAsyncRouter(routerMap) {
 
 		accessedRouters.push(route);
 	});
+
+	
 	return accessedRouters;
 }
 function loadComponent(component) {
