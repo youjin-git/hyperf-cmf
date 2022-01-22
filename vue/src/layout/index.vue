@@ -10,8 +10,8 @@
 							:class="pmenu.name == item.name ? 'active' : ''"
 							@click="showMenu(item)"
 						>
-							<i :class="item.meta.icon || 'el-icon-menu'"></i>
-							<p>{{ item.meta.title }}11</p>
+							<i :class="item.icon || 'el-icon-menu'"></i>
+							<p>{{ item.title }}</p>
 						</li>
 					</ul>
 				</el-scrollbar>
@@ -22,7 +22,7 @@
 			:class="menuIsCollapse ? 'aminui-side isCollapse' : 'aminui-side'"
 		>
 			<div v-if="!menuIsCollapse" class="adminui-side-top">
-				<h2>{{ pmenu.meta.title }}</h2>
+				<h2>{{ pmenu.title }}</h2>
 			</div>
 			<div class="adminui-side-scroll">
 				<el-scrollbar>
@@ -158,8 +158,9 @@ export default {
 			this.pmenu = this.$route.meta.breadcrumb
 				? this.$route.meta.breadcrumb[0]
 				: {};
-			console.log(this.pmenu);
+			
 			this.nextMenu = this.filterUrl(this.pmenu.children);
+			console.log(this.nextMenu);
 			this.$nextTick(() => {
 				this.active = this.$route.meta.active || this.$route.fullPath;
 				console.log(this.active);
@@ -167,6 +168,7 @@ export default {
 		},
 		//点击显示
 		showMenu(route) {
+			console.log(route);
 			this.pmenu = route;
 			this.nextMenu = this.filterUrl(route.children);
 			this.getRouteFirstChild(route);

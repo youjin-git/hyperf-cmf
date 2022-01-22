@@ -67,7 +67,7 @@ router.beforeEach(async (to, from, next) => {
 	//加载API路由
 	if (!isGetApiRouter) {
 		let menu = await Store.dispatch("getMenus");
-		console.log(menu);
+	
 		var apiRouter = filterAsyncRouter(menu);
 		apiRouter = flatAsyncRoutes(apiRouter);
 		console.log(apiRouter);
@@ -117,6 +117,8 @@ function filterAsyncRouter(routerMap) {
 		//MAP转路由对象
 		var route = {
 			path: item.path,
+			title: item.title,
+			icon: item.icon,
 			name: item.name,
 			meta: item.meta,
 			redirect: item.redirect,

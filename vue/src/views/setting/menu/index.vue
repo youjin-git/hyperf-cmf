@@ -119,7 +119,9 @@ export default {
 		nodeDrop(draggingNode, dropNode, dropType) {
 			console.log(draggingNode, dropNode, dropType)
 			console.log(draggingNode.data.id, dropNode.data.id, dropType);
-			this.$HTTP().post('/admin/m');
+			this.$HTTP().params({menu_id:draggingNode.data.id,target_menu_id:dropNode.data.id,types:dropType}).post('/admin/menu/set-position').then(res=>{
+
+			});
 			this.$refs.save.setData({});
 			this.$message(
 				`拖拽对象：${draggingNode.data.meta.title}, 释放对象：${dropNode.data.meta.title}, 释放对象的位置：${dropType}`
@@ -139,7 +141,7 @@ export default {
 			this.menuloading = true;
 			var res = await this.$HTTP()
 				.showSuccessInfo("添加成功")
-				.post("/admin/system/system_menu/add", newMenuData)
+				.post("/admin/menu/add", newMenuData)
 				.catch((res) => {
 					this.getMenu();
 				});

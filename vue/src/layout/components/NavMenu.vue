@@ -17,10 +17,10 @@
 			></a>
 			<i
 				v-if="navMenu.meta && navMenu.meta.icon"
-				:class="navMenu.meta.icon || 'el-icon-menu'"
+				:class="navMenu.icon || 'el-icon-menu'"
 			></i>
 			<template #title>
-				<span>{{ navMenu.meta.title }}</span>
+				<span>{{ navMenu.title }}</span>
 			</template>
 		</el-menu-item>
 		<el-sub-menu v-else :index="navMenu.path">
@@ -29,7 +29,7 @@
 					v-if="navMenu.meta && navMenu.meta.icon"
 					:class="navMenu.meta.icon || 'el-icon-menu'"
 				></i>
-				<span>{{ navMenu.meta.title }}</span>
+				<span>{{ navMenu.title }}</span>
 			</template>
 			<NavMenu :navMenus="navMenu.children"></NavMenu>
 		</el-sub-menu>

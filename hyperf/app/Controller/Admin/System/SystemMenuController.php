@@ -74,10 +74,14 @@ class SystemMenuController extends AbstractController
 
     /**
      * @PostApi(path="set-position",description="设置位置")
-     * @FormData(key="")
+     * @FormData(key="target_menu_id",rule="required")
+     * @FormData(key="menu_id",rule="required")
+     * @FormData(key="types",rule="required")
      * @return void
      */
     public function setPosition(){
-
+        $params = $this->getValidatorData();
+        $this->systemMenuService->setPosition($params->get('menu_id'),$params->get('target_menu_id'),$params->get('types'));
+        _SUCCESS();
     }
 }

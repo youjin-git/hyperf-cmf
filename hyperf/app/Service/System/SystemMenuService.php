@@ -20,7 +20,7 @@ class SystemMenuService extends BaseService
 
     public function list($params)
     {
-        $data = $this->systemMenuDao->DaoWhere($params)->getList();
+        $data = $this->systemMenuDao->DaoWhere($params)->orderBy('sort')->getList();
         $except = [];
         $data->transform(function ($item) use ($except) {
             $item = collect($item);
@@ -43,9 +43,48 @@ class SystemMenuService extends BaseService
 
     public function add(Collection $params)
     {
-        $this->systemMenuDao->check($id,$params);
-
+        $this->systemMenuDao->check(0,$params);
         return $this->systemMenuDao->create($params->toArray());
+    }
+
+    public function setPosition($menu_id, $target_menu_id, $types)
+    {
+        if(in_array($types,['after','before'])){
+            $pid = $this->systemMenuDao->where('id',$target_menu_id)->value('pid');
+            $this->systemMenuDao->where('id',$menu_id)->update(['pid'=>$pid]);
+            $systemMenuDao = $this->systemMenuDao->where('pid',$pid)->orderBy('sort')->select([
+                'id',
+                'sort',
+            ])->get()->transform(function ($item,$index)use($types,$target_menu_id){
+                    $item->sort = $index*10;
+                    return $item;
+            });
+
+            $sort = $systemMenuDao->where('id',$target_menu_id)->first()->sort;
+         
+            $systemMenuDao->transform(function ($item)use($menu_id,$types,$sort){
+                       if($item['id'] == $menu_id){
+                           if($types == 'after'){
+                               $item['sort'] = $sort+1;
+                           }
+                           if($types == 'before'){
+                               $item['sort'] = $sort-1;
+                           }
+                       }
+                       return $item;
+            })->sortBy(function ($item){
+                return $item['sort'];
+            })->values()->each(function($item,$index){
+                $item->sort = $index*10;
+                dump($item->id,$item->sort);
+                return $item->save();
+            });
+        }
+
+        if($types == 'inner'){
+          $this->systemMenuDao->where('id',$menu_id)->update(['pid'=>$target_menu_id]);
+        }
+        return true;
     }
 
 }

@@ -1,6 +1,7 @@
 import config from "@/config";
 import http from "@/utils/request";
 import tool from "@/utils/tool";
+const collect = require('collect.js');
 export default {
 	state: {
 		list: tool.data.get("MENU"),
@@ -13,7 +14,7 @@ export default {
 	actions: {
 		async getMenus({ commit, state }) {
 			await http.post("/admin/menu/lists").then((data) => {
-				console.log(data);
+				
 				commit("SET_MENU_LIST", data);
 				tool.data.set("MENU", data);
 			});
