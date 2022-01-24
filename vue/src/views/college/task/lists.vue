@@ -21,8 +21,13 @@
 			>
 				<el-table-column type="selection" width="50"></el-table-column>
 				<el-table-column
-					label="订单号"
-					prop="tables_name"
+					label="ID"
+					prop="id"
+					width="150"
+				></el-table-column>
+				<el-table-column
+					label="准考证"
+					prop="ticket"
 					width="150"
 				></el-table-column>
 				<el-table-column
@@ -32,27 +37,17 @@
 				></el-table-column>
 				<el-table-column
 					label="姓名"
-					prop="tables_name"
+					prop="username"
 					width="150"
 				></el-table-column>
 				<el-table-column
 					label="手机号"
-					prop="tables_name"
+					prop="mobile"
 					width="150"
 				></el-table-column>
 				<el-table-column
-					label="任务"
-					prop="tables_name"
-					width="150"
-				></el-table-column>
-				<el-table-column
-					label="填报人"
-					prop="tables_name"
-					width="150"
-				></el-table-column>
-				<el-table-column
-					label="审核人"
-					prop="tables_name"
+					label="成绩"
+					prop="score"
 					width="150"
 				></el-table-column>
 				<el-table-column
@@ -61,18 +56,8 @@
 					width="150"
 				></el-table-column>
 				<el-table-column
-					label="创建时间"
-					prop="tables_name"
-					width="150"
-				></el-table-column>
-				<el-table-column
-					label="志愿表"
-					prop="tables_name"
-					width="150"
-				></el-table-column>
-				<el-table-column
-					label="志愿表"
-					prop="tables_name"
+					label="状态"
+					prop="status"
 					width="150"
 				></el-table-column>
 				<el-table-column
@@ -81,9 +66,9 @@
 					align="right"
 					width="100"
 				>
-					<template #default>
-						<el-button type="text" @click="preview">
-							预览
+					<template #default="scope">
+						<el-button type="text" @click="onEdit(scope.row)">
+							编辑
 						</el-button>
 					</template>
 				</el-table-column>
@@ -100,8 +85,8 @@
 		},
 		data() {
 			return {
-				formParams: { id: 1 },
-				apiObj: this.$HTTP().url("/admin/code/code/lists"),
+				formParams: {},
+				apiObj: this.$HTTP().url("/admin/task/lists"),
 				tableData: [],
 				queryParams: {
 					table_name: undefined,
@@ -114,6 +99,11 @@
 			onAdd(){
 				this.$modalForm(
 					this.$HTTP().post("/admin/task/form")
+				).then((res) => {});
+			},
+			onEdit({id}){
+				this.$modalForm(
+					this.$HTTP().params({id}).post("/admin/task/form")
 				).then((res) => {});
 			},
 			success(res){

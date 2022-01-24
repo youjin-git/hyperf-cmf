@@ -4,4 +4,3 @@ export function creatorFactory(name,init){
     }
 }
 
-export default function Creator(type,title,fi)

@@ -29,6 +29,11 @@
 			<el-col :lg="12">
 				<el-card shadow="never" header="异步多选">
 					<sc-select
+
+
+
+
+
 						v-model="value2"
 						:apiObj="$API.system.dic.get"
 						clearable

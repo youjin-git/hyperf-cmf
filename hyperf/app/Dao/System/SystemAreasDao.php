@@ -19,14 +19,14 @@ class SystemAreasDao extends \Yj\Daos\BaseDao
 
     public function DaoWhere(array $params)
     {
-//        return $this->getDaoQuery($params, function (Verify $verify) {
-//            $verify('id', function (Builder $query, $id) {
-//                $query->where('id', $id);
-//            });
-//            $verify('title', function (Builder $query, $title) {
-//                $query->where('title', $title);
-//            });
-//        });
+        return $this->getDaoQuery($params, function (Verify $verify) {
+            $verify('id', function (Builder $query, $id) {
+                $query->where('id', $id);
+            });
+            $verify('title', function (Builder $query, $title) {
+                $query->where('title', $title);
+            });
+        });
     }
 
     public function DaoLevel(int $level){
@@ -46,8 +46,6 @@ class SystemAreasDao extends \Yj\Daos\BaseDao
     public function lists($params){
         return $this->DaoLevelWhere($params)->get();
     }
-
-
 
 
 

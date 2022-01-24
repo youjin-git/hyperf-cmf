@@ -35,72 +35,32 @@
 			>
 				<el-table-column type="selection" width="50"></el-table-column>
 				<el-table-column
-					label="订单号"
-					prop="tables_name"
+					label="ID"
+					prop="id"
 					width="150"
 				></el-table-column>
 				<el-table-column
-					label="省份"
-					prop="tables_name"
+					label="code"
+					prop="code"
 					width="150"
 				></el-table-column>
 				<el-table-column
-					label="姓名"
-					prop="tables_name"
+					label="学校名称"
+					prop="title"
 					width="150"
 				></el-table-column>
-				<el-table-column
-					label="手机号"
-					prop="tables_name"
-					width="150"
-				></el-table-column>
-				<el-table-column
-					label="任务"
-					prop="tables_name"
-					width="150"
-				></el-table-column>
-				<el-table-column
-					label="填报人"
-					prop="tables_name"
-					width="150"
-				></el-table-column>
-				<el-table-column
-					label="审核人"
-					prop="tables_name"
-					width="150"
-				></el-table-column>
-				<el-table-column
-					label="来源"
-					prop="tables_name"
-					width="150"
-				></el-table-column>
-				<el-table-column
-					label="创建时间"
-					prop="tables_name"
-					width="150"
-				></el-table-column>
-				<el-table-column
-					label="志愿表"
-					prop="tables_name"
-					width="150"
-				></el-table-column>
-				<el-table-column
-					label="志愿表"
-					prop="tables_name"
-					width="150"
-				></el-table-column>
-				<el-table-column
-					label="操作"
-					fixed="right"
-					align="right"
-					width="100"
-				>
-					<template #default>
-						<el-button type="text" @click="preview">
-							预览
-						</el-button>
-					</template>
-				</el-table-column>
+<!--				<el-table-column-->
+<!--					label="操作"-->
+<!--					fixed="right"-->
+<!--					align="right"-->
+<!--					width="100"-->
+<!--				>-->
+<!--					<template #default>-->
+<!--						<el-button type="text" @click="preview">-->
+<!--							预览-->
+<!--						</el-button>-->
+<!--					</template>-->
+<!--				</el-table-column>-->
 			</yjTable>
 		</el-main>
 	</el-container>
@@ -114,8 +74,8 @@
 		},
 		data() {
 			return {
-				formParams: { id: 1 },
-				apiObj: this.$HTTP().url("/admin/code/code/lists"),
+				formParams: { },
+				apiObj: this.$HTTP().url("/admin/college/school/lists"),
 				tableData: [],
 				queryParams: {
 					table_name: undefined,

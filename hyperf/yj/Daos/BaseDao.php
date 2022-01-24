@@ -20,13 +20,16 @@ class BaseDao
 
     protected $daoQuerys = [];
 
+
     public function __construct()
     {
+        $this->daoQuerys = [];
         $modelClass = str_replace(['\Dao', 'Dao'], ['\Model', ''], get_class($this));
         $this->baseDao = App($modelClass);
     }
 
 //    abstract public function MakeWhere(Builder $query, $params);
+
 
     public function getModel()
     {
@@ -41,7 +44,7 @@ class BaseDao
      */
     public function getDaoQuery(Collection|array $params = [], callable $callback = null)
     {
-        $daoQuery = app(Verify::class)->init($params);
+        $daoQuery = make(Verify::class)->init($params);
         if (is_callable($callback)) {
             $callback($daoQuery);
         }
@@ -59,6 +62,7 @@ class BaseDao
             foreach($this->daoQuerys as $daoQuery){
                 $query->addNestedWhereQuery($daoQuery->getQuery());
             }
+            $this->daoQuerys = [];
         })->{$method}(...$parameters);
     }
 

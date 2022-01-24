@@ -23,7 +23,7 @@ import {
 
 
 import { nameProp, BaseParser } from "./Prop";
-var { ElInput, ElSelect, ElOption,ElRadio,ElRadioButton,ElRadioGroup} = require("element-plus");
+var { ElInput, ElSelect, ElOption,ElRadio,ElRadioButton,ElRadioGroup,ElCheckboxGroup,ElCheckbox,ElCheckboxButton,ElCascader} = require("element-plus");
 
 import {CreateNodeFactory} from '@/components/formCreate/core/factory/node';
 
@@ -560,7 +560,7 @@ var alias = {
 	slider: PRE + "-slider",
 	rate: PRE + "-rate",
 	upload: "fc-upload",
-	cascader: PRE + "-cascader",
+	cascader: "fc-cascader",
 	popover: PRE + "-popover",
 	tooltip: PRE + "-tooltip",
 	colorPicker: PRE + "-colorPicker",
@@ -658,6 +658,166 @@ var fragment = vue.defineComponent({
 	},
 });
 
+var NAME$a = 'fcCheckbox';
+var Checkbox = vue.defineComponent({
+	name: NAME$a,
+	inheritAttrs: false,
+	props: {
+		modelValue: {
+			type: Array,
+			"default": function _default() {
+				return [];
+			}
+		},
+		type: String
+	},
+	emits: ['update:modelValue'],
+	setup: function setup(props, _) {
+		var _toRefs = vue.toRefs(vue.inject('formCreateInject')),
+			options = _toRefs.options;
+
+		var trueValue = vue.ref([]);
+		var value = vue.toRef(props, 'modelValue');
+
+		var _options = vue.computed(function () {
+			return options.value;
+		});
+
+
+		var update = function update() {
+			trueValue.value = value.value ? _options.value.filter(function (opt) {
+				return value.value.indexOf(opt.value) !== -1;
+			}).map(function (option) {
+				return option.label;
+			}) : [];
+		};
+
+
+		update();
+		return {
+			options: _options,
+			trueValue: trueValue,
+			value: value,
+			onInput: function onInput(n) {
+				_.emit('update:modelValue', _options.value.filter(function (opt) {
+					return n.indexOf(opt.label) !== -1;
+				}).map(function (opt) {
+					return opt.value;
+				}).filter(function (v) {
+					return v !== undefined;
+				}));
+			},
+			update: update
+		};
+	},
+	watch: {
+		modelValue: function modelValue() {
+			this.update();
+		}
+	},
+	components: {
+		ElCheckboxGroup,
+		ElCheckbox,
+		ElCheckboxButton,
+	},
+	render: function render() {
+		var _this$$slots$default,
+			_this$$slots,
+			_this = this;
+
+		var name = this.type === 'button' ? 'ElCheckboxButton' : 'ElCheckbox';
+		var Type = vue.resolveComponent(name);
+		return vue.createVNode(vue.resolveComponent("ElCheckboxGroup"), vue.mergeProps(this.$attrs, {
+			"modelValue": this.trueValue,
+			"onUpdate:modelValue": this.onInput
+		}), _objectSpread2({
+			"default": function _default() {
+				return [_this.options.map(function (opt, index) {
+					var props = _objectSpread2({}, opt);
+					delete props.value;
+					return vue.createVNode(Type, vue.mergeProps(props, {
+						"key": name + index + opt.value
+					}), null);
+				}), (_this$$slots$default = (_this$$slots = _this.$slots)["default"]) === null || _this$$slots$default === void 0 ? void 0 : _this$$slots$default.call(_this$$slots)];
+			}
+		}, getSlot(this.$slots, ['default'])));
+	}
+});
+
+var Cascader = vue.defineComponent({
+	name:'fcCascader',
+	inheritAttrs: false,
+	props: {
+		modelValue: {
+			type: Array,
+			default: function _default() {
+				return [];
+			},
+		},
+		type: String,
+	},
+	components:{
+		ElCascader,
+	},
+	emits: ["update:modelValue"],
+	setup: function setup(props) {
+		var _toRefs = vue.toRefs(vue.inject("formCreateInject")),
+			options = _toRefs.options;
+
+			console.log('Cascader',options);
+			console.log('Cascader',_toRefs);
+
+		var value = vue.toRef(props, "modelValue");
+		return {
+			options: options,
+			value: value,
+		};
+	},
+	render: function render() {
+		var _this = this,
+			_this$$slots$default,
+			_this$$slots;
+
+		console.log('Cascader',vue.mergeProps(
+			this.$attrs,
+			{
+				props:{
+					multiple:vue.ref(!!this.$attrs.multiple),
+				},
+			},
+			{
+				modelValue: this.value,
+				"onUpdate:modelValue": function onUpdateModelValue(v) {
+					return _this.$emit("update:modelValue", v);
+				},
+			},
+			[]
+		));
+
+
+
+		const props = {};
+		if(this.$attrs.multiple==true){
+			props.multiple = vue.ref(this.$attrs.multiple)
+		}
+
+		return vue.createVNode(
+			vue.resolveComponent("ElCascader"),
+			vue.mergeProps(
+				this.$attrs,
+				{props},
+				{
+					modelValue: this.value,
+					"onUpdate:modelValue": function onUpdateModelValue(v) {
+						return _this.$emit("update:modelValue", v);
+					},
+				},
+				[]
+			)
+		);
+	}
+})
+
 var NAME$7 = "fcSelect";
 var Select = vue.defineComponent({
 	name: NAME$7,
@@ -748,6 +908,7 @@ var Select = vue.defineComponent({
 		);
 	},
 });
+
 
 function FormCreate(vm) {
 	//4776
@@ -941,11 +1102,11 @@ function FormCreate(vm) {
 			}
 		},
 		$handleRender() {
-		
-			// if (this.vm.setupState.unique > 0) {
+
+			if (this.vm.setupState.unique > 0) {
 				// this.vm.setupState.unique--;
 				return this.$renderRender();
-			// }
+			}
 		},
 		$renderRender() {
 			var _this = this;
@@ -1597,7 +1758,7 @@ function FormCreate(vm) {
 
 	extend(this, {
 		install: () => {
-			[Radio, Select,Group].forEach(function (component) {
+			[Radio, Select,Group,Checkbox,Cascader].forEach(function (component) {
 				_this.component(component.name, component);
 			});
 			CreateNode.use(alias);

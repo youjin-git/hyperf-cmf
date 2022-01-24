@@ -4,6 +4,8 @@
 namespace App\Excel\Import;
 
 
+use App\Dao\College\CollegeSchoolDao;
+use App\Model\Admin\File;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\Utils\Collection;
 use Hyperf\Utils\Context;
@@ -20,10 +22,23 @@ use Yj\Excel\Excel;
 class SchoolImport implements  ToCollection
 {
 
+    /**
+     * @Inject()
+     * @var CollegeSchoolDao
+     */
+    public $collegeSchoolDao;
+
     public function collection(Collection $collection)
     {
 
-        dump($collection);
+//        dump($collection);
+        $collection->each(function ($item){
+
+           $this->collegeSchoolDao->firstOrCreate([
+               'code'=>$item[0],
+           ],['title'=>$item[1]]);
+
+        });
 //        dump(111);
         // TODO: Implement collect() method.
     }
@@ -34,13 +49,16 @@ class SchoolImport implements  ToCollection
      */
     protected $filesFactory;
 
+
     /**
      * @PostApi(path="school")
      * @FormData(key="id",rule="required",default="40")
      */
     public function import(){
         $params = Context::get('validator.data');
-        $file = getFilePath($params->get('id'));
+//        $file = getFilePath($params->get('id'));
+        $file = App(File::class)->where('id',$params->get('id'))->value('path');
+
         App(Excel::class)->queueImport($this,($file));
 
     }

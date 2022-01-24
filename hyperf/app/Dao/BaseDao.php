@@ -42,7 +42,6 @@ abstract class BaseDao
         return false;
     }
 
-
     public function setBaseMethods($method, $params)
     {
         return $this->baseMethods[] = [$method, $params];
@@ -75,7 +74,6 @@ abstract class BaseDao
 
     public function __call($method, $parameters)
     {
-
         return tap($this->getModel()->newQuery(), function ($query) {
         })->{$method}(...$parameters);
     }

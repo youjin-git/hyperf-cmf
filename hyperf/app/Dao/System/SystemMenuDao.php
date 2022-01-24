@@ -12,18 +12,17 @@ use Hyperf\Utils\Collection;
 /**
  * @var SystemMenu
  */
-class SystemMenuDao extends BaseDao
+class SystemMenuDao extends \Yj\Daos\BaseDao
 {
     public function check($id, Collection $params)
     {
-        //检
+
         if ($path = $params->get('path')) {
             if ($this->where('id', '<>', $id)
                 ->where('path', $params->get('path'))
                 ->exists()) {
                 _Error('path is exists');
             }
-
         }
     }
 }
