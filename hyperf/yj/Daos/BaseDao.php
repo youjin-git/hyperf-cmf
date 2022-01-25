@@ -3,6 +3,7 @@
 namespace Yj\Daos;
 
 
+use App\Model\Model;
 use Hyperf\Database\Model\Builder;
 use Hyperf\Utils\Collection;
 
@@ -10,7 +11,7 @@ use Hyperf\Utils\Collection;
  * @Notes: []
  * @User: zwc
  * @Date: 2022/1/14 13:56
- * @mixin Builder
+ * @mixin Model
  */
 class BaseDao
 {
@@ -20,6 +21,12 @@ class BaseDao
 
     protected $daoQuerys = [];
 
+
+    public function page($isPage = true)
+    {
+        _SetNotPage($isPage);
+        return $this;
+    }
 
     public function __construct()
     {
