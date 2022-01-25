@@ -1284,6 +1284,7 @@ function FormCreate(vm) {
 		},
 		makeWrap: function (ctx, children) {
 			const rule = ctx.prop;
+			console.log('ruless',rule);
 			const uni = `${this.key}${ctx.key}`;
 			const col = rule.col;
 			const isTitle = this.isTitle(rule);

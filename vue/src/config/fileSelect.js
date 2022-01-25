@@ -28,7 +28,7 @@ export default {
 		page: "page",
 		pageSize: "pageSize",
 		keyword: "keyword",
-		menuKey: "groupId",
+		tagKey: "tags_id",
 	},
 	menuProps: {
 		key: "id",
@@ -37,8 +37,8 @@ export default {
 	},
 	fileProps: {
 		key: "id",
-		fileName: "fileName",
-		url: "url",
+		fileName: "name",
+		url: "path",
 	},
 	files: {
 		doc: {

@@ -18,14 +18,14 @@
 					:node-key="treeProps.key"
 					:props="treeProps"
 					:current-node-key="
-						menu.length > 0 ? menu[0][treeProps.key] : ''
+						menu.length > 0 ? menu[0][treeProps.key] : 0
 					"
 					highlight-current
 					@node-click="groupClick"
 				>
-					<template #default="{ node }">
+					<template #default="{ data }">
 						<span class="el-tree-node__label">
-							<i class="el-icon-folder icon"></i>{{ node.label }}
+							<i class="el-icon-folder icon"></i>{{ data.name }}
 						</span>
 					</template>
 				</el-tree>
@@ -191,7 +191,7 @@ export default {
 			currentPage: 1,
 			data: [],
 			menu: [],
-			menuId: "",
+			menuId: 0,
 			value: this.multiple ? [] : "",
 			fileList: [],
 			accept: this.onlyImage ? "image/gif, image/jpeg, image/png" : "",
@@ -219,15 +219,16 @@ export default {
 		//获取分类数据
 		async getMenu() {
 			this.menuLoading = true;
-			var res = await config.menuApiObj.get();
-			this.menu = res.data;
+			var data = await this.$HTTP().post('admin/system/file-tags/lists');
+			 data.unshift({id: 0, name: '未分组'})
+			this.menu = data;
 			this.menuLoading = false;
 		},
 		//获取列表数据
 		async getData() {
 			this.listLoading = true;
 			var reqData = {
-				[config.request.menuKey]: this.menuId,
+				[config.request.tagKey]: this.menuId,
 				[config.request.page]: this.currentPage,
 				[config.request.pageSize]: this.pageSize,
 				[config.request.keyword]: this.keyword,
@@ -235,10 +236,10 @@ export default {
 			if (this.onlyImage) {
 				reqData.type = "image";
 			}
-			var res = await config.listApiObj.get(reqData);
-			var parseData = config.listParseData(res);
-			this.data = parseData.rows;
-			this.total = parseData.total;
+			var data = await this.$HTTP().params(reqData).post('admin/system/file/lists');
+			console.log('data',data);
+			this.data = data.data;
+			this.total = data.total;
 			this.listLoading = false;
 			this.$refs.scrollbar.setScrollTop(0);
 		},
