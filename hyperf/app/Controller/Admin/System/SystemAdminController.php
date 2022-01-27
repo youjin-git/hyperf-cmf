@@ -60,10 +60,10 @@ class SystemAdminController extends BaseController
         }
         $form = Elm::createForm($id?'admin/system/admin/edit':'admin/system/admin/add',[],['labelPosition'=>'right']);
         $form->setRule([
-            \Yj\Form\Elm::YjUpload()->title('上传头像')->field('icon'),
-            Elm::input('username','用户名')->required()->col(12),
-            Elm::password('password','密码')->required()->col(12),
-            Elm::input('nickname','昵称')->required()->col(12),
+//            \Yj\Form\Elm::YjUpload()->title('上传头像')->field('icon'),
+//            Elm::input('username','用户名')->required()->col(12),
+//            Elm::password('password','密码')->required()->col(12),
+//            Elm::input('nickname','昵称')->required()->col(12),
             Elm::radio('gender', '性别')->options(function (){
                 return [['value'=>'1','label'=>'男'],['value'=>'2','label'=>'女']];
             })->required()->col(12),
@@ -73,7 +73,7 @@ class SystemAdminController extends BaseController
                     $label = $item->name;
                     return compact('value','label');
                 })->toArray();
-            })->requiredNum()->col(12),
+            })->required()->col(12),
 //            Elm::select('roles', '角色')->options(function (){
 //                return [['value'=>'1','label'=>'男'],['value'=>'2','label'=>'女']];
 //            })->required()->col(12),
@@ -85,12 +85,12 @@ class SystemAdminController extends BaseController
 
     /**
      * @PostApi(path="add",description="添加用户")
-     * @FormData(key="icon",rule="")
-     * @FormData(key="username",rule="")
-     * @FormData(key="nickname",rule="")
-     * @FormData(key="remark",rule="")
-     * @FormData(key="gender",rule="")
-     * @FormData(key="password",rule="")
+     * @FormData(key="icon",rule="required")
+     * @FormData(key="username",rule="required")
+     * @FormData(key="nickname",rule="required")
+     * @FormData(key="remark",rule="required")
+     * @FormData(key="gender",rule="required")
+     * @FormData(key="password",rule="required")
      */
     public function add(){
         $params = $this->getValidatorData();

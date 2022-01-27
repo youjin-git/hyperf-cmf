@@ -79,10 +79,11 @@ class Select extends FormOptionsComponent
 
     public function createValidate()
     {
+
         if ($this->props['multiple'] == true)
             return Elm::validateArr();
         else
-            return Elm::validateStr();
+            return Elm::validateStrOrNum();
     }
 
     public function createValidateNum()

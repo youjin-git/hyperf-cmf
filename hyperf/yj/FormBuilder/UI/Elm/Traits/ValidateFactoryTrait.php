@@ -21,6 +21,12 @@ trait ValidateFactoryTrait
         return new Validate(Validate::TYPE_STRING, $trigger);
     }
 
+    public static function validateStrOrNum($trigger = Validate::TRIGGER_CHANGE)
+    {
+        return new Validate([Validate::TYPE_STRING,Validate::TYPE_NUMBER], $trigger);
+    }
+
+
     public static function validateAny($trigger = Validate::TRIGGER_CHANGE)
     {
         return new Validate(Validate::TYPE_ANY, $trigger);
