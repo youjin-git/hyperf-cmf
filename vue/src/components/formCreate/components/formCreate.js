@@ -46,6 +46,7 @@ export  default  function $FormCreate(FormCreate,app) {
 
 			let { rule, modelValue } = toRefs(props);
 
+			
 			const data = reactive({
 				destroyed: false,
 				isShow: true,
@@ -75,6 +76,7 @@ export  default  function $FormCreate(FormCreate,app) {
 		},
 		created: function created() {
 			const vm = getCurrentInstance();
+			console.log(vm.ctx.fc.init);
 			vm.ctx.fc.init();
 			vm.emit("getApi", vm.ctx.fc);
 		},

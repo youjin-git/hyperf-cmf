@@ -1063,9 +1063,30 @@ function FormCreate(vm) {
 			};
 		},
 		parseRule(_rule) {
+		  	if(Object.hasOwnProperty.call(_rule,'validate')){
+					_rule.validate.map((item)=>{
+						if(is.Array(item.type)){
+									const types = item.type;
+									item.validator = (rule, value, callback)=>{
+										try{
+											if(value!=="" && types.some(type=>{
+												type = type[0].toUpperCase() + type.substr(1)   
+												return true === is[`${type}`](value)
+											})){
+												return callback();
+											}else{
+												return callback(new Error('types is wrong'))
+											}
+										}catch(e){
+											return callback(new Error(e))
+										}
+								}
+							 item.type = 'any';
+						}
+					});
+			}
 			this.fullRule(_rule);
 			this.appendValue(_rule);
-
 			return _rule;
 		},
 		appendValue: function appendValue(rule) {
@@ -1227,17 +1248,26 @@ function FormCreate(vm) {
 		submit(successFn, failFn) {
 			var _this = this;
 			return new Promise(function (resolve, reject) {
+		
 				var formData = _this.getFormDatas();
-				_this
+		
+				// console.log(_this
+				// 	.form()
+				// 	.validate());
+
+					_this
 					.form()
 					.validate()
 					.then(function () {
+						console.log(11);
 						if (is.Function(successFn)) {
 							return successFn(formData, _this);
 						}
 						if (is.Function(_this.options.onSubmit)) {
 							return _this.options.onSubmit(formData, _this);
 						}
+					}).catch(res=>{
+						console.log(res);
 					});
 			});
 		},
@@ -1289,6 +1319,10 @@ function FormCreate(vm) {
 			const isTitle = this.isTitle(rule);
 			const labelWidth = (!col.labelWidth && !isTitle) ? 0 : col.labelWidth;
 			const {inline, col: _col} = this.rule.props;
+
+			
+		
+
 			const item = (rule.wrap.show)===false ? children : this.$r(mergeProps([rule.wrap, {
 				props: {
 					labelWidth: labelWidth === void 0 ? labelWidth : toString(labelWidth),
