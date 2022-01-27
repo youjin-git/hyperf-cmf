@@ -1290,6 +1290,26 @@ function FormCreate(vm) {
 			const isTitle = this.isTitle(rule);
 			const labelWidth = (!col.labelWidth && !isTitle) ? 0 : col.labelWidth;
 			const {inline, col: _col} = this.rule.props;
+
+			//
+			rule.map((item)=>{
+				if(is.Array(item.type)){
+					const types = item.type;
+					item.validator = (rule, value, callback)=>{
+						if(!types.some(type=>{
+							return true === is[type](value)
+						})){
+							return callback(new Error('types is wrong'))
+						}else{
+							return callback()
+						}
+					}
+					delete item.type;
+				}
+				return item;
+			})
+			
+
 			const item = (rule.wrap.show)===false ? children : this.$r(mergeProps([rule.wrap, {
 				props: {
 					labelWidth: labelWidth === void 0 ? labelWidth : toString(labelWidth),
