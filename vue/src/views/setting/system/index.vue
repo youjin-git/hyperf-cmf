@@ -2,7 +2,6 @@
 	<el-main>
 		<el-card shadow="never">
 			<el-tabs v-model="currentId" tab-position="top">
-
 				<el-tab-pane
 					v-for="(item,index) in headerList"
 					:name="item.id.toString()"
@@ -11,7 +10,6 @@
 					>
 						<formCreate class="ConfigformCreate" v-if="rules.length!==0" :option="option" :rule="rules" />
 				</el-tab-pane>
-
 			</el-tabs>
 		</el-card>
 	</el-main>
@@ -39,7 +37,17 @@ export default {
 			rules:[
 
 			],
-			option:[],
+			FromData:{},
+			option:{
+				onSubmit: (formData)=>{
+					this.$HTTP().post(this.FromData.action, formData).then(res => {
+						this.$message.success('提交成功')
+					}).catch(res => {
+						console.log(res)
+						this.$message.error(res.msg)
+					})
+				}
+			},
 			currentId:0,
 			headerList:[],
 			setting: [
@@ -91,7 +99,7 @@ export default {
 		},
 		changeTab(){
 			this.$HTTP().post('/admin/config_classify/create_form',{tab_id:this.currentId}).then(res=>{
-				this.option = extend({'size':'large'},res.config)
+				this.option = extend(this.option,{'size':'large'},res.config)
 				this.rules = res.rule
 				this.title = res.title
 				this.FromData = res

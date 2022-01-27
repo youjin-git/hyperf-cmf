@@ -19,7 +19,7 @@ let unique = 1;
 
 const uniqueId = () => ++unique;
 
-import formCreate from '../components/formCreate/index'
+// import formCreate from '../components/formCreate/index'
 
 
 var formCreateGlobalOptions = {
@@ -46,6 +46,7 @@ var formCreateGlobalOptions = {
 
 
 export default function modalForm(app) {
+
 	return function (formRequestPromise, config = {}) {
 
 		return new Promise((resolve, reject) => {
@@ -78,7 +79,7 @@ export default function modalForm(app) {
 					}));
 
 					const formCreateMessage = h(
-						formCreate.$form(),
+						app._context.components.formCreate,
 						toProps({
 							props: {
 								rule: data.rule,
@@ -102,11 +103,10 @@ export default function modalForm(app) {
 							if (action === "confirm") {
 								instance.confirmButtonLoading = true;
 								fApi.submit((formData) => {
-									http[data.method.toLowerCase()](
+									http().reflush()[data.method.toLowerCase()](
 										data.action,
 										formData
-									)
-										.then((res) => {
+									).then((res) => {
 											this.$message.success(
 												res.message || "提交成功"
 											);

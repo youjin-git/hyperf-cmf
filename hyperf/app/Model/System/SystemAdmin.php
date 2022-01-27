@@ -23,12 +23,17 @@ class SystemAdmin extends Model
     protected $fillable = [
         'roles',
         'id',
-        'account',
-        'phone',
+        'username',
+        'icon',
         'password',
+        'nickname',
+        'remark',
         'status'
     ];
 
+    public function setPasswordAttribute($value){
+         $this->attributes['password'] = md5($value);
+    }
 
 
     const USER_ENABLE = 1;
@@ -39,6 +44,8 @@ class SystemAdmin extends Model
         self::USER_DISABLE => '禁用',
         self::USER_ENABLE => '启用',
     ];
+
+
 
 
     public function getLastTimeAttribute($value){

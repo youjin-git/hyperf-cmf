@@ -82,7 +82,6 @@ class FileController extends AbstractController
             succ(['id' => $file->id, 'path' => $filePath, 'src' => $this->configValueModel->_get('site_url') . $filePath]);
 
         }
-
     }
 
     public function getFilePath($type = 'img', $ext = '')
@@ -94,17 +93,15 @@ class FileController extends AbstractController
     /**
      * @GetApi(path="get_path", description="")
      * @PostApi(path="get_path", description="")
-     * @FormData(key="id|文件id", rule="required")
+     * @FormData(key="id", rule="required")
      */
     public function get_path()
     {
         $id = $this->request->input('id');
-
         if (empty($id)) {
             succ('');
         } else {
             succ($this->fileModel->getFullPath($id));
-
         }
     }
 }

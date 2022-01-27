@@ -6,7 +6,7 @@ use FormBuilder\Driver\CustomComponent;
 class Elm extends \FormBuilder\Factory\Elm{
 
     public static function YjUpload(){
-        $type = 'YjUpload';
+        $type = 'yjUpload';
         $component = new CustomComponent($type);
 ////            $span->action( $this->configValueModel->_get('site_url').'/util/file/upload');
         $component->props(['action'=>systemConfig('site_url').'/util/file/upload','name'=>'上传图片']);

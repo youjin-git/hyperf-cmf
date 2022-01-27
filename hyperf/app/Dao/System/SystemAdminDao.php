@@ -24,9 +24,15 @@ class SystemAdminDao extends BaseDao
 //        });
     }
 
+
     public function lists(\Hyperf\Utils\Collection $params)
     {
         return $this->paginate();
+    }
+
+    public function add(\Hyperf\Utils\Collection $params)
+    {
+        return $this->create($params->toArray());
     }
 
 }

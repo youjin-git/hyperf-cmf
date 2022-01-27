@@ -1,14 +1,17 @@
 import {defineComponent,getCurrentInstance,toRefs,reactive,markRaw,watch} from "vue";
+
+
+
 var ElementPlus = require("element-plus");
 
 const NAME = 'FormCreate';
 
-export  default  function $FormCreate(FormCreate) {
+export  default  function $FormCreate(FormCreate,app) {
+	// console.log('app',app._context.components,ElementPlus);
+
 	return defineComponent({
 		name: NAME,
-		components: {
-			...ElementPlus,
-		},
+		components: app._context.components,
 		props: {
 			rule: {
 				type: Array,

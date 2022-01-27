@@ -107,6 +107,7 @@
           <yjTable
             ref="table"
             :apiObj="apiObj"
+			:params="queryParams"
             :column="column"
             :showRecycle="true"
             @selection-change="selectionChange"
@@ -207,7 +208,6 @@
 
                       <el-dropdown-item
                         @click="edit(scope.row, scope.$index)"
-                        v-auth="['system:user:update']"
                       >编辑</el-dropdown-item>
 
                       <el-dropdown-item
@@ -298,7 +298,40 @@
         showRolesLoading: false,
         rolesFilterText: '',
         roles: [],
-		apiObj:  this.$HTTP().url('admin/system/admin/lists'),
+		apiObj:  this.$HTTP().url('admin/system/admin/lists')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		   ,
           // recycleList: this.$API.user.getRecyclePageList,
         selection: [],
         queryParams: {
@@ -322,17 +355,14 @@
     methods: {
       //添加
       add(){
-        this.dialog.save = true
-        this.$nextTick(() => {
-          this.$refs.saveDialog.open()
-        })
+		  this.$modalForm(this.$HTTP().post('admin/system/admin/form')).then(res=>{
+				  this.$refs.table.upData()
+		  });
       },
+
       //编辑
       edit(row){
-        this.dialog.save = true
-        this.$nextTick(() => {
-          this.$refs.saveDialog.open('edit').setData(row)
-        })
+
       },
       //查看
       show(row){
