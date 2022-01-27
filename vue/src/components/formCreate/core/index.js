@@ -13,11 +13,11 @@ export default function formCreateFactory(config){
     }
 
 	function component(id,component){
-		
+
 	}
-	
-	function $form() {
-		return $FormCreate(formCreate);
+
+	function $form(app) {
+		return $FormCreate(formCreate,app);
 	}
 
 	if(config.install){
@@ -25,7 +25,7 @@ export default function formCreateFactory(config){
 			config.install(formCreate)
 		}
 	}
-	
+
 	function useAttr(formCreate) {
 		extend(formCreate,{
 			componentAlias

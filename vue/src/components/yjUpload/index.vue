@@ -1,21 +1,15 @@
 <template>
-	<div
-		class="sc-upload"
-		v-loading="loading"
-		element-loading-background="rgba(0, 0, 0, 0.5)"
-		:style="style"
-	>
-		<div v-if="tempImg || img" class="sc-upload-file">
+	<div class="sc-upload" element-loading-background="rgba(0, 0, 0, 0.5)" :style="style">
+		<div v-if="img" class="sc-upload-file">
 			<div class="mask">
-				<span class="del" @click.stop="del"
-					><i class="el-icon-delete"></i
-				></span>
+				<span class="del" @click.stop="del"><i class="el-icon-delete"></i></span>
 			</div>
+
 			<el-image
 				v-if="fileIsImg"
 				class="image"
-				:src="tempImg || img"
-				:preview-src-list="[img]"
+				:src="(img)"
+				:preview-src-list="[(img)]"
 				fit="cover"
 				hide-on-click-modal
 				append-to-body
@@ -26,7 +20,7 @@
 		<div
 			v-else
 			class="sc-upload-uploader"
-			@click="fileSelect && showfileSelect()"
+			@click="showfileSelect()"
 		>
 			<el-upload
 				ref="upload"
@@ -50,50 +44,18 @@
 				</slot>
 			</el-upload>
 		</div>
-		<el-dialog
-			title="剪裁"
-			v-model="cropperDialogVisible"
-			:width="580"
-			destroy-on-close
-		>
-			<sc-cropper
-				:src="cropperImg"
-				:compress="compress"
-				:aspectRatio="aspectRatio"
-				ref="cropper"
-			></sc-cropper>
-			<template #footer>
-				<el-button @click="cropperDialogVisible = false"
-					>取 消</el-button
-				>
-				<el-button type="primary" @click="cropperSave">确 定</el-button>
-			</template>
-		</el-dialog>
-		<el-dialog
-			title="打开"
-			v-model="fileSelectDialogVisible"
-			:width="880"
-			destroy-on-close
-		>
-			<sc-file-select @submit="fileSelectSubmit">
-				<template #do>
-					<el-button @click="fileSelectDialogVisible = false"
-						>取 消</el-button
-					>
-				</template>
-			</sc-file-select>
-		</el-dialog>
-		<el-input v-model="img" style="display: none"></el-input>
 	</div>
 </template>
 
 <script>
+import getFilePath from "@/utils/lib/file";
 import { defineAsyncComponent } from "vue";
 import config from "@/config/upload";
 const scCropper = defineAsyncComponent(() => import("@/components/scCropper"));
 const scFileSelect = defineAsyncComponent(() =>
 	import("@/components/scFileSelect")
 );
+import { ElUpload,ElImage } from 'element-plus'
 
 export default {
 	props: {
@@ -119,10 +81,12 @@ export default {
 	},
 	computed:{
 		style() {
-			return {width:'auto',height:'auto'};
-		}
+			return {width:'100px',height:'100px'};
+		},
 	},
 	components: {
+		ElUpload,
+		ElImage,
 		scCropper,
 		scFileSelect,
 	},
@@ -138,18 +102,18 @@ export default {
 			fileSelectDialogVisible: false,
 		};
 	},
+
 	watch: {
-		modelValue() {
-			this.isImg(this.modelValue);
-			this.img = this.modelValue;
-		},
-		img() {
-			this.$emit("update:modelValue", this.img);
+		async modelValue(value) {
+			this.img = await getFilePath(value);
+			this.$emit("update:modelValue",value);
 		},
 	},
-	mounted() {
-		this.isImg(this.modelValue);
-		this.img = this.modelValue;
+	async mounted() {
+		// this.isImg(this.modelValue);
+
+			this.img = await getFilePath(this.modelValue);
+
 	},
 	methods: {
 		showfileSelect() {
@@ -208,7 +172,6 @@ export default {
 			this.loading = true;
 		},
 		success(res) {
-			console.log(res);
 
 			this.loading = false;
 			this.tempImg = "";
@@ -222,8 +185,11 @@ export default {
 			// } else {
 			// 	this.img = response.src;
 			// }
+			this.$emit("update:modelValue", res.id);
+
 		},
 		error(err) {
+			console.log(err);
 			this.$notify.error({
 				title: "上传文件错误",
 				message: err,
@@ -330,13 +296,13 @@ export default {
 }
 
 .sc-upload-uploader {
-	/* border: 1px dashed #d9d9d9; */
+	 border: 1px dashed #d9d9d9;
 	box-sizing: border-box;
 	width: 100%;
 	height: 100%;
 }
 .sc-upload-uploader:hover {
-	/* border: 1px dashed #409eff; */
+	 border: 1px dashed #409eff;
 }
 .sc-upload-uploader .uploader {
 	width: 100%;

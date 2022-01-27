@@ -207,4 +207,7 @@ class http {
 	}
 }
 
-export default (new http());
+export default function(){
+	return (new http());
+}
+

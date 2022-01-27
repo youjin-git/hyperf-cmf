@@ -23,18 +23,21 @@ import copy from "./directives/copy";
 import errorHandler from "./utils/errorHandler";
 import modalForm from "@/libs/modal-form";
 const collect = require('collect.js');
-
+import formCreate from "@/components/formCreate";
 
 export default {
 	install(app) {
+
+
+
+
 		//挂载全局对象
 		app.config.globalProperties.$CONFIG = config;
 		app.config.globalProperties.$TOOL = tool;
-		app.config.globalProperties.$HTTP = function(){
-			return http.reflush();
-		}
+		app.config.globalProperties.$HTTP = http;
+
 		app.config.globalProperties.collect = collect;
-		app.config.globalProperties.$modalForm = modalForm(app);
+
 
 		app.config.globalProperties.$API = api;
 		app.config.globalProperties.$AUTH = permission;
@@ -57,6 +60,9 @@ export default {
 		app.component("scForm", scForm);
 		app.component("scTitle", scTitle);
 
+		app.component("formCreate", formCreate.$form(app));
+
+		app.config.globalProperties.$modalForm = modalForm(app);
 		//注册全局指令
 		app.directive("auth", auth);
 		app.directive("role", role);

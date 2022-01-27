@@ -800,7 +800,6 @@ var Cascader = vue.defineComponent({
 		if(this.$attrs.multiple==true){
 			props.multiple = vue.ref(this.$attrs.multiple)
 		}
-
 		return vue.createVNode(
 			vue.resolveComponent("ElCascader"),
 			vue.mergeProps(

@@ -23,9 +23,14 @@ class SystemRolesDao extends BaseDao
 //        });
     }
 
-    public function lists(\Hyperf\Utils\Collection $params)
+    public function lists(\Hyperf\Utils\Collection|array $param = [])
     {
-        return $this->paginate();
+        return $this->getList();
+    }
+
+    public function add(\Hyperf\Utils\Collection $params)
+    {
+
     }
 
 }

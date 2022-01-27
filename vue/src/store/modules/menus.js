@@ -13,8 +13,8 @@ export default {
 	},
 	actions: {
 		async getMenus({ commit, state }) {
-			await http.post("/admin/menu/lists").then((data) => {
-				
+			await http().post("/admin/menu/lists").then((data) => {
+
 				commit("SET_MENU_LIST", data);
 				tool.data.set("MENU", data);
 			});

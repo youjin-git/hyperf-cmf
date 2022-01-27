@@ -82,7 +82,7 @@ use function Swoole\Coroutine\Http\request;
 
     public function scopeGetList(Builder $query, $columns = ['*'], $pageName = 'page', $page = null)
     {
-
+//        console.log(Context::get(\App\Constants\Context::ISPAGE));
         if (Context::get(\App\Constants\Context::ISPAGE, true)) {
             $limit = di()->get(RequestInterface::class)->input('limit', config('page.defaultLimit'));
             return $query->paginate($limit, $columns, $pageName, $page);
