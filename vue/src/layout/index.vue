@@ -135,9 +135,10 @@ export default {
 			},
 			immediate: true,
 		},
-		active(val) {
-			this.$router.replace({
-				path: val,
+		active(val,path) {
+			console.log(this.$route);
+			this.$router.push({
+				path: val
 			});
 		},
 	},
@@ -158,12 +159,12 @@ export default {
 			this.pmenu = this.$route.meta.breadcrumb
 				? this.$route.meta.breadcrumb[0]
 				: {};
-			
+
 			this.nextMenu = this.filterUrl(this.pmenu.children);
 			console.log(this.nextMenu);
 			this.$nextTick(() => {
 				this.active = this.$route.meta.active || this.$route.fullPath;
-				console.log(this.active);
+				console.log('active',this.active);
 			});
 		},
 		//点击显示
@@ -171,9 +172,15 @@ export default {
 			console.log(route);
 			this.pmenu = route;
 			this.nextMenu = this.filterUrl(route.children);
+			if((!route.children || route.children.length == 0) && route.component){
+				this.$router.push({path: route.path})
+			}
+
 			this.getRouteFirstChild(route);
 		},
 		getRouteFirstChild(route) {
+			console.log('getRouteFirstChild',route.name,this.pmenu);
+
 			if (route.children) {
 				this.$nextTick(() => {
 					this.active = route.children[0].path;
@@ -182,7 +189,7 @@ export default {
 		},
 		//转换外部链接的路由
 		filterUrl(map) {
-	
+
 			var newMap = [];
 			map &&
 				map.forEach((item) => {

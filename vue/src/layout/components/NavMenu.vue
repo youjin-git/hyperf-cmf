@@ -16,7 +16,7 @@
 				@click.stop="() => {}"
 			></a>
 			<i
-				v-if="navMenu.meta && navMenu.meta.icon"
+				v-if="navMenu.icon"
 				:class="navMenu.icon || 'el-icon-menu'"
 			></i>
 			<template #title>

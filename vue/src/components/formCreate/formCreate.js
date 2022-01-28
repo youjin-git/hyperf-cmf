@@ -762,15 +762,15 @@ var Cascader = vue.defineComponent({
 	emits: ["update:modelValue"],
 	setup: function setup(props) {
 		var _toRefs = vue.toRefs(vue.inject("formCreateInject")),
-			options = _toRefs.options;
+			options = _toRefs.options,
+			prop = _toRefs.prop;
 
-			console.log('Cascader',options);
-			console.log('Cascader',_toRefs);
 
 		var value = vue.toRef(props, "modelValue");
 		return {
 			options: options,
 			value: value,
+			prop: prop,
 		};
 	},
 	render: function render() {
@@ -778,25 +778,31 @@ var Cascader = vue.defineComponent({
 			_this$$slots$default,
 			_this$$slots;
 
-		console.log('Cascader',vue.mergeProps(
-			this.$attrs,
-			{
-				props:{
-					multiple:vue.ref(!!this.$attrs.multiple),
-				},
-			},
-			{
-				modelValue: this.value,
-				"onUpdate:modelValue": function onUpdateModelValue(v) {
-					return _this.$emit("update:modelValue", v);
-				},
-			},
-			[]
-		));
+		// console.log('Cascader.options',this.prop);
+		// if(this.props)
+
+
+		// console.log('Cascader.options',vue.mergeProps(
+		// 	this.$attrs,
+		// 	{
+		// 		props:{
+		// 			...this.prop.props,
+		// 			multiple:vue.ref(!!this.$attrs.multiple),
+		// 		},
+		// 	},
+		// 	{
+		//
+		// 		modelValue: this.value,
+		// 		"onUpdate:modelValue": function onUpdateModelValue(v) {
+		// 			return _this.$emit("update:modelValue", v);
+		// 		},
+		// 	},
+		// 	[]
+		// ));
 
 
 
-		const props = {};
+		const props = this.prop.props;
 		if(this.$attrs.multiple==true){
 			props.multiple = vue.ref(this.$attrs.multiple)
 		}
@@ -1070,7 +1076,7 @@ function FormCreate(vm) {
 									item.validator = (rule, value, callback)=>{
 										try{
 											if(value!=="" && types.some(type=>{
-												type = type[0].toUpperCase() + type.substr(1)   
+												type = type[0].toUpperCase() + type.substr(1)
 												return true === is[`${type}`](value)
 											})){
 												return callback();
@@ -1248,13 +1254,8 @@ function FormCreate(vm) {
 		submit(successFn, failFn) {
 			var _this = this;
 			return new Promise(function (resolve, reject) {
-		
+				console.log('submitsubmit');
 				var formData = _this.getFormDatas();
-		
-				// console.log(_this
-				// 	.form()
-				// 	.validate());
-
 					_this
 					.form()
 					.validate()
@@ -1320,8 +1321,6 @@ function FormCreate(vm) {
 			const labelWidth = (!col.labelWidth && !isTitle) ? 0 : col.labelWidth;
 			const {inline, col: _col} = this.rule.props;
 
-			
-		
 
 			const item = (rule.wrap.show)===false ? children : this.$r(mergeProps([rule.wrap, {
 				props: {
@@ -1339,54 +1338,6 @@ function FormCreate(vm) {
 			return (inline === true || _col===false || (col.show)===false) ? item : this.makeCol(rule, uni, [item]);
 
 
-			// var _this3 = this;
-			// var rule = ctx.prop;
-			// var uni = "".concat(this.key).concat(ctx.key);
-			//
-			// var isTitle = true;
-			// var col = rule.col;
-			// var labelWidth = !col.labelWidth && !isTitle ? 0 : col.labelWidth;
-			// return this.$r(
-			// 	mergeProps([
-			// 		rule.wrap,
-			// 		{
-			// 			props: _objectSpread2(
-			// 				_objectSpread2(
-			// 					{
-			// 						labelWidth:
-			// 							labelWidth === void 0
-			// 								? labelWidth
-			// 								: toString(labelWidth),
-			// 					},
-			// 					rule.wrap || {}
-			// 				),
-			// 				{},
-			// 				{
-			// 					prop: ctx.id,
-			// 					rules: rule.validate,
-			// 				}
-			// 			),
-			// 			class: rule.className,
-			// 			key: ctx.wrapRef,
-			// 			ref: ctx.wrapRef,
-			// 			type: "formItem",
-			// 		},
-			// 	]),
-			// 	_objectSpread2(
-			// 		{
-			// 			default: function _default() {
-			// 				return children;
-			// 			},
-			// 		},
-			// 		isTitle
-			// 			? {
-			// 					label: function label() {
-			// 						return _this3.makeInfo(rule, uni);
-			// 					},
-			// 			  }
-			// 			: {}
-			// 	)
-			// );
 		},
 		isTooltip: function (info) {
 			return info.type === "tooltip";

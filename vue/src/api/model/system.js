@@ -17,7 +17,7 @@ export default {
 			url: `admin/menu/lists`,
 			name: "获取菜单",
 			get: async function () {
-				return await http.reflush().post(this.url);
+				return await http().reflush().post(this.url);
 			},
 		},
 	},

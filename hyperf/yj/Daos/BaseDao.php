@@ -11,7 +11,7 @@ use Hyperf\Utils\Collection;
  * @Notes: []
  * @User: zwc
  * @Date: 2022/1/14 13:56
- * @mixin Model
+ * @mixin Builder|Model
  */
 class BaseDao
 {

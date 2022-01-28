@@ -25,11 +25,11 @@ const uniqueId = () => ++unique;
 var formCreateGlobalOptions = {
 	form:{
 		labelWidth:	'120px',
+		size:"small",
 	},
 	submitBtn: {
 		show: false,
 	},
-	size:"mini",
 	upload:{
 		props: {
 			onSuccess(res, file) {
@@ -103,9 +103,8 @@ export default function modalForm(app) {
 							if (action === "confirm") {
 								instance.confirmButtonLoading = true;
 								fApi.submit((formData) => {
-									http().reflush()[data.method.toLowerCase()](
-										data.action,
-										formData
+									http().params(formData)[data.method.toLowerCase()](
+										data.action
 									).then((res) => {
 											this.$message.success(
 												res.message || "提交成功"

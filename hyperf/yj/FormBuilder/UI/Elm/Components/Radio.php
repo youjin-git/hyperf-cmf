@@ -38,7 +38,7 @@ class Radio extends FormOptionsComponent
 
     public function createValidate()
     {
-        return Elm::validateStr();
+        return Elm::validateStrOrNum();
     }
 
     public function createValidateNum()

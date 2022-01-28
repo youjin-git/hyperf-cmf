@@ -156,16 +156,16 @@ class http {
 			return Promise.reject({ message, data, status });
 		});
 	}
-
-	post(url, params) {
-		console.log(params)
+	post(url) {
 		this.config.method = "post";
 		this.url(url);
-		this.params(params);
 		return this.request();
 	}
-	params(params = new FormData()) {
-		console.log(params)
+	params(params = new FormData()){
+		this.config.params = params;
+		return this;
+	}
+	addParams(params = new FormData()) {
 		if(params instanceof FormData){
 			for (const item of params.keys()) {
 				this.config.params.append(item, params.get(item))
@@ -176,7 +176,6 @@ class http {
 				this.config.params.append(item, params[item])
 			}
 		}
-
 		// this.config.params = Object.assign(this.config.params, params);
 		// this.config.params.push
 		return this;

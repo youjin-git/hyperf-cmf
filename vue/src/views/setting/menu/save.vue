@@ -228,7 +228,8 @@ export default {
 		async save() {
 			this.loading = true;
 			var res = await this.$HTTP()
-				.post("/admin/menu/edit", this.form)
+				.params(this.form)
+				.post("/admin/menu/edit")
 				.then((res) => {
 					this.$message.success("保存成功");
 				})

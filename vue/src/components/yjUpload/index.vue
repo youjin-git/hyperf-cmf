@@ -111,9 +111,7 @@ export default {
 	},
 	async mounted() {
 		// this.isImg(this.modelValue);
-
 			this.img = await getFilePath(this.modelValue);
-
 	},
 	methods: {
 		showfileSelect() {
@@ -202,8 +200,9 @@ export default {
 			this.img = "";
 		},
 		request(param) {
-			console.log(param);
+
 			var apiObj = config.apiObj;
+			console.log(apiObj);
 			if (this.apiObj) {
 				apiObj = this.apiObj;
 			}
@@ -211,12 +210,12 @@ export default {
 			var file = this.cropper ? this.cropperUploadFile : param.file;
 			data.append("file", file);
 			console.log(data);
-			apiObj
-				.post(data)
+			apiObj.params(data).post()
 				.then((res) => {
 					param.onSuccess(res);
 				})
 				.catch((err) => {
+					console.log(err);
 					param.onError(err);
 				});
 		},

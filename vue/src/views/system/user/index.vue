@@ -120,7 +120,7 @@
 
             <el-table-column label="头像" width="60">
               <template #default="scope">
-                <el-avatar :src="scope.row.avatar" size="small" @error="() => true">
+                <el-avatar :src="scope.row.icon_path.full_path" size="small" @error="() => true">
                   <i class="el-icon-s-custom" />
                 </el-avatar>
               </template>
@@ -298,41 +298,7 @@
         showRolesLoading: false,
         rolesFilterText: '',
         roles: [],
-		apiObj:  this.$HTTP().url('admin/system/admin/lists')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		   ,
-          // recycleList: this.$API.user.getRecyclePageList,
+		apiObj:  this.$HTTP().url('admin/system/admin/lists'),
         selection: [],
         queryParams: {
           username: undefined,
@@ -359,10 +325,11 @@
 				  this.$refs.table.upData()
 		  });
       },
-
       //编辑
-      edit(row){
-
+      edit({id}){
+		  this.$modalForm(this.$HTTP().params({id}).post('admin/system/admin/form')).then(res=>{
+			  this.$refs.table.upData()
+		  });
       },
       //查看
       show(row){

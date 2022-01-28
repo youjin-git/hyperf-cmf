@@ -20,6 +20,7 @@ class Bootstrap implements BootstrapInterface
 
     public function init(Form $form)
     {
+
         $dependScript = $form->getDependScript();
 
         array_splice($dependScript, 2, 0, [

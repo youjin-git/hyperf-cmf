@@ -67,11 +67,11 @@ router.beforeEach(async (to, from, next) => {
 	//加载API路由
 	if (!isGetApiRouter) {
 		let menu = await Store.dispatch("getMenus");
-	
 		var apiRouter = filterAsyncRouter(menu);
 		apiRouter = flatAsyncRoutes(apiRouter);
-		console.log(apiRouter);
+
 		apiRouter.forEach((item) => {
+			console.log('apiRouter',item);
 			router.addRoute("layout", item);
 		});
 		routes_404_r = router.addRoute(routes_404);
@@ -108,6 +108,7 @@ function filterAsyncRouter(routerMap) {
 			icon: item.icon,
 			title: item.title,
 			type: "menu",
+			id:11,
 		};
 		//处理外部链接特殊路由
 		if (item.meta.type == "iframe") {
@@ -118,6 +119,7 @@ function filterAsyncRouter(routerMap) {
 		var route = {
 			path: item.path,
 			title: item.title,
+			props: {id:1},
 			icon: item.icon,
 			name: item.name,
 			meta: item.meta,
@@ -129,7 +131,7 @@ function filterAsyncRouter(routerMap) {
 		accessedRouters.push(route);
 	});
 
-	
+
 	return accessedRouters;
 }
 function loadComponent(component) {

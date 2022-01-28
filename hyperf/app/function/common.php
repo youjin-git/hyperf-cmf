@@ -75,7 +75,7 @@ function systemConfig($keys)
 
 
 if (!function_exists('formToData')) {
-    function formToData(\FormBuilder\Form $form): array
+    function formToData(Yj\FormBuilder\Form $form): array
     {
 
         $rule = $form->formRule();

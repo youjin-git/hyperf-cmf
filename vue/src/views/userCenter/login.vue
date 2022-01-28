@@ -341,7 +341,9 @@ export default {
 import { ref, getCurrentInstance, onMounted, reactive } from "vue";
 import { useRouter } from "vue-router";
 const router = useRouter();
+
 import { captchatImg, getCaptcha } from "./loginCaptcha";
+import request from "@/utils/request";
 const { proxy, ctx } = getCurrentInstance();
 const FormParams = reactive({
 	username: "admin",
@@ -377,8 +379,7 @@ const login = async () => {
 		return false;
 	}
 	//获取token
-	var user = await proxy.$API.auth.token
-		.post(FormParams)
+	var user = await request().params(FormParams).post('/admin/login/login')
 		.then(loginSuccess)
 		.finally(() => {
 			islogin.value = false;

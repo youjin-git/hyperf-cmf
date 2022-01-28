@@ -141,7 +141,8 @@ export default {
 			this.menuloading = true;
 			var res = await this.$HTTP()
 				.showSuccessInfo("添加成功")
-				.post("/admin/menu/add", newMenuData)
+				.params(newMenuData)
+				.post("/admin/menu/add")
 				.catch((res) => {
 					this.getMenu();
 				});

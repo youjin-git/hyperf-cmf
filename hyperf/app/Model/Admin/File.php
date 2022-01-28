@@ -30,7 +30,6 @@ class File extends Model
 
     public function getFullPath($id)
     {
-
         if (is_array($id)) {
             $data = $this->whereIn('id', $id)->pluck('path')->toArray();
             $data = array_map(function ($item) {

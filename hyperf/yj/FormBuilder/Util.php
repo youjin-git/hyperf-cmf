@@ -10,11 +10,11 @@
  * @document http://php.form-create.com
  */
 
-namespace FormBuilder;
+namespace Yj\FormBuilder;
 
 
-use FormBuilder\Contract\CustomComponentInterface;
-use FormBuilder\Contract\FormComponentInterface;
+use Yj\FormBuilder\Contract\CustomComponentInterface;
+use Yj\FormBuilder\Contract\FormComponentInterface;
 
 class Util
 {

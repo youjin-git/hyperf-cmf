@@ -53,17 +53,16 @@ class SystemAdminController extends BaseController
     {
         $params = $this->getValidatorData();
         if($id = $params->get('id')){
-            $formData =  $this->collegeTaskDao->detail($id);
-            _GetLastSql(1);
+            $formData =  $this->systemAdminDao->detail($id);
         }else{
             $formData = collect();
         }
         $form = Elm::createForm($id?'admin/system/admin/edit':'admin/system/admin/add',[],['labelPosition'=>'right']);
         $form->setRule([
-//            \Yj\Form\Elm::YjUpload()->title('上传头像')->field('icon'),
-//            Elm::input('username','用户名')->required()->col(12),
-//            Elm::password('password','密码')->required()->col(12),
-//            Elm::input('nickname','昵称')->required()->col(12),
+            \Yj\Form\Elm::YjUpload()->title('上传头像')->field('icon'),
+            Elm::input('username','用户名')->required()->col(12),
+            Elm::password('password','密码')->isRequired(!$id)->col(12),
+            Elm::input('nickname','昵称')->required()->col(12),
             Elm::radio('gender', '性别')->options(function (){
                 return [['value'=>'1','label'=>'男'],['value'=>'2','label'=>'女']];
             })->required()->col(12),
@@ -74,9 +73,7 @@ class SystemAdminController extends BaseController
                     return compact('value','label');
                 })->toArray();
             })->required()->col(12),
-//            Elm::select('roles', '角色')->options(function (){
-//                return [['value'=>'1','label'=>'男'],['value'=>'2','label'=>'女']];
-//            })->required()->col(12),
+            Elm::hidden('id',$id),
             Elm::textarea('remark','备注')->rows(3)->required()->showWordLimit(true),
         ]);
         $lists = $form->setTitle(is_null($id) ? '新增管理员' : '编辑管理员')->formData($formData->toArray());
@@ -90,11 +87,27 @@ class SystemAdminController extends BaseController
      * @FormData(key="nickname",rule="required")
      * @FormData(key="remark",rule="required")
      * @FormData(key="gender",rule="required")
-     * @FormData(key="password",rule="required")
+     * @FormData(key="password",rule="required|min:6")
      */
     public function add(){
         $params = $this->getValidatorData();
         $this->systemAdminDao->add($params);
+        _SUCCESS();
+    }
+
+    /**
+     * @PostApi(path="edit",description="添加用户")
+     * @FormData(key="icon",rule="required")
+     * @FormData(key="id",rule="required")
+     * @FormData(key="username",rule="required")
+     * @FormData(key="nickname",rule="required")
+     * @FormData(key="remark",rule="required")
+     * @FormData(key="gender",rule="required")
+     * @FormData(key="password",rule="")
+     */
+    public function edit(){
+        $params = $this->getValidatorData();
+        $this->systemAdminDao->edit($params->get('id'),$params);
         _SUCCESS();
     }
 }

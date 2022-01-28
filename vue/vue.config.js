@@ -22,40 +22,49 @@ module.exports = {
 		},
 	},
 
+
 	chainWebpack: (config) => {
 		// 移除 prefetch 插件
 		config.plugins.delete("preload");
 		config.plugins.delete("prefetch");
 		config.resolve.alias.set("vue-i18n", "vue-i18n/dist/vue-i18n.cjs.js");
 	},
-
-	configureWebpack: (config) => {
-		//性能提示
-		config.performance = {
-			hints: false,
-		};
-		config.optimization = {
-			splitChunks: {
-				chunks: "async",
-				automaticNameDelimiter: "~",
-				name: true,
-				cacheGroups: {
-					//第三方库抽离
-					vendor: {
-						name: "modules",
-						test: /[\\/]node_modules[\\/]/,
-						priority: -10,
-					},
-					tinymce: {
-						name: "tinymce",
-						test: /[\\/]node_modules[\\/]tinymce[\\/]/,
-					},
-					echarts: {
-						name: "echarts",
-						test: /[\\/]node_modules[\\/]echarts[\\/]/,
-					},
-				},
-			},
-		};
+	configureWebpack: {
+		module: {
+			rules: [{
+				test: /\.mjs$/,
+				include: /node_modules/,
+				type: "javascript/auto"
+			}]
+		}
 	},
+	// configureWebpack: (config) => {
+	// 	//性能提示
+	// 	config.performance = {
+	// 		hints: false,
+	// 	};
+	// 	config.optimization = {
+	// 		splitChunks: {
+	// 			chunks: "async",
+	// 			automaticNameDelimiter: "~",
+	// 			name: true,
+	// 			cacheGroups: {
+	// 				//第三方库抽离
+	// 				vendor: {
+	// 					name: "modules",
+	// 					test: /[\\/]node_modules[\\/]/,
+	// 					priority: -10,
+	// 				},
+	// 				tinymce: {
+	// 					name: "tinymce",
+	// 					test: /[\\/]node_modules[\\/]tinymce[\\/]/,
+	// 				},
+	// 				echarts: {
+	// 					name: "echarts",
+	// 					test: /[\\/]node_modules[\\/]echarts[\\/]/,
+	// 				},
+	// 			},
+	// 		},
+	// 	};
+	// },
 };

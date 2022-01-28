@@ -1,9 +1,11 @@
-import API from "@/api";
+import request from "@/utils/request";
+
+
 
 //上传配置
 
 export default {
-	apiObj: API.common.upload, //上传请求API对象
+	apiObj: request().url('util/file/upload'), //上传请求API对象
 	successCode: 200, //请求完成代码
 	maxSize: 10, //最大文件大小 默认10MB
 	parseData: function (res) {

@@ -15,6 +15,7 @@ namespace App\Controller\Util;
 use App\Controller\AbstractController;
 use App\Model\Admin\ConfigValue;
 use App\Model\Admin\File;
+use App\Model\System\SystemFile;
 use App\Model\User;
 use App\Service\UserService;
 use Hyperf\Di\Annotation\Inject;
@@ -44,7 +45,7 @@ class FileController extends AbstractController
 
     /**
      * @Inject()
-     * @var File
+     * @var SystemFile
      */
     protected $fileModel;
 
@@ -72,7 +73,7 @@ class FileController extends AbstractController
         }
 
         //插入数据库
-        $file = $this->fileModel->create(['name' => $file->getClientFilename(), 'path' => $filePath, 'size' => $file->getSize()]);
+        $file = $this->fileModel->create(['name' => $file->getClientFilename(), 'path' => $filePath, 'size' => $file->getSize(),'suffix'=>$file->getExtension()]);
 
         fclose($stream);
 
@@ -101,7 +102,7 @@ class FileController extends AbstractController
         if (empty($id)) {
             succ('');
         } else {
-            succ($this->fileModel->getFullPath($id));
+            succ(getFilePath($id));
         }
     }
 }

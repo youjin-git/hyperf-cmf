@@ -2,6 +2,7 @@
 declare (strict_types=1);
 namespace App\Model\System;
 
+use App\Model\File;
 use App\Model\Model;
 use Hyperf\Database\Model\Events\Saving;
 use Hyperf\Di\Annotation\Inject;
@@ -31,8 +32,17 @@ class SystemAdmin extends Model
         'status'
     ];
 
+    public function iconPath(){
+        return $this->hasOne(SystemFile::class,'id','icon')->withDefault(function(){
+            return App(SystemFile::class)->where('suffix','jpg')->first();
+        });
+    }
+
     public function setPasswordAttribute($value){
-         $this->attributes['password'] = md5($value);
+        if($value = trim($value)){
+            $this->attributes['password'] = md5($value);
+        }
+
     }
 
 
@@ -44,8 +54,6 @@ class SystemAdmin extends Model
         self::USER_DISABLE => '禁用',
         self::USER_ENABLE => '启用',
     ];
-
-
 
 
     public function getLastTimeAttribute($value){
