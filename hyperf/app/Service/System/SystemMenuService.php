@@ -8,6 +8,7 @@ use App\Dao\System\SystemMenuDao;
 use App\Service\BaseService;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\Utils\Collection;
+use Hyperf\Utils\Str;
 
 class SystemMenuService extends BaseService
 {
@@ -21,7 +22,7 @@ class SystemMenuService extends BaseService
     public function list($params)
     {
         $data = $this->systemMenuDao->DaoWhere($params)->orderBy('sort')->getList();
-        $except = [];
+        $except = ['active','icon','params','type','title','hidden'];
         $data->transform(function ($item) use ($except) {
             $item = collect($item);
             $item->offsetSet('meta', $item->only($except));
@@ -30,6 +31,7 @@ class SystemMenuService extends BaseService
         return $data;
     }
 
+
     public function edit($id, Collection $params)
     {
         $this->systemMenuDao->check($id,$params);
@@ -37,6 +39,12 @@ class SystemMenuService extends BaseService
         $systemMenuData = $this->systemMenuDao->DaoWhere([
             'id' => $id
         ])->firstOr(fn() => _Error('不存在数据'));
+
+        $params->except('name');
+        if($path = $params->get('path')){
+            $params->offsetSet('name',implode(array_map('ucwords',explode('/',$path))));
+        }
+
         $systemMenuData->fill($params->toArray());
         return $systemMenuData->save();
     }

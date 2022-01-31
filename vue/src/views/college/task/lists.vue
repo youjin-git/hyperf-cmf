@@ -17,7 +17,7 @@
 				ref="yjTable"
 				:data="tableData"
 				:apiObj="apiObj"
-				:params="formParams"
+				:params="queryParams"
 			>
 				<el-table-column type="selection" width="50"></el-table-column>
 				<el-table-column
@@ -26,10 +26,16 @@
 					width="150"
 				></el-table-column>
 				<el-table-column
+					label="填报人"
+					prop="system_admin.nickname"
+					width="150"
+				></el-table-column>
+				<el-table-column
 					label="准考证"
 					prop="ticket"
 					width="150"
 				></el-table-column>
+
 				<el-table-column
 					label="省份"
 					prop="tables_name"
@@ -64,11 +70,17 @@
 					label="操作"
 					fixed="right"
 					align="right"
-					width="100"
+					width="150"
 				>
 					<template #default="scope">
+						<el-button type="text" v-if="scope.row.delivery_id>0" @click="onFill(scope.row)">
+							填报
+						</el-button>
 						<el-button type="text" @click="onEdit(scope.row)">
 							编辑
+						</el-button>
+						<el-button type="text" @click="onDelivery(scope.row)">
+							派送
 						</el-button>
 					</template>
 				</el-table-column>
@@ -79,26 +91,42 @@
 </template>
 <script>
 
+	import {extend} from "@/utils/common";
+
 	export default {
 		name: "setting:code",
 		components: {
 		},
 		data() {
 			return {
-				formParams: {},
 				apiObj: this.$HTTP().url("/admin/task/lists"),
 				tableData: [],
 				queryParams: {
-					table_name: undefined,
 				},
 				selection: [],
 			};
 		},
-		async created() {},
+		async created() {
+			if(this.$route.meta.params){
+				console.log(this.$route.meta.params,'$route');
+				extend(this.queryParams,JSON.parse(this.$route.meta.params))
+			}
+		},
 		methods: {
+			onFill({id}){
+				this.$router.push({
+					path:"/college/task/fill",
+					query:'id='+id,
+				});
+			},
 			onAdd(){
 				this.$modalForm(
 					this.$HTTP().post("/admin/task/form")
+				).then((res) => {});
+			},
+			onDelivery({id}){
+				this.$modalForm(
+					this.$HTTP().params({id}).post("/admin/task/delivery-form")
 				).then((res) => {});
 			},
 			onEdit({id}){

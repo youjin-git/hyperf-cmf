@@ -1,4 +1,5 @@
 import config from "@/config";
+import Layout from '@/layout'
 
 //系统路由
 const routes = [

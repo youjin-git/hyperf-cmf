@@ -73,17 +73,18 @@ class Verify
 
     public function verify($field, $value = null, $callback = true)
     {
+
         if (is_callable($value)) {
             $callback = $value;
             $value = null;
         }
 
         if ($this->getParams()->offsetExists($field)) {
-            $value = is_null($value) ? [$value] : Arr::wrap($value);
-            $val = $this->getParams()->get($field);
-            if (false === collect($value)->containsStrict($val)) {
-                return (is_callable($callback) ? $callback($this->getQuery(), $this->params[$field]) : $callback);
-            }
+                $value = is_null($value) ? [$value] : Arr::wrap($value);
+                $val = $this->getParams()->get($field);
+                if (false === collect($value)->containsStrict($val)) {
+                    return (is_callable($callback) ? $callback($this->getQuery(), $this->params[$field]) : $callback);
+                }
         }
         return false;
     }

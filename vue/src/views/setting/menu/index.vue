@@ -93,6 +93,7 @@ export default {
 		},
 	},
 	mounted() {
+		console.log('getMenu');
 		this.getMenu();
 	},
 	methods: {
@@ -162,7 +163,6 @@ export default {
 				this.$message.warning("请选择需要删除的项");
 				return false;
 			}
-
 			var confirm = await this.$confirm(
 				"确认删除已选择的菜单吗？",
 				"提示",

@@ -21,12 +21,13 @@ class SystemAdminDao extends BaseDao
             $verify('username', function (Builder $query, $username) {
                 $query->where('username', $username);
             });
+
         });
     }
 
-    public function lists(\Hyperf\Utils\Collection $params)
+    public function lists(\Hyperf\Utils\Collection|array $params)
     {
-        return $this->with('iconPath')->getList();
+        return $this->DaoWhere($params->toArray())->with('iconPath')->getList();
     }
 
     public function add(\Hyperf\Utils\Collection $params)

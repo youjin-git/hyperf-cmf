@@ -98,17 +98,33 @@
 							如父节点、链接或Iframe等没有视图的菜单不需要填写
 						</div>
 					</el-form-item>
-					<el-form-item label="是否隐藏" prop="meta.hidden">
-						<el-checkbox v-model="form.hidden"
-							>隐藏菜单</el-checkbox
-						>
-						<el-checkbox v-model="form.hiddenBreadcrumb"
-							>隐藏面包屑</el-checkbox
-						>
-						<div class="el-form-item-msg">
-							菜单不显示在导航中，但用户依然可以访问，例如详情页
-						</div>
+					<el-form-item label="是否隐藏" prop="hidden">
+						<el-radio-group v-model="form.hidden">
+							<el-radio :label="1">是</el-radio>
+							<el-radio :label="0">否</el-radio>
+						</el-radio-group>
+						<div class="el-form-item-msg" true-label="0" false-label="1" label="0">菜单不显示在导航中，但用户依然可以访问，例如详情页</div>
 					</el-form-item>
+
+<!--					<el-form-item label="是否停用" prop="status">-->
+<!--						<el-radio-group v-model="form.status">-->
+<!--							<el-radio label="0">启用</el-radio>-->
+<!--							<el-radio label="1">停用</el-radio>-->
+<!--						</el-radio-group>-->
+<!--						<div class="el-form-item-msg" true-label="0" false-label="1" label="0">停用的菜单不会在导航中，也无法访问</div>-->
+<!--					</el-form-item>-->
+
+<!--					<el-form-item label="是否隐藏" prop="meta.hidden">-->
+<!--						<el-checkbox v-model="form.hidden"-->
+<!--							>隐藏菜单</el-checkbox-->
+<!--						>-->
+<!--						<el-checkbox v-model="form.hiddenBreadcrumb"-->
+<!--							>隐藏面包屑</el-checkbox-->
+<!--						>-->
+<!--						<div class="el-form-item-msg">-->
+<!--							菜单不显示在导航中，但用户依然可以访问，例如详情页-->
+<!--						</div>-->
+<!--					</el-form-item>-->
 					<el-form-item>
 						<el-button
 							type="primary"

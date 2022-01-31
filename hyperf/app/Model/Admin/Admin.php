@@ -20,7 +20,6 @@ class Admin extends Model
     protected $token_pre = 'Admin:';
     protected $primaryKey= 'id';
 
-
     protected $fillable = [
         'roles',
         'id',

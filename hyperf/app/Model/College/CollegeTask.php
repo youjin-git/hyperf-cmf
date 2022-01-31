@@ -2,6 +2,7 @@
 
 namespace App\Model\College;
 use App\Model\Model;
+use App\Model\System\SystemAdmin;
 
 
 class CollegeTask extends Model
@@ -14,6 +15,7 @@ class CollegeTask extends Model
         'mobile',
         'ticket',
         'subject_id',
+        'delivery_id',
         'cityid',
         'score',
         'art_score',
@@ -34,4 +36,10 @@ class CollegeTask extends Model
         'character',
         'interest',
     ];
+
+    public function SystemAdmin(){
+        return $this->hasOne(SystemAdmin::class,'id','delivery_id');
+    }
+
+
 }

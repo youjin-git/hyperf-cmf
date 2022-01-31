@@ -2,6 +2,7 @@
 
 namespace App\Dao\College;
 use App\Model\College\CollegeTask;
+use Hyperf\Utils\Collection;
 use \Yj\Daos\BaseDao;
 use Hyperf\Database\Model\Builder;
 use Yj\Daos\Verify;
@@ -12,7 +13,7 @@ use Yj\Daos\Verify;
 class CollegeTaskDao extends BaseDao
 {
 
-    public function DaoWhere(array $params)
+    public function DaoWhere(Collection|array $params)
     {
         return $this->getDaoQuery($params, function (Verify $verify) {
             $verify('id', function (Builder $query, $id) {
@@ -20,6 +21,14 @@ class CollegeTaskDao extends BaseDao
             });
             $verify('username', function (Builder $query, $title) {
                 $query->where('username','like', "%{$title}%");
+            });
+            $verify->verify('delivery_id',function(Builder $query,$delivery_id){
+                if(is_numeric($delivery_id)){
+                    $query->where('delivery_id',$delivery_id);
+                }
+                $this->getOperator($delivery_id,function ($op,$delivery_id)use($query){
+                    $query->where('delivery_id',$op,$delivery_id);
+                });
             });
         });
     }
@@ -31,7 +40,7 @@ class CollegeTaskDao extends BaseDao
 
     public function lists($params)
     {
-        return $this->paginate();
+        return $this->DaoWhere($params)->with('SystemAdmin')->getList();
     }
 
     public function detail(int $id)

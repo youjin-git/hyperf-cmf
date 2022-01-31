@@ -109,6 +109,7 @@
 <script>
 import config from "@/config/table";
 import columnSetting from "./columnSetting";
+import {extend} from "@/utils/common";
 
 export default {
 	name: "yjTable",
@@ -205,11 +206,9 @@ export default {
 				[config.request.order]: this.order,
 			};
 
-			// if (this.hidePagination) {
-			// 	delete reqData[config.request.page];
-			// 	delete reqData[config.request.pageSize];
-			// }
-			Object.assign(reqData, this.tableParams);
+
+			extend(reqData, this.tableParams);
+
 
 			var res = await this.apiObj.params(reqData).post();
 			try {

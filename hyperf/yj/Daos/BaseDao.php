@@ -15,12 +15,12 @@ use Hyperf\Utils\Collection;
  */
 class BaseDao
 {
+
+    use Query;
+
     protected $baseDao;
 
     protected $model = null;
-
-    protected $daoQuerys = [];
-
 
     public function page($isPage = true)
     {
@@ -28,34 +28,47 @@ class BaseDao
         return $this;
     }
 
+    public function getOperator($value,$callback){
+        if(is_string($value) && in_array($value[0],['>','<','='])){
+            return $callback($value[0],ltrim($value[0],$value));
+        }
+    }
+
+
     public function __construct()
     {
-        $this->daoQuerys = [];
         $modelClass = str_replace(['\Dao', 'Dao'], ['\Model', ''], get_class($this));
         $this->baseDao = App($modelClass);
     }
-
 //    abstract public function MakeWhere(Builder $query, $params);
-
 
     public function getModel()
     {
         return $this->baseDao;
     }
 
+    /**
+     * @return $this
+     */
+    public function query(){
+        return (new static());
+    }
 
     /**
      * @param array $params
      * @param callable|null $callback
      * @return $this
      */
-    public function getDaoQuery(Collection|array $params = [], callable $callback = null)
+    public function getDaoQuery(Collection|array $params = [], callable $callback = null,$query = true)
     {
-        $daoQuery = make(Verify::class)->init($params);
+        if(is_null($this->daoQuerys) && $query){
+            return $this->query()->getDaoQuery($params,$callback,false);
+        }
+        $daoQuery = app(Verify::class)->init($params);
         if (is_callable($callback)) {
             $callback($daoQuery);
         }
-        $this->daoQuerys[] = $daoQuery->getQuery();
+        $this->setDaoQuerys($daoQuery->getQuery());
         return $this;
     }
 
@@ -63,13 +76,12 @@ class BaseDao
 
     public function __call($method, $parameters)
     {
-
         return tap($this->getModel()->newQuery(), function (Builder $query) {
+            if($this->getDaoQuerys())
             /** @var Builder $daoQuery */
-            foreach($this->daoQuerys as $daoQuery){
+            foreach($this->getDaoQuerys() as $daoQuery){
                 $query->addNestedWhereQuery($daoQuery->getQuery());
             }
-            $this->daoQuerys = [];
         })->{$method}(...$parameters);
     }
 

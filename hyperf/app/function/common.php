@@ -386,6 +386,7 @@ if (!function_exists('_GetLastSql')) {
      */
     function _GetLastSql()
     {
+
         $sqls = Db::getQueryLog();
         foreach ($sqls as &$sql) {
             foreach ($sql['bindings'] as $i => $binding) {
@@ -402,6 +403,7 @@ if (!function_exists('_GetLastSql')) {
             $sql['_query'] = $query;
         }
         dump(array_column($sqls, '_query'));
+        Db::flushQueryLog();
     }
 }
 

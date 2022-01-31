@@ -104,12 +104,6 @@ function filterAsyncRouter(routerMap) {
 
 	routerMap.forEach((item) => {
 		item.meta = item.meta ? item.meta : {};
-		item.meta = {
-			icon: item.icon,
-			title: item.title,
-			type: "menu",
-			id:11,
-		};
 		//处理外部链接特殊路由
 		if (item.meta.type == "iframe") {
 			item.meta.url = item.path;
@@ -119,7 +113,6 @@ function filterAsyncRouter(routerMap) {
 		var route = {
 			path: item.path,
 			title: item.title,
-			props: {id:1},
 			icon: item.icon,
 			name: item.name,
 			meta: item.meta,

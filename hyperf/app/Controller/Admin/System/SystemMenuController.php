@@ -67,7 +67,6 @@ class SystemMenuController extends AbstractController
     {
         $params = $request->collection();
         tap($this->systemMenuService->edit($params->get('id'), $params->except('id')), function ($data) {
-            _GetLastSql();
             $data ? _SUCCESS() : _Error();
         });
     }

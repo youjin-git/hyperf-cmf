@@ -94,7 +94,6 @@ class SystemAdminController extends BaseController
         $this->systemAdminDao->add($params);
         _SUCCESS();
     }
-
     /**
      * @PostApi(path="edit",description="添加用户")
      * @FormData(key="icon",rule="required")
@@ -110,4 +109,6 @@ class SystemAdminController extends BaseController
         $this->systemAdminDao->edit($params->get('id'),$params);
         _SUCCESS();
     }
+
+
 }

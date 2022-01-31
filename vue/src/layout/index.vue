@@ -10,8 +10,8 @@
 							:class="pmenu.name == item.name ? 'active' : ''"
 							@click="showMenu(item)"
 						>
-							<i :class="item.icon || 'el-icon-menu'"></i>
-							<p>{{ item.title }}</p>
+							<i :class="item.meta.icon || 'el-icon-menu'"></i>
+							<p>{{ item.meta.title }}</p>
 						</li>
 					</ul>
 				</el-scrollbar>
@@ -22,10 +22,11 @@
 			:class="menuIsCollapse ? 'aminui-side isCollapse' : 'aminui-side'"
 		>
 			<div v-if="!menuIsCollapse" class="adminui-side-top">
-				<h2>{{ pmenu.title }}</h2>
+				<h2>{{ pmenu.meta.title }}</h2>
 			</div>
 			<div class="adminui-side-scroll">
 				<el-scrollbar>
+					{{active}}
 					<el-menu
 						:default-active="active"
 						router
@@ -161,11 +162,10 @@ export default {
 				: {};
 
 			this.nextMenu = this.filterUrl(this.pmenu.children);
-			console.log(this.nextMenu);
 			this.$nextTick(() => {
 				this.active = this.$route.meta.active || this.$route.fullPath;
-				console.log('active',this.active);
 			});
+
 		},
 		//点击显示
 		showMenu(route) {
@@ -189,19 +189,19 @@ export default {
 		},
 		//转换外部链接的路由
 		filterUrl(map) {
-
 			var newMap = [];
 			map &&
 				map.forEach((item) => {
+					console.log('filterUrl',item);
 					item.meta = item.meta ? item.meta : {};
 					//处理隐藏
 					if (item.meta.hidden) {
 						return false;
 					}
 					//处理http
-					if (item.meta.type == "iframe") {
-						item.path = `/i/${item.name}`;
-					}
+					// if (item.meta.type == "iframe") {
+					// 	item.path = `/i/${item.name}`;
+					// }
 					//递归循环
 					if (item.children && item.children.length > 0) {
 						item.children = this.filterUrl(item.children);
