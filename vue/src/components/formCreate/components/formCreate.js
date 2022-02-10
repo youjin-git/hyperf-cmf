@@ -54,9 +54,7 @@ export  default  function $FormCreate(FormCreate,app) {
 				renderRule: rule.value || [],
 				updateValue: JSON.stringify(modelValue),
 			});
-
-
-
+			
 			const fc = new FormCreate(vm);
 			fc.install();
 			const fapi = fc.api();
@@ -76,9 +74,9 @@ export  default  function $FormCreate(FormCreate,app) {
 		},
 		created: function created() {
 			const vm = getCurrentInstance();
-			console.log(vm.ctx.fc.init);
-			vm.ctx.fc.init();
-			vm.emit("getApi", vm.ctx.fc);
+			console.log(vm);
+			vm.setupState.fc.init();
+			vm.emit("getApi", vm.setupState.fc);
 		},
 	});
 }

@@ -101,6 +101,7 @@ export default function modalForm(app) {
 						message: formCreateMessage,
 						beforeClose: (action, instance, done) => {
 							if (action === "confirm") {
+								console.log(fApi);
 								instance.confirmButtonLoading = true;
 								fApi.submit((formData) => {
 									http().params(formData)[data.method.toLowerCase()](
