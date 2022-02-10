@@ -9,6 +9,7 @@
 		"test": "vue-cli-service serve --mode prod"
 	},
 	"dependencies": {
+		"@element-plus/icons-vue": "^0.2.6",
 		"@tinymce/tinymce-vue": "4.0.4",
 		"axios": "0.23.0",
 		"codemirror-editor-vue3": "^0.2.4",

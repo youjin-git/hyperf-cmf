@@ -12,4 +12,11 @@ class PayFactory
             $class_name = "\\App\\Service\\Pay\\".$payType;
             return make($class_name);
     }
+
+    /**
+     * @return WxPay
+     */
+    public static function wechat(){
+        return make(WxPay::class);
+    }
 }

@@ -12,6 +12,13 @@ import Codemirror from "codemirror-editor-vue3";
 import "codemirror-editor-vue3/dist/style.css";
 const app = createApp(App);
 
+import * as Icons from '@element-plus/icons-vue';
+import toLine from "./utils/lib/toLine";
+
+for(let i in Icons){
+    app.component(`el-icon-${toLine(i)}`,Icons[i]);
+}
+
 app.use(store);
 app.use(router);
 app.use(ElementPlus, { size: "small" });

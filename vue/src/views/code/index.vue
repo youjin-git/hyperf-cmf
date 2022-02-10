@@ -47,6 +47,8 @@
 		</el-container>
 
 	<preview ref="preview" />
+	
+	
 </template>
 <script>
 // import editForm from './edit'

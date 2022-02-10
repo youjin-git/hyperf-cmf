@@ -35,7 +35,7 @@ class DaoMakeCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $type = 'Daos';
+    protected $type = 'Dao';
 
 
     protected $Suffix = '.php';

@@ -23,7 +23,6 @@ class testCommand extends HyperfCommand
     {
         $this->container = $container;
 
-
         parent::__construct('demo:command');
     }
 

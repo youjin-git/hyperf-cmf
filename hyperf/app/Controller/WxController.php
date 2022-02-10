@@ -41,6 +41,7 @@ class WxController extends AbstractController
         succ($redirectUrl);
     }
 
+
     public function get_openid(){
         $code = $this->request->input('code');
         dump($code);
@@ -59,5 +60,9 @@ class WxController extends AbstractController
         $user = $app->oauth->userFromCode($code);
 
         succ($user->getId());
+    }
+
+    public function getTel(){
+
     }
 }

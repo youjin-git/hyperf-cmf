@@ -26,7 +26,7 @@ class SystemMenuService extends BaseService
         $data->transform(function ($item) use ($except) {
             $item = collect($item);
             $item->offsetSet('meta', $item->only($except));
-            return $item->except($except);
+            return $item;
         });
         return $data;
     }

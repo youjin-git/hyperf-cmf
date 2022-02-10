@@ -5,6 +5,8 @@ namespace App\Service;
 use App\Ide\ModelIDE;
 use App\Model\Model;
 use Hyperf\Database\Model\Builder;
+use Hyperf\Di\Annotation\Inject;
+use Hyperf\Redis\Redis;
 use Hyperf\Utils\Context;
 
 abstract class BaseService
@@ -13,6 +15,13 @@ abstract class BaseService
      * @var Builder
      */
     public $baseModel;
+
+
+    /**
+     * @Inject()
+     * @var Redis
+     */
+    protected $redis;
 
     public function getModel()
     {

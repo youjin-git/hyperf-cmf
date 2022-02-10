@@ -135,7 +135,7 @@ class OrderController extends AbstractController
 
     public function getPayOrder()
     {
-        $this->order
+//        $this->order
     }
 
 }

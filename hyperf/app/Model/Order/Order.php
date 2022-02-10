@@ -1,62 +1,79 @@
 <?php
-declare (strict_types=1);
 
 namespace App\Model\Order;
-
-use App\Constants\OrderStatus;
 use App\Model\Model;
-use App\Model\User;
-use Hyperf\Database\Model\SoftDeletes;
-use Hyperf\Redis\Redis;
-use Hyperf\Snowflake\Concern\Snowflake;
 
 
 class Order extends Model
 {
-    use SoftDeletes;
-    use Snowflake;
-
     protected $table = 'order';
 
-    protected $appends = [
-        'status_name'
-    ];
-
     protected $fillable = [
-        'user_id',
-        'product_id',
-        'integral',
+        'name',
+        'price',
         'status',
-        'remark'
+        'house_area',
+        'tel',
+        'house_price',
+        'house_type',
+        'house_years',
+        'is_sysc',
+        'type',
+        'is_real_person',
+        'is_ad',
+        'quality',
+        'photo_type',
+        'house_listing_price',
+        'house_renovation',
+        'is_accelerate',
     ];
 
+    protected $appends = [
+      'status_format',
+        'type_format',
+    ];
 
-    public function user()
-    {
-        return $this->hasOne(User::class, 'id', 'user_id');
-    }
+    protected $status_formats = [
+      '0'=>'待支付',
+      '1'=>'等待提交资料',
+      '2'=>'制作中',
+      '3'=>'待付尾款',
+      '4'=>'待修改',
+      '5'=>'完成',
+    ];
 
-    public function orderProduct()
-    {
-        return $this->hasMany(OrderProduct::class, 'order_id', 'id');
-    }
-
-
-    public function getStatusNameAttribute($value)
-    {
-        return $this->checkAttributes('status', function ($value) {
-            return OrderStatus::getMessage($value);
+    protected $type_formats = [
+        '1'=>'中介卖家',
+        '2'=>'设计装修',
+        '3'=>'渠道分销',
+    ];
+    
+    public function getStatusFormatAttribute(){
+        return $this->checkAttributes('status',function ($status){
+            return $this->status_formats[$status];
         });
     }
 
-    public function getIdAttribute($value)
-    {
-        return (string)$value;
+    public function getTypeFormatAttribute(){
+        return $this->checkAttributes('type',function ($type){
+            return $this->type_formats[$type];
+        });
     }
 
-    public function getInsuredIdAttribute($value)
-    {
-        return (string)$value;
+    public function OrderChange(){
+        return $this->hasOne(OrderChange::class,'order_id','id');
+    }
+    public function OrderChangeDetail(){
+        return $this->hasOne(OrderChange::class,'order_id','id')->where('status',1);
     }
 
+    public function OrderMaidian()
+    {
+        return $this->hasMany(OrderMaidian::class,'order_id','id');
+    }
+
+    public function OrderMaidianDesc()
+    {
+        return $this->hasMany(OrderMaidianDesc::class,'order_id','id');
+    }
 }

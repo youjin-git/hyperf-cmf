@@ -8,7 +8,7 @@ use Hyperf\Constants\Annotation\Constants;
 
 /**
  * @Constants
- * @method static string getMessage(int $type)
+ * @method static string getMessage(int $status)
  */
 class GroupType extends AbstractConstants
 {

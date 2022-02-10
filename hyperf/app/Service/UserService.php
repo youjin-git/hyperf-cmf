@@ -9,15 +9,24 @@ use App\Model\User;
 use Hyperf\DbConnection\Db;
 use Hyperf\Di\Annotation\Inject;
 use App\Constants\ErrorCode;
+use Hyperf\Redis\Redis;
 
 
 class UserService extends Service
 {
+
+    /**
+     * @Inject()
+     * @var Redis
+     */
+    protected $redis;
     /**
      * @Inject()
      * @var User
      */
     protected $userModel;
+
+    protected $userDao;
 
     public function lists()
     {
@@ -51,13 +60,30 @@ class UserService extends Service
         return $wechatUser;
     }
 
-    public function getToken($uid)
+    public function RegOrLogin($mobile)
     {
-        return $this->userModel->get_token($uid);
+
+    }
+
+    public function getToken($usersId)
+    {
+        $token_pre = 'token:';
+        //生成随机树
+        $token = time() . rand(10000, 9999999) . $usersId;
+
+        if ($this->redis->set($token_pre . $token, $usersId)) {
+
+        } else {
+            err('获取token失败');
+        }
+
+        return $token;
     }
 
     public function getUserInfo($uid)
     {
         return $this->userModel->where('id', $uid)->first()->toArray();
     }
+
+
 }

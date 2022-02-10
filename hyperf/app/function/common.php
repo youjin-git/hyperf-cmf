@@ -56,6 +56,11 @@ function _Error(string $msg = '未知错误', int $code = ErrorCode::FAIL, $data
     throw  new YjException($data, $code, $msg);
 }
 
+function _Exception(string $msg = '未知错误', int $code = ErrorCode::FAIL){
+    throw  new Exception($msg,$code);
+}
+
+
 
 function succ($data = [])
 {
@@ -75,7 +80,7 @@ function systemConfig($keys)
 
 
 if (!function_exists('formToData')) {
-    function formToData(Yj\FormBuilder\Form $form): array
+    function formToData($form): array
     {
 
         $rule = $form->formRule();

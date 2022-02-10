@@ -9,7 +9,6 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
-
 namespace Hyperf\Watcher;
 
 use Hyperf\Contract\ConfigInterface;
@@ -103,13 +102,11 @@ class Watcher
         $this->config = $container->get(ConfigInterface::class);
         $this->printer = new Standard();
         $this->channel = new Channel(1);
-        dump('启动push');
         $this->channel->push(true);
     }
 
     public function run()
     {
-
         $this->dumpautoload();
         $this->restart(true);
 
@@ -119,11 +116,8 @@ class Watcher
         });
 
         $result = [];
-        $i = 0;
         while (true) {
-            $i++;
             $file = $channel->pop(0.001);
-
             if ($file === false) {
                 if (count($result) > 0) {
                     $result = [];
@@ -150,78 +144,50 @@ class Watcher
 
     public function restart($isStart = true)
     {
-//        dump($this->option->isRestart(),'isRestart');
-//        if (! $this->option->isRestart()) {
-//            return;
-//        }
-
+        if (! $this->option->isRestart()) {
+            return;
+        }
+        $file = $this->config->get('server.settings.pid_file');
+        if (empty($file)) {
+            throw new FileNotFoundException('The config of pid_file is not found.');
+        }
         $daemonize = $this->config->get('server.settings.daemonize', false);
         if ($daemonize) {
             throw new InvalidArgumentException('Please set `server.settings.daemonize` to false');
         }
+        if (! $isStart && $this->filesystem->exists($file)) {
+            $pid = $this->filesystem->get($file);
+            try {
+                $this->output->writeln('Stop server...');
+                if (Process::kill((int) $pid, 0)) {
+                    Process::kill((int) $pid, SIGTERM);
+                }
+            } catch (\Throwable $exception) {
+                $this->output->writeln('Stop server failed. Please execute `composer dump-autoload -o`');
+            }
+        }
 
-        Coroutine::create(function () use ($isStart) {
-            $pop = $this->channel->pop();
-            dump("pop:{$pop}");
-            $this->kill($isStart); //强杀
-//            sleep(5);
+        Coroutine::create(function () {
+            $this->channel->pop();
             $this->output->writeln('Start server ...');
+
             $descriptorspec = [
                 0 => STDIN,
                 1 => STDOUT,
                 2 => STDERR,
             ];
 
-//            if ($pop > 1) {
-            proc_open('php /data/bin/hyperf.php start', $descriptorspec, $pipes); //启动
-//            }
-//            dump($this->option->getBin() . ' ' . BASE_PATH . '/' . $this->option->getCommand());
-//            proc_open($this->option->getBin() . ' ' . BASE_PATH . '/' . $this->option->getCommand(), $descriptorspec, $pipes);
+            proc_open($this->option->getBin() . ' ' . BASE_PATH . '/' . $this->option->getCommand(), $descriptorspec, $pipes);
 
             $this->output->writeln('Stop server success.');
-            $this->channel->push($pop++);
+            $this->channel->push(1);
         });
-    }
-
-    public function kill($isStart)
-    {
-
-        $file = $this->config->get('server.settings.pid_file');
-        if (empty($file)) {
-            throw new FileNotFoundException('The config of pid_file is not found.');
-        }
-        if (!$isStart && $this->filesystem->exists($file)) {
-            $pid = $this->filesystem->get($file);
-            try {
-
-                $this->output->writeln('Stop server...');
-                if (Process::kill((int)$pid, 0)) {
-                    Process::kill((int)$pid, SIGTERM);
-                }
-            } catch (\Throwable $exception) {
-                $this->output->writeln('Stop server failed. Please execute `composer dump-autoload -o`');
-            }
-        }
-        $this->forceKill();
-    }
-
-    function forceKill($match = '')
-    {
-        if (!$match) {
-            $match = 'skeleton';
-        }
-        // 适配MacOS
-        if (PHP_OS == 'Darwin') $match = ENTRY_POINT_FILE;
-        $command = "ps -ef | grep '$match' | grep -v grep | awk '{print $2}' | xargs kill -9 2>&1";
-        dump($command);
-        // 找不到pid，强杀进程
-        exec($command);
     }
 
     protected function getDriver()
     {
         $driver = $this->option->getDriver();
-        if (!class_exists($driver)) {
+        if (! class_exists($driver)) {
             throw new \InvalidArgumentException('Driver not support.');
         }
         return make($driver, ['option' => $this->option]);

@@ -1,0 +1,1 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d2221b6"],{cccc:function(e,c,n){"use strict";n.r(c);var o=n("7a23");function r(e,c){var n=Object(o["resolveComponent"])("router-view");return Object(o["openBlock"])(),Object(o["createBlock"])(n)}var t=n("6b0d"),a=n.n(t);const u={},b=a()(u,[["render",r]]);c["default"]=b}}]);

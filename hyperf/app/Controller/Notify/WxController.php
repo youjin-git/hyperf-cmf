@@ -22,6 +22,7 @@ use App\Model\User;
 
 use App\Model\UserBalance;
 use App\Model\UserBalanceLog;
+use App\Service\Notice\OrderNoticeService;
 use App\Service\OrderService;
 use App\Service\Pay\AliPay;
 use App\Service\Pay\PayFactory;
@@ -47,63 +48,26 @@ use Hyperf\Utils\Context;
 
 
 /**
- * @ApiController(tag="支付管理",prefix="notify/wx",description="")
+ * @\Yj\Apidog\Annotation\ApiController(tag="支付管理",prefix="notify/wx",description="")
  */
-class WxController extends \Yurun\PaySDK\Weixin\Notify\Pay
+class WxController extends AbstractController
 {
 
     /**
      * @Inject()
-     * @var RequestInterface
+     * @var OrderNoticeService
      */
-    private $request;
-    /**
-     * @Inject
-     * @var OrderService
-     */
-    private $orderServer;
+    protected $orderNoticeService;
 
     /**
-     * @Inject()
-     * @var UserBalance
-     */
-    private $userBalanceModel;
-
-    /**
-     * @Inject()
-     * @var UserBalanceLog
-     */
-    private $userBalanceLogModel;
-    /**
-     * @Inject()
-     * @var User
-     */
-    private $user;
-
-    public function __exec()
-    {
-        // TODO: Implement __exec() method.
-        p($data = $this->data);
-        $this->orderServer->handel($data['out_trade_no'],$data['total_fee']/100,time());
-//        $this->handle_order($this->data['out_trade_no']);
-    }
-    public function getNotifyData(){
-        return   \Yurun\PaySDK\Lib\XML::fromString($this->request->getBody()->getContents());
-    }
-    /**
-     * @GetApi(path="", description="客服")
-     * @PostApi(path="", description="客服")
+     * @\Yj\Apidog\Annotation\GetApi(path="", description="客服")
+     * @\Yj\Apidog\Annotation\PostApi(path="")
      */
     public function notify(){
-        $params = new \Yurun\PaySDK\Weixin\Params\PublicParams;
-        $pay_config =  c(['wx_app_id','wx_mch_id','wx_key']);
-        $params->appID = $pay_config['wx_app_id'];
-        $params->mch_id = $pay_config['wx_mch_id'];
-        $params->key =$pay_config['wx_key'];
-        $pay = new \Yurun\PaySDK\Weixin\SDK($params);
-        $pay->notify(make(WxController::class));
-
+        $this->orderNoticeService->notice();
     }
+
+
 
     /**
      * @GetApi(path="zfb_balance_test", description="balance")

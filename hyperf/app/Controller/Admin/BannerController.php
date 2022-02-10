@@ -17,6 +17,8 @@ use App\Middleware\CheckAdminMiddleware;
 
 use App\Model\Admin\Banner;
 use FormBuilder\Factory\Elm;
+use Hyperf\Apidog\Annotation\ApiController;
+use Hyperf\Apidog\Annotation\PostApi;
 use Hyperf\DbConnection\Db;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\AutoController;
@@ -27,7 +29,7 @@ use Hyperf\Utils\Context;
 use FormBuilder\Driver\CustomComponent;
 
 /**
- * @AutoController()
+ * @\Yj\Apidog\Annotation\ApiController(prefix="admin/banner")
  * @Middleware(CheckAdminMiddleware::class)
  */
 class BannerController extends AbstractController
@@ -39,16 +41,21 @@ class BannerController extends AbstractController
      */
     protected $bannerModel;
 
+    /**
+     * @\Yj\Apidog\Annotation\PostApi(path="lists")
+     */
     public function lists()
     {
         $type = $this->request->input('type',0);
-        $lists = $this->bannerModel->where(function($query)use($type){
-                if ($type){
-                    $query->where('type',$type);
-                }
+        $lists = $this->bannerModel->with('imagePath')->where(function($query)use($type){
+
         })->orderBy('create_time','desc')->paginate();
         succ($lists);
     }
+
+    /**
+     * @\Yj\Apidog\Annotation\PostApi(path="create")
+     */
     public function create(){
         $id = $this->request->input('id');
         if($id){
@@ -58,37 +65,32 @@ class BannerController extends AbstractController
         }
         $form =  Elm::createForm('admin/banner/save');
 
-        $type = 'YjUpload';
-        $span = new CustomComponent($type);
-////            $span->action( $this->configValueModel->_get('site_url').'/util/file/upload');
-        $span->props(['action'=>systemConfig('site_url').'/util/file/upload','name'=>'上传图片']);
-        $component =  $span->field('picture');
-
-
-
-
         $form->setRule([
-            \App\Form\Elm::wangeditor(),
+            \Yj\Form\Elm::YjUpload()->title('图片')->field('image'),
             Elm::input('title', '标题')->required('标题必填'),
-            $component,
             Elm::input('link', '链接')->required('跳转必填'),
             Elm::hidden('id',$id)
         ]);
+
         $lists = $form->setTitle($id?'编辑banner':'添加banner')->formData($formData);
         succ(formToData($lists));
     }
+
+
+    /**
+     * @\Yj\Apidog\Annotation\PostApi(path="save")
+     */
     public function  save(){
             $params = $this->request->all();
-            p($params);
+
            $id = $params['id'];
            unset($params['id']);
             if($id){
-
                    $res =  $this->bannerModel->where('id',$id)->update($params);
             }else{
                   $res=  $this->bannerModel->create($params);
             }
-            $res?succ():err();
+            $res?_SUCCESS():_Error();
     }
 
     public function authorization()
@@ -105,9 +107,11 @@ class BannerController extends AbstractController
             succ($info);
     }
 
+    /**
+     * @\Yj\Apidog\Annotation\PostApi(path="delete")
+     */
     public function  delete(){
         $id = $this->request->input('id');
-
         $this->bannerModel->where('id',$id)->delete()?succ():err();
     }
 

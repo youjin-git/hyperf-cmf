@@ -26,7 +26,6 @@
 			</div>
 			<div class="adminui-side-scroll">
 				<el-scrollbar>
-					{{active}}
 					<el-menu
 						:default-active="active"
 						router

@@ -6,6 +6,7 @@ namespace App\Controller\Api;
 
 use App\Controller\AbstractController;
 use App\Service\MiniProgramService;
+use App\Service\Users\UsersService;
 use App\Service\UserService;
 use Hyperf\Apidog\Annotation\ApiController;
 use Hyperf\Apidog\Annotation\FormData;
@@ -15,7 +16,7 @@ use Hyperf\HttpServer\Annotation\Middleware;
 use Symfony\Component\Serializer\Annotation\Ignore;
 
 /**
- * @ApiController(tag="授权",prefix="api/login",description="")
+ * @\Yj\Apidog\Annotation\ApiController(tag="授权",prefix="api/login",description="")
  */
 class Login extends AbstractController
 {
@@ -32,6 +33,11 @@ class Login extends AbstractController
      */
     protected $userService;
 
+    /**
+     * @Inject()
+     * @var UsersService
+     */
+    protected $usersService;
     /**
      * @PostApi(path="openid", description="微信小程序授权")
      * @FormData(key="code|code", rule="required")
@@ -68,5 +74,26 @@ class Login extends AbstractController
         succ(['token' => $this->userService->getToken($wechatUser->id)]);
     }
 
+    /**
+     * @Inject()
+     * @var \App\Service\EasyWeChat\MiniProgramService
+     */
+    protected $miniProgramService;
+
+    /**
+     * @\Yj\Apidog\Annotation\PostApi(path="get-tel")
+     * @\Yj\Apidog\Annotation\FormData(key="code",rule="required")
+     * @\Yj\Apidog\Annotation\FormData(key="iv",rule="required")
+     * @\Yj\Apidog\Annotation\FormData(key="encryptedData",rule="required")
+     */
+    public function getTel(){
+        $params = $this->getValidatorData();
+        [$tel,$openid] = $this->miniProgramService->getTelAndMobile($params->get('code'),$params->get('iv'),$params->get('encryptedData'));
+        //注册或登录
+        $data = $this->usersService->regAndLogin($tel,compact('openid'));
+
+        _SUCCESS($data);
+//        $app->phone_number->getUserPhoneNumber(string $code);
+    }
 
 }

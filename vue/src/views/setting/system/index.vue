@@ -40,7 +40,7 @@ export default {
 			FromData:{},
 			option:{
 				onSubmit: (formData)=>{
-					this.$HTTP().post(this.FromData.action, formData).then(res => {
+					this.$HTTP().params(formData).post(this.FromData.action).then(res => {
 						this.$message.success('提交成功')
 					}).catch(res => {
 						console.log(res)
@@ -98,7 +98,7 @@ export default {
 			});
 		},
 		changeTab(){
-			this.$HTTP().post('/admin/config_classify/create_form',{tab_id:this.currentId}).then(res=>{
+			this.$HTTP().params({tab_id:this.currentId}).post('/admin/config_classify/create_form').then(res=>{
 				this.option = extend(this.option,{'size':'large'},res.config)
 				this.rules = res.rule
 				this.title = res.title

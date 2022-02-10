@@ -19,7 +19,6 @@ use Hyperf\DbConnection\Db;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\HttpServer\Contract\ResponseInterface;
-use Hyperf\Utils\Collection;
 use Hyperf\Utils\Context;
 use Psr\Container\ContainerInterface;
 
@@ -53,10 +52,6 @@ abstract class AbstractController
         return Context::get('uid') ?: err('token is wrong', ErrorCode::TOEKN_INVALID);
     }
 
-    /**
-     * @param $fielid
-     * @return Collection
-     */
     protected function getValidatorData($fielid = '')
     {
         if ($fielid) {

@@ -4,6 +4,7 @@ namespace App\Middleware;
 
 use App\Constants\ErrorCode;
 use App\Model\Admin\Admin;
+use App\Service\Users\UsersService;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -29,6 +30,13 @@ class CheckLoginMiddleware implements MiddlewareInterface
      */
     protected $adminModel;
 
+    /**
+     * @Inject()
+     * @var UsersService
+     */
+    protected $usersService;
+
+
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         //排除
@@ -42,7 +50,7 @@ class CheckLoginMiddleware implements MiddlewareInterface
         if (Context::has('uid')) {
             return $handler->handle($request);
         }
-        $User = new User();
+
 
         $token = $request->getHeaderLine('X-token') ?: '1614781075835825164';
 
@@ -51,8 +59,7 @@ class CheckLoginMiddleware implements MiddlewareInterface
             return $this->response->json(err('用户未登录', ErrorCode::TOEKN_NOT_EXISTS));
         }
 
-        $uid = $User->check_token($token);
-
+        $uid = $this->usersService->checkToken($token);
         if (!$uid) {
             //登录失效
             err('token失效', ErrorCode::TOEKN_INVALID);

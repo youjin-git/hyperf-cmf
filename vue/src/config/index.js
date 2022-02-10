@@ -1,6 +1,6 @@
 const DEFAULT_CONFIG = {
 	//标题
-	APP_NAME: "hyperf-admin",
+	APP_NAME: "房产BBG线上订片系统",
 
 	//首页地址
 	DASHBOARD_URL: "/dashboard",

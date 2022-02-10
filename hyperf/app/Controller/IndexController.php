@@ -30,7 +30,7 @@ use Hyperf\Apidog\Annotation\GetApi;
 use Hyperf\View\RenderInterface;
 
 /**
- * @ApiController(tag="访问路径",description="")
+ * @\Yj\Apidog\Annotation\ApiController(prefix="/")
  */
 class IndexController extends AbstractController
 {
@@ -50,11 +50,11 @@ class IndexController extends AbstractController
     }
 
     /**
-     * @GetApi(path="admin", description="后台访问路径")
+     * @\Yj\Apidog\Annotation\GetApi(path="admin")
      */
     public function admin()
     {
-        return $this->render->render('system');
+        return $this->render->render('index');
     }
 
 }
